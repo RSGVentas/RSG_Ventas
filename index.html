@@ -1,32 +1,373 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RSG Ventas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSG Ventas</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f3f3;
+  color: #333;
+}
+
+header {
+  background: #198754;
+  color: white;
+  padding: 18px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+header p {
+  margin: 5px 0 15px;
+}
+
+.buscador {
+  width: 95%;
+  max-width: 600px;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.categorias {
+  background: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.categorias button {
+  border: none;
+  background: #e9ecef;
+  padding: 10px 14px;
+  margin: 4px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.contenedor {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+.titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 18px;
+}
+
+.producto {
+  background: white;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.producto img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f8f8f8;
+}
+
+.producto h3 {
+  margin: 10px 0 5px;
+}
+
+.precio {
+  font-size: 22px;
+  font-weight: bold;
+  color: #198754;
+  margin: 8px 0;
+}
+
+.producto button {
+  width: 100%;
+  padding: 11px;
+  background: #198754;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.carrito {
+  margin-top: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.carrito button {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 7px;
+  font-size: 16px;
+  width: 100%;
+  cursor: pointer;
+}
+
+footer {
+  margin-top: 30px;
+  background: #198754;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+</style>
 </head>
+
 <body>
-  <h1>RSG Ventas</h1>
-  <h2>Tu sitio de compras online</h2>
 
-  <h3>🛍️ Productos</h3>
-  <p>Próximamente vas a encontrar nuestro catálogo.</p>
+<header>
+  <h1>🛒 RSG Ventas</h1>
+  <p>Productos y recuerdos</p>
 
-  <h3>📦 Recuerdos y souvenirs</h3>
-  <p>Medallas, crucifijos, llaveros, rosarios, estampitas y recuerdos del Papa León XIV.</p>
+  <input
+    class="buscador"
+    type="text"
+    placeholder="¿Qué estás buscando?"
+    onkeyup="buscarProducto()"
+    id="buscador">
+</header>
 
-  <h3>📱 Consultas y pedidos</h3>
-  <p>Comunicate con nosotros para consultar precios y disponibilidad.</p>
-  <p><a href="carrito.html">🛒 Ver carrito de compras</a></p>
+<div class="categorias">
+  <button onclick="mostrarTodos()">Todos</button>
+  <button onclick="filtrar('Religiosos')">Religiosos</button>
+  <button onclick="filtrar('Llaveros')">Llaveros</button>
+  <button onclick="filtrar('Recuerdos')">Recuerdos</button>
+</div>
+
+<main class="contenedor">
+
+  <div class="titulo">
+    <h2>Productos destacados</h2>
+    <span>🛒 <b id="cantidadCarrito">0</b></span>
+  </div>
+
+  <div class="productos" id="productos">
+
+    <div class="producto" data-categoria="Religiosos" data-nombre="Rosario">
+      <img src="https://via.placeholder.com/300x300?text=Rosario" alt="Rosario">
+      <h3>Rosario</h3>
+      <p>Recuerdo religioso</p>
+      <div class="precio">$8.000</div>
+      <button onclick="agregarCarrito('Rosario', 8000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto" data-categoria="Religiosos" data-nombre="Medalla">
+      <img src="https://via.placeholder.com/300x300?text=Medalla" alt="Medalla">
+      <h3>Medalla</h3>
+      <p>Recuerdo religioso</p>
+      <div class="precio">$5.000</div>
+      <button onclick="agregarCarrito('Medalla', 5000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto" data-categoria="Llaveros" data-nombre="Llavero">
+      <img src="https://via.placeholder.com/300x300?text=Llavero" alt="Llavero">
+      <h3>Llavero</h3>
+      <p>Recuerdo especial</p>
+      <div class="precio">$4.000</div>
+      <button onclick="agregarCarrito('Llavero', 4000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto" data-categoria="Recuerdos" data-nombre="Estampita">
+      <img src="https://via.placeholder.com/300x300?text=Estampita" alt="Estampita">
+      <h3>Estampita</h3>
+      <p>Recuerdo religioso</p>
+      <div class="precio">$2.000</div>
+      <button onclick="agregarCarrito('Estampita', 2000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+  </div>
+
+  <section class="carrito">
+    <h2>🛒 Mi carrito</h2>
+    <div id="listaCarrito">
+      <p>Tu carrito está vacío.</p>
+    </div>
+
+    <h3>Total: $<span id="total">0</span></h3>
+
+    <button onclick="enviarWhatsApp()">
+      📲 Enviar pedido por WhatsApp
+    </button>
+  </section>
+
+</main>
+
+<footer>
+  <p><b>RSG Ventas</b></p>
+  <p>Productos y recuerdos</p>
+</footer>
+
+<script>
+
+let carrito = [];
+
+function agregarCarrito(nombre, precio) {
+  carrito.push({
+    nombre: nombre,
+    precio: precio
+  });
+
+  actualizarCarrito();
+}
+
+function actualizarCarrito() {
+
+  let lista = document.getElementById("listaCarrito");
+  let total = 0;
+
+  if (carrito.length === 0) {
+    lista.innerHTML = "<p>Tu carrito está vacío.</p>";
+  } else {
+
+    lista.innerHTML = "";
+
+    carrito.forEach(function(producto, indice) {
+
+      total += producto.precio;
+
+      let item = document.createElement("p");
+
+      item.innerHTML =
+        producto.nombre +
+        " - $" +
+        producto.precio.toLocaleString("es-AR") +
+        ' <button onclick="eliminarProducto(' +
+        indice +
+        ')">❌</button>';
+
+      lista.appendChild(item);
+    });
+  }
+
+  document.getElementById("total").textContent =
+    total.toLocaleString("es-AR");
+
+  document.getElementById("cantidadCarrito").textContent =
+    carrito.length;
+}
+
+function eliminarProducto(indice) {
+  carrito.splice(indice, 1);
+  actualizarCarrito();
+}
+
+function enviarWhatsApp() {
+
+  if (carrito.length === 0) {
+    alert("El carrito está vacío.");
+    return;
+  }
+
+  let mensaje = "Hola, quiero realizar este pedido en RSG Ventas:%0A%0A";
+  let total = 0;
+
+  carrito.forEach(function(producto) {
+
+    mensaje +=
+      "• " +
+      producto.nombre +
+      " - $" +
+      producto.precio.toLocaleString("es-AR") +
+      "%0A";
+
+    total += producto.precio;
+  });
+
+  mensaje +=
+    "%0ATotal: $" +
+    total.toLocaleString("es-AR");
+
+  let telefono = "543447520403";
+
+  window.open(
+    "https://wa.me/" + telefono + "?text=" + mensaje,
+    "_blank"
+  );
+}
+
+function buscarProducto() {
+
+  let texto =
+    document.getElementById("buscador").value.toLowerCase();
+
+  let productos =
+    document.querySelectorAll(".producto");
+
+  productos.forEach(function(producto) {
+
+    let nombre =
+      producto.dataset.nombre.toLowerCase();
+
+    if (nombre.includes(texto)) {
+      producto.style.display = "block";
+    } else {
+      producto.style.display = "none";
+    }
+  });
+}
+
+function filtrar(categoria) {
+
+  let productos =
+    document.querySelectorAll(".producto");
+
+  productos.forEach(function(producto) {
+
+    if (producto.dataset.categoria === categoria) {
+      producto.style.display = "block";
+    } else {
+      producto.style.display = "none";
+    }
+  });
+}
+
+function mostrarTodos() {
+
+  let productos =
+    document.querySelectorAll(".producto");
+
+  productos.forEach(function(producto) {
+    producto.style.display = "block";
+  });
+}
+
+</script>
+
 </body>
 </html>
-<h2>🛍️ Nuestros productos</h2>
-
-<h3>🙏 Denarios o collares del Papa León XIV</h3>
-<p>Recuerdos especiales para llevar o regalar.</p>
-
-<h3>📿 Rosarios</h3>
-<p>Diferentes modelos para recuerdo o regalo.</p>
-
-<h3>🔑 Llaveros del Papa León XIV</h3>
-<p>Souvenirs para llevar como recuerdo.</p>
