@@ -13,23 +13,38 @@
   <h3>Elegí tus productos</h3>
 
   <p>🙏 Denarios o collares del Papa León XIV</p>
-  <input type="number" min="0" value="0">
+  <input id="denarios" type="number" min="0" value="0">
 
   <p>📿 Rosarios</p>
-  <input type="number" min="0" value="0">
+  <input id="rosarios" type="number" min="0" value="0">
 
   <p>🔑 Llaveros del Papa León XIV</p>
-  <input type="number" min="0" value="0">
+  <input id="llaveros" type="number" min="0" value="0">
 
   <br><br>
 
-  <button onclick="alert('Tu pedido fue preparado. Nos comunicaremos para confirmar precios y disponibilidad.')">
-    Confirmar pedido
-  </button>
+  <button onclick="enviarPedido()">📲 Confirmar pedido por WhatsApp</button>
 
   <br><br>
 
   <a href="index.html">← Volver a RSG Ventas</a>
+
+  <script>
+    function enviarPedido() {
+      const denarios = document.getElementById("denarios").value;
+      const rosarios = document.getElementById("rosarios").value;
+      const llaveros = document.getElementById("llaveros").value;
+
+      const mensaje =
+        "Hola, quiero hacer un pedido en RSG Ventas:%0A%0A" +
+        "🙏 Denarios o collares del Papa León XIV: " + denarios + "%0A" +
+        "📿 Rosarios: " + rosarios + "%0A" +
+        "🔑 Llaveros del Papa León XIV: " + llaveros;
+
+      window.location.href =
+        "https://wa.me/543447521720?text=" + mensaje;
+    }
+  </script>
 
 </body>
 </html>
