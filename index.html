@@ -246,7 +246,22 @@ function agregarCarrito(nombre, precio) {
   actualizarCarrito();
 }
 
-function actualizarCarrito() {
+function actualizarCarrito(let lista = document.getElementById("lista-carrito");
+let total = 0;
+lista.innerHTML = "";
+
+carrito.forEach((producto, indice) => {
+  total += producto.precio;
+
+  let item = document.createElement("li");
+  item.innerHTML = `${producto.nombre} - $${producto.precio.toLocaleString("es-AR")}
+  <button onclick="eliminarProducto(${indice})">❌</button>`;
+
+  lista.appendChild(item);
+});
+
+document.getElementById("total").textContent =
+  total.toLocaleString("es-AR");) {
 
   let lista = document.getElementById("listaCarrito");
   let total = 0;
