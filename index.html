@@ -298,7 +298,8 @@ function enviarWhatsApp() {
   let total = 0;
 
   carrito.forEach(function(producto) {
-
+const crgo=*0.20;
+    const totalConCargo=total+cargo
     mensaje +=
       "• " +
       producto.nombre +
@@ -311,7 +312,7 @@ function enviarWhatsApp() {
 
   mensaje +=
     "%0ATotal: $" +
-    total.toLocaleString("es-AR");
+    totalconcargo.toLocaleString("es-AR");
 
   let telefono = "543447520403";
 
