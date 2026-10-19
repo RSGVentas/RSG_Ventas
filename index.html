@@ -412,6 +412,108 @@ function mostrarTodos() {
   });
 }
 
+</script><script>
+const URL_PRODUCTOS =
+  "https://docs.google.com/spreadsheets/d/1SXuaPmMKJfNlAbgSqx5h6bRczkuJ_A1QjUQwAuR0tr0/export?format=csv&gid=0";
+
+async function cargarProductosHoja() {
+  const contenedor = document.getElementById("productos");
+
+  if (!contenedor) {
+    console.error("No se encontró el contenedor productos");
+    return;
+  }
+
+  try {
+    const respuesta = await fetch(URL_PRODUCTOS);
+
+    if (!respuesta.ok) {
+      throw new Error("No se pudo leer la hoja");
+    }
+
+    const csv = await respuesta.text();
+    const filas = csv.trim().split(/\r?\n/);
+
+    const separar = (fila) =>
+      fila.match(/("(?:[^"]|"")*"|[^,]*)(,|$)/g)
+        ?.map(c => c.replace(/,$/, "").replace(/^"|"$/g, "")
+          .replace(/""/g, '"')) || [];
+
+    const encabezados = separar(filas.shift())
+      .map(t => t.trim().toLowerCase());
+
+    const columna = (...nombres) =>
+      encabezados.findIndex(h => nombres.includes(h));
+
+    const iNombre = columna("nombre", "producto");
+    const iPrecio = columna("precio");
+    const iDescripcion = columna("descripción", "descripcion");
+    const iFoto = columna("foto", "fotos", "imagen");
+
+    if (iNombre < 0 || iPrecio < 0) {
+      throw new Error("Falta la columna Nombre o Precio");
+    }
+
+    const productos = filas.map(fila => {
+      const c = separar(fila);
+      return {
+        nombre: c[iNombre]?.trim() || "",
+        precio: Number(
+          (c[iPrecio] || "").replace(/[^\d,.-]/g, "")
+            .replace(/\./g, "").replace(",", ".")
+        ),
+        descripcion: iDescripcion >= 0
+          ? c[iDescripcion] || "" : "",
+        foto: iFoto >= 0 ? c[iFoto] || "" : ""
+      };
+    }).filter(p => p.nombre && Number.isFinite(p.precio));
+
+    contenedor.innerHTML = "";
+
+    productos.forEach(p => {
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "producto";
+
+      if (/^https?:\/\//i.test(p.foto)) {
+        const img = document.createElement("img");
+        img.src = p.foto;
+        img.alt = p.nombre;
+        img.style.maxWidth = "100%";
+        tarjeta.appendChild(img);
+      }
+
+      const nombre = document.createElement("h3");
+      nombre.textContent = p.nombre;
+      tarjeta.appendChild(nombre);
+
+      const descripcion = document.createElement("p");
+      descripcion.textContent = p.descripcion;
+      tarjeta.appendChild(descripcion);
+
+      const precio = document.createElement("p");
+      precio.textContent = "$ " + p.precio.toLocaleString("es-AR");
+      tarjeta.appendChild(precio);
+
+      const boton = document.createElement("button");
+      boton.textContent = "Agregar al carrito";
+      boton.addEventListener("click", () =>
+        agregarCarrito(p.nombre, p.precio)
+      );
+      tarjeta.appendChild(boton);
+
+      contenedor.appendChild(tarjeta);
+    });
+
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+    contenedor.insertAdjacentHTML(
+      "beforeend",
+      "<p>No se pudieron cargar los productos de la hoja.</p>"
+    );
+  }
+}
+
+cargarProductosHoja();
 </script>
 
 </body>
