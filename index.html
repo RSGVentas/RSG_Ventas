@@ -450,6 +450,13 @@ async function cargarProductosHoja() {
     const iDescripcion = columna("descripción", "descripcion");
     const iFoto = columna("foto", "fotos", "imagen");
 
+        img.alt = p.nombre;
+        img.style.maxWidth = "100%";
+        tarjeta.appendChild(img);
+      }
+
+      const nombre = document.createElement("h3");
+      nombre.textContent = p.nombre;
     if (iNombre < 0 || iPrecio < 0) {
       throw new Error("Falta la columna Nombre o Precio");
     }
@@ -477,13 +484,6 @@ async function cargarProductosHoja() {
       if (/^https?:\/\//i.test(p.foto)) {
         const img = document.createElement("img");
         img.src = p.foto;
-        img.alt = p.nombre;
-        img.style.maxWidth = "100%";
-        tarjeta.appendChild(img);
-      }
-
-      const nombre = document.createElement("h3");
-      nombre.textContent = p.nombre;
       tarjeta.appendChild(nombre);
 
       const descripcion = document.createElement("p");
