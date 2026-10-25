@@ -6,7 +6,9 @@
 <title>RSG Ventas</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -27,7 +29,9 @@ header h1 {
   font-size: 30px;
 }
 
-header p { margin: 8px 0 15px; }
+header p {
+  margin: 5px 0 15px;
+}
 
 .buscador {
   width: 95%;
@@ -63,7 +67,6 @@ header p { margin: 8px 0 15px; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
 }
 
 .productos {
@@ -76,8 +79,7 @@ header p { margin: 8px 0 15px; }
   background: white;
   border-radius: 10px;
   padding: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.12);
-  min-width: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
 .producto img {
@@ -88,7 +90,9 @@ header p { margin: 8px 0 15px; }
   background: #f8f8f8;
 }
 
-.producto h3 { margin: 10px 0 5px; }
+.producto h3 {
+  margin: 10px 0 5px;
+}
 
 .precio {
   font-size: 22px;
@@ -126,10 +130,11 @@ header p { margin: 8px 0 15px; }
   cursor: pointer;
 }
 
-.eliminar {
+.boton-eliminar {
   width: auto !important;
   padding: 5px 10px !important;
   background: #dc3545 !important;
+  margin-left: 8px;
 }
 
 footer {
@@ -138,13 +143,6 @@ footer {
   color: white;
   text-align: center;
   padding: 20px;
-}
-
-.mensaje {
-  text-align: center;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
 }
 </style>
 </head>
@@ -159,8 +157,8 @@ footer {
     class="buscador"
     type="text"
     placeholder="¿Qué estás buscando?"
-    id="buscador"
-    oninput="aplicarFiltros()">
+    oninput="aplicarFiltros()"
+    id="buscador">
 </header>
 
 <div class="categorias">
@@ -177,19 +175,69 @@ footer {
     <span>🛒 <b id="cantidadCarrito">0</b></span>
   </div>
 
-  <div id="estado" class="mensaje">
-    Cargando productos...
-  </div>
+  <div class="productos" id="productos">
 
-  <div class="productos" id="productos"></div>
+    <div class="producto"
+         data-categoria="Religiosos"
+         data-nombre="Rosario">
+      <img src="Rosario papa.jpg" alt="Rosario"
+           onerror="this.style.display='none'">
+      <h3>Rosario</h3>
+      <p>Recuerdo religioso</p>
+      <div class="precio">$15.000</div>
+      <button onclick="agregarCarrito('Rosario', 15000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto"
+         data-categoria="Religiosos"
+         data-nombre="Medalla">
+      <img src="Medalla papa.jpg" alt="Medalla del Papa"
+           onerror="this.style.display='none'">
+      <h3>Medalla</h3>
+      <p>Recuerdo religioso</p>
+      <div class="precio">$7.000</div>
+      <button onclick="agregarCarrito('Medalla', 7000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto"
+         data-categoria="Llaveros"
+         data-nombre="Llavero">
+      <img src="papa 1 cruz.jpg" alt="Llavero en forma de cruz"
+           onerror="this.style.display='none'">
+      <h3>Llavero</h3>
+      <p>Recuerdo especial</p>
+      <div class="precio">$7.000</div>
+      <button onclick="agregarCarrito('Llavero', 7000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto"
+         data-categoria="Recuerdos"
+         data-nombre="Almanaque">
+      <img src="Almanaque papa.jpg" alt="Almanaque"
+           onerror="this.style.display='none'">
+      <h3>Almanaque</h3>
+      <p>Recuerdo religioso</p>
+      <div class="precio">$5.000</div>
+      <button onclick="agregarCarrito('Almanaque', 5000)">
+        Agregar al carrito
+      </button>
+    </div>
+
+  </div>
 
   <section class="carrito">
     <h2>🛒 Mi carrito</h2>
+
     <div id="listaCarrito">
       <p>Tu carrito está vacío.</p>
     </div>
-    <h3>Subtotal: $<span id="subtotal">0</span></h3>
-    <h3>Cargo de servicio (20%): $<span id="cargo">0</span></h3>
+
     <h3>Total: $<span id="total">0</span></h3>
 
     <button onclick="enviarWhatsApp()">
@@ -205,312 +253,57 @@ footer {
 </footer>
 
 <script>
-const URL_PRODUCTOS =
-  "https://docs.google.com/spreadsheets/d/1SXuaPmMKJfNlAbgSqx5h6bRczkuJ_A1QjUQwAuR0tr0/export?format=csv&gid=0";
-
-const TELEFONO_WHATSAPP = "543447520403";
-const FORMATO_PRECIO = new Intl.NumberFormat("es-AR", {
-  maximumFractionDigits: 2
-});
-
 let carrito = [];
-let productosCargados = [];
 let categoriaActual = "Todos";
-
-function dinero(valor) {
-  return FORMATO_PRECIO.format(valor);
-}
-
-// Lee correctamente los campos CSV que contienen comas entre comillas.
-function leerCSV(texto) {
-  const filas = [];
-  let fila = [];
-  let campo = "";
-  let entreComillas = false;
-
-  texto = texto.replace(/^\uFEFF/, "");
-
-  for (let i = 0; i < texto.length; i++) {
-    const caracter = texto[i];
-
-    if (caracter === '"') {
-      if (entreComillas && texto[i + 1] === '"') {
-        campo += '"';
-        i++;
-      } else {
-        entreComillas = !entreComillas;
-      }
-    } else if (caracter === "," && !entreComillas) {
-      fila.push(campo);
-      campo = "";
-    } else if (
-      (caracter === "\n" || caracter === "\r") &&
-      !entreComillas
-    ) {
-      if (caracter === "\r" && texto[i + 1] === "\n") i++;
-      fila.push(campo);
-
-      if (fila.some(valor => valor.trim() !== "")) {
-        filas.push(fila);
-      }
-
-      fila = [];
-      campo = "";
-    } else {
-      campo += caracter;
-    }
-  }
-
-  fila.push(campo);
-
-  if (fila.some(valor => valor.trim() !== "")) {
-    filas.push(fila);
-  }
-
-  return filas;
-}
-
-function detectarCategoria(nombre, categoriaHoja) {
-  if (categoriaHoja) return categoriaHoja;
-
-  const texto = nombre.toLowerCase();
-
-  if (texto.includes("llavero")) return "Llaveros";
-  if (
-    texto.includes("medalla") ||
-    texto.includes("rosario") ||
-    texto.includes("cruz") ||
-    texto.includes("religioso") ||
-    texto.includes("papa")
-  ) {
-    return "Religiosos";
-  }
-
-  return "Recuerdos";
-}
-
-function convertirPrecio(valor) {
-  let texto = String(valor || "").trim();
-  texto = texto.replace(/[^\d,.-]/g, "");
-
-  if (!texto) return NaN;
-
-  // Admite precios argentinos como 7.000 y 7.000,50.
-  if (texto.includes(",")) {
-    texto = texto.replace(/\./g, "").replace(",", ".");
-  } else if (/^-?\d{1,3}(\.\d{3})+$/.test(texto)) {
-    texto = texto.replace(/\./g, "");
-  }
-
-  return Number(texto);
-}
-
-async function cargarProductosHoja() {
-  const contenedor = document.getElementById("productos");
-  const estado = document.getElementById("estado");
-
-  estado.textContent = "Cargando productos...";
-  contenedor.innerHTML = "";
-
-  try {
-    const respuesta = await fetch(URL_PRODUCTOS, {
-      cache: "no-store"
-    });
-
-    if (!respuesta.ok) {
-      throw new Error("No se pudo acceder a Google Sheets.");
-    }
-
-    const textoCSV = await respuesta.text();
-    const filas = leerCSV(textoCSV);
-
-    if (filas.length < 2) {
-      throw new Error("La hoja no contiene productos.");
-    }
-
-    const encabezados = filas.shift().map(valor =>
-      valor.trim().toLowerCase().normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-    );
-
-    const buscarColumna = (...nombres) =>
-      encabezados.findIndex(nombre => nombres.includes(nombre));
-
-    const iNombre = buscarColumna("nombre", "producto");
-    const iPrecio = buscarColumna("precio");
-    const iDescripcion = buscarColumna("descripcion");
-    const iFoto = buscarColumna("foto", "fotos", "imagen");
-    const iCategoria = buscarColumna("categoria", "categoría");
-
-    if (iNombre < 0 || iPrecio < 0) {
-      throw new Error(
-        "La primera fila debe tener las columnas Nombre y Precio."
-      );
-    }
-
-    productosCargados = filas.map(columnas => {
-      const nombre = (columnas[iNombre] || "").trim();
-      const precio = convertirPrecio(columnas[iPrecio]);
-
-      return {
-        nombre,
-        precio,
-        descripcion: iDescripcion >= 0
-          ? (columnas[iDescripcion] || "").trim()
-          : "",
-        foto: iFoto >= 0
-          ? (columnas[iFoto] || "").trim()
-          : "",
-        categoria: detectarCategoria(
-          nombre,
-          iCategoria >= 0
-            ? (columnas[iCategoria] || "").trim()
-            : ""
-        )
-      };
-    }).filter(producto =>
-      producto.nombre &&
-      Number.isFinite(producto.precio) &&
-      producto.precio >= 0
-    );
-
-    if (productosCargados.length === 0) {
-      throw new Error("No se encontraron productos válidos.");
-    }
-
-    estado.style.display = "none";
-    aplicarFiltros();
-
-  } catch (error) {
-    console.error("Error al cargar productos:", error);
-    estado.style.display = "block";
-    estado.textContent =
-      "No se pudieron cargar los productos. Revisá que la hoja de Google permita leer el CSV y que tenga las columnas Nombre y Precio.";
-  }
-}
-
-function mostrarProductos(lista) {
-  const contenedor = document.getElementById("productos");
-  contenedor.innerHTML = "";
-
-  if (lista.length === 0) {
-    contenedor.innerHTML =
-      '<p class="mensaje">No se encontraron productos.</p>';
-    return;
-  }
-
-  lista.forEach(producto => {
-    const tarjeta = document.createElement("div");
-    tarjeta.className = "producto";
-
-    const nombre = document.createElement("h3");
-    nombre.textContent = producto.nombre;
-    tarjeta.appendChild(nombre);
-
-    if (producto.foto) {
-      const imagen = document.createElement("img");
-      imagen.alt = producto.nombre;
-      imagen.loading = "lazy";
-      imagen.src = producto.foto;
-
-      imagen.onerror = function() {
-        this.style.display = "none";
-      };
-
-      tarjeta.insertBefore(imagen, nombre);
-    }
-
-    const descripcion = document.createElement("p");
-    descripcion.textContent =
-      producto.descripcion || "Producto y recuerdo especial";
-    tarjeta.appendChild(descripcion);
-
-    const precio = document.createElement("div");
-    precio.className = "precio";
-    precio.textContent = "$" + dinero(producto.precio);
-    tarjeta.appendChild(precio);
-
-    const boton = document.createElement("button");
-    boton.textContent = "Agregar al carrito";
-    boton.addEventListener("click", () => {
-      agregarCarrito(producto.nombre, producto.precio);
-    });
-    tarjeta.appendChild(boton);
-
-    contenedor.appendChild(tarjeta);
-  });
-}
-
-function aplicarFiltros() {
-  const texto = document.getElementById("buscador")
-    .value.trim().toLowerCase();
-
-  const lista = productosCargados.filter(producto => {
-    const coincideCategoria =
-      categoriaActual === "Todos" ||
-      producto.categoria.toLowerCase() ===
-        categoriaActual.toLowerCase();
-
-    const coincideTexto =
-      producto.nombre.toLowerCase().includes(texto) ||
-      producto.descripcion.toLowerCase().includes(texto);
-
-    return coincideCategoria && coincideTexto;
-  });
-
-  mostrarProductos(lista);
-}
-
-function filtrar(categoria) {
-  categoriaActual = categoria;
-  aplicarFiltros();
-}
 
 function agregarCarrito(nombre, precio) {
   carrito.push({ nombre, precio });
   actualizarCarrito();
 }
 
-function eliminarProducto(indice) {
-  carrito.splice(indice, 1);
-  actualizarCarrito();
-}
-
 function actualizarCarrito() {
   const lista = document.getElementById("listaCarrito");
-  let subtotal = 0;
+  let total = 0;
 
   lista.innerHTML = "";
 
   if (carrito.length === 0) {
     lista.innerHTML = "<p>Tu carrito está vacío.</p>";
+  } else {
+    carrito.forEach(function(producto, indice) {
+      total += producto.precio;
+
+      const item = document.createElement("p");
+      item.appendChild(
+        document.createTextNode(
+          producto.nombre + " - $" +
+          producto.precio.toLocaleString("es-AR") + " "
+        )
+      );
+
+      const eliminar = document.createElement("button");
+      eliminar.className = "boton-eliminar";
+      eliminar.textContent = "❌";
+      eliminar.setAttribute("aria-label", "Eliminar " + producto.nombre);
+      eliminar.onclick = function() {
+        eliminarProducto(indice);
+      };
+
+      item.appendChild(eliminar);
+      lista.appendChild(item);
+    });
   }
 
-  carrito.forEach((producto, indice) => {
-    subtotal += producto.precio;
+  document.getElementById("total").textContent =
+    total.toLocaleString("es-AR");
 
-    const item = document.createElement("p");
-    item.appendChild(document.createTextNode(
-      producto.nombre + " - $" + dinero(producto.precio) + " "
-    ));
+  document.getElementById("cantidadCarrito").textContent =
+    carrito.length;
+}
 
-    const boton = document.createElement("button");
-    boton.className = "eliminar";
-    boton.textContent = "❌";
-    boton.setAttribute("aria-label", "Eliminar " + producto.nombre);
-    boton.addEventListener("click", () => eliminarProducto(indice));
-
-    item.appendChild(boton);
-    lista.appendChild(item);
-  });
-
-  const cargo = subtotal * 0.20;
-  const total = subtotal + cargo;
-
-  document.getElementById("subtotal").textContent = dinero(subtotal);
-  document.getElementById("cargo").textContent = dinero(cargo);
-  document.getElementById("total").textContent = dinero(total);
-  document.getElementById("cantidadCarrito").textContent = carrito.length;
+function eliminarProducto(indice) {
+  carrito.splice(indice, 1);
+  actualizarCarrito();
 }
 
 function enviarWhatsApp() {
@@ -519,29 +312,54 @@ function enviarWhatsApp() {
     return;
   }
 
-  let subtotal = 0;
   let mensaje = "Hola, quiero realizar este pedido en RSG Ventas:\n\n";
+  let subtotal = 0;
 
-  carrito.forEach(producto => {
-    mensaje += "• " + producto.nombre +
-      " - $" + dinero(producto.precio) + "\n";
+  carrito.forEach(function(producto) {
+    mensaje += "• " + producto.nombre + " - $" +
+      producto.precio.toLocaleString("es-AR") + "\n";
     subtotal += producto.precio;
   });
 
   const cargo = subtotal * 0.20;
-  const total = subtotal + cargo;
+  const totalConCargo = subtotal + cargo;
 
-  mensaje += "\nSubtotal: $" + dinero(subtotal);
-  mensaje += "\nCargo de servicio (20%): $" + dinero(cargo);
-  mensaje += "\nTotal: $" + dinero(total);
+  mensaje += "\nSubtotal: $" + subtotal.toLocaleString("es-AR");
+  mensaje += "\nCargo de servicio (20%): $" +
+    cargo.toLocaleString("es-AR");
+  mensaje += "\n\nTotal: $" + totalConCargo.toLocaleString("es-AR");
 
-  const url = "https://wa.me/" + TELEFONO_WHATSAPP +
+  const telefono = "543447520403";
+  const url = "https://wa.me/" + telefono +
     "?text=" + encodeURIComponent(mensaje);
 
   window.open(url, "_blank");
 }
 
-cargarProductosHoja();
+function filtrar(categoria) {
+  categoriaActual = categoria;
+  aplicarFiltros();
+}
+
+function aplicarFiltros() {
+  const texto = document.getElementById("buscador")
+    .value.trim().toLowerCase();
+
+  const productos = document.querySelectorAll("#productos .producto");
+
+  productos.forEach(function(producto) {
+    const nombre = producto.dataset.nombre.toLowerCase();
+    const categoria = producto.dataset.categoria;
+
+    const coincideNombre = nombre.includes(texto);
+    const coincideCategoria =
+      categoriaActual === "Todos" ||
+      categoria === categoriaActual;
+
+    producto.style.display =
+      coincideNombre && coincideCategoria ? "" : "none";
+  });
+}
 </script>
 
 </body>
