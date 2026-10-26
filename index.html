@@ -130,10 +130,10 @@ header p {
   cursor: pointer;
 }
 
-.boton-eliminar {
-  width: auto !important;
-  padding: 5px 10px !important;
-  background: #dc3545 !important;
+.carrito .boton-eliminar {
+  width: auto;
+  padding: 5px 10px;
+  background: #dc3545;
   margin-left: 8px;
 }
 
@@ -253,11 +253,13 @@ footer {
 </footer>
 
 <script>
+"use strict";
+
 let carrito = [];
 let categoriaActual = "Todos";
 
 function agregarCarrito(nombre, precio) {
-  carrito.push({ nombre, precio });
+  carrito.push({ nombre: nombre, precio: precio });
   actualizarCarrito();
 }
 
@@ -274,6 +276,7 @@ function actualizarCarrito() {
       total += producto.precio;
 
       const item = document.createElement("p");
+
       item.appendChild(
         document.createTextNode(
           producto.nombre + " - $" +
@@ -284,7 +287,11 @@ function actualizarCarrito() {
       const eliminar = document.createElement("button");
       eliminar.className = "boton-eliminar";
       eliminar.textContent = "❌";
-      eliminar.setAttribute("aria-label", "Eliminar " + producto.nombre);
+      eliminar.setAttribute(
+        "aria-label",
+        "Eliminar " + producto.nombre
+      );
+
       eliminar.onclick = function() {
         eliminarProducto(indice);
       };
@@ -312,24 +319,32 @@ function enviarWhatsApp() {
     return;
   }
 
-  let mensaje = "Hola, quiero realizar este pedido en RSG Ventas:\n\n";
+  let mensaje =
+    "Hola, quiero realizar este pedido en RSG Ventas:\n\n";
+
   let subtotal = 0;
 
   carrito.forEach(function(producto) {
     mensaje += "• " + producto.nombre + " - $" +
       producto.precio.toLocaleString("es-AR") + "\n";
+
     subtotal += producto.precio;
   });
 
   const cargo = subtotal * 0.20;
   const totalConCargo = subtotal + cargo;
 
-  mensaje += "\nSubtotal: $" + subtotal.toLocaleString("es-AR");
+  mensaje += "\nSubtotal: $" +
+    subtotal.toLocaleString("es-AR");
+
   mensaje += "\nCargo de servicio (20%): $" +
     cargo.toLocaleString("es-AR");
-  mensaje += "\n\nTotal: $" + totalConCargo.toLocaleString("es-AR");
+
+  mensaje += "\n\nTotal: $" +
+    totalConCargo.toLocaleString("es-AR");
 
   const telefono = "543447520403";
+
   const url = "https://wa.me/" + telefono +
     "?text=" + encodeURIComponent(mensaje);
 
@@ -342,28 +357,34 @@ function filtrar(categoria) {
 }
 
 function aplicarFiltros() {
-  const texto = document.getElementById("buscador")
-    .value.trim().toLowerCase();
+  const buscador = document.getElementById("buscador");
+  const texto = buscador.value.trim().toLowerCase();
 
-  const productos = document.querySelectorAll("#productos .producto");
+  const productos = document.querySelectorAll(
+    "#productos .producto"
+  );
 
   productos.forEach(function(producto) {
     const nombre = producto.dataset.nombre.toLowerCase();
     const categoria = producto.dataset.categoria;
 
     const coincideNombre = nombre.includes(texto);
+
     const coincideCategoria =
       categoriaActual === "Todos" ||
       categoria === categoriaActual;
 
     producto.style.display =
       coincideNombre && coincideCategoria ? "" : "none";
-  / }}      
-HTML
-  
-<script>
-const SUPABASE_URL = "https://mgivpmsjlonddmvtiyzr.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_WX2Pv_Qf4VRLzH0M_DeS-w_mWaNqAgP";
+  });
+}
+
+/* Configuración de Supabase */
+const SUPABASE_URL =
+  "https://mgivpmsjlonddmvtiyzr.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_WX2Pv_Qf4VRLzH0M_DeS-w_mWaNqAgP";
 </script>
 
 </body>
