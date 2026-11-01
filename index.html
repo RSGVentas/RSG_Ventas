@@ -443,6 +443,55 @@
     // Mostrar el carrito vacío al abrir la página.
     actualizarCarrito();
   </script>
+<script>
+const URL_PRODUCTOS = "https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
 
+async function cargarProductosPlanilla() {
+  try {
+    const respuesta = await fetch(URL_PRODUCTOS);
+    if (!respuesta.ok) throw new Error("Error al conectar");
+
+    const productosPlanilla = await respuesta.json();
+    const contenedor = document.getElementById("productos");
+
+    if (!contenedor) {
+      console.error("No se encontró el listado de productos");
+      return;
+    }
+
+    contenedor.innerHTML = "";
+
+    productosPlanilla.forEach(producto => {
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "producto";
+
+      const nombre = producto.nombre || "";
+      const precio = Number(producto.precio) || 0;
+      const descripcion = producto.descripcion || "";
+      const foto = producto.foto || "";
+
+      tarjeta.innerHTML = `
+        ${foto ? `<img src="${foto}" alt="${nombre}">` : ""}
+        <h3>${nombre}</h3>
+        <p>${descripcion}</p>
+        <p><strong>$${precio}</strong></p>
+        <button type="button">Agregar al carrito</button>
+      `;
+
+      tarjeta.querySelector("button").addEventListener("click", () => {
+        agregarCarrito(nombre, precio);
+      });
+
+      contenedor.appendChild(tarjeta);
+    });
+
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
+    alert("No se pudieron cargar los productos de la planilla.");
+  }
+}
+
+cargarProductosPlanilla();
+</script>
 </body>
 </html>
