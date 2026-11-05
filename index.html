@@ -494,9 +494,24 @@
           const imagen = document.createElement("img");
            let enlaceFoto = producto.foto || "";
 
-if (enlaceFoto.includes("drive.google.com/file/d/")) {
-  const idFoto = enlaceFoto.split("/d/")[1].split("/")[0];
-  enlaceFoto = "https://drive.google.com/uc?export=view&id=" + idFoto;
+if (producto.foto) {
+  const imagen = document.createElement("img");
+
+  let enlaceFoto = producto.foto.trim();
+
+  if (enlaceFoto.includes("drive.google.com/file/d/")) {
+    const idFoto = enlaceFoto.split("/d/")[1].split("/")[0];
+    enlaceFoto = "https://drive.google.com/uc?export=view&id=" + idFoto;
+  }
+
+  imagen.src = enlaceFoto;
+  imagen.alt = producto.nombre;
+
+  imagen.onerror = function() {
+    imagen.style.display = "none";
+  };
+
+  tarjeta.appendChild(imagen);
 }
 
 image.src = enlaceFoto;
