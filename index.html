@@ -492,8 +492,15 @@
         if (producto.foto) {
 
           const imagen = document.createElement("img");
-          imagen.src = producto.foto;
-          imagen.alt = producto.nombre;
+           let enlaceFoto = producto.foto || "";
+
+if (enlaceFoto.includes("drive.google.com/file/d/")) {
+  const idFoto = enlaceFoto.split("/d/")[1].split("/")[0];
+  enlaceFoto = "https://drive.google.com/uc?export=view&id=" + idFoto;
+}
+
+image.src = enlaceFoto;
+image.alt = producto.nombre;  
 
           imagen.onerror = function() {
             const reemplazo = document.createElement("div");
