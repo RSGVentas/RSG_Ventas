@@ -1,665 +1,288 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RSG Ventas</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f7f0;
-      color: #222;
-    }
-
-    header {
-      background: #168447;
-      color: white;
-      text-align: center;
-      padding: 22px 12px;
-    }
-
-    header h1 { margin: 0 0 8px; }
-    header p { margin: 0; }
-
-    .buscador {
-      display: block;
-      width: 92%;
-      max-width: 500px;
-      margin: 18px auto;
-      padding: 12px;
-      border: 1px solid #bbb;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    .filtros {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 0 10px 15px;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      border-radius: 7px;
-      padding: 10px 14px;
-      font-size: 15px;
-    }
-
-    .filtros button {
-      background: #e8b52b;
-      color: #222;
-    }
-
-    .productos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-      gap: 14px;
-      padding: 12px;
-      max-width: 1000px;
-      margin: auto;
-    }
-
-    .producto {
-      background: white;
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center;
-      box-shadow: 0 2px 7px #00000018;
-    }
-
-    .producto img {
-      width: 100%;
-      height: 170px;
-      object-fit: contain;
-      border-radius: 7px;
-    }
-
-    .sin-foto {
-      height: 170px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f3f7f0;
-      border-radius: 7px;
-      color: #777;
-      font-size: 14px;
-    }
-
-    .producto h3 {
-      font-size: 17px;
-      margin: 10px 0;
-    }
-
-    .descripcion {
-      font-size: 14px;
-      color: #666;
-    }
-
-    .precio {
-      font-size: 19px;
-      font-weight: bold;
-      color: #168447;
-      margin: 10px 0;
-    }
-
-    .boton-agregar {
-      background: #168447;
-      color: white;
-      width: 100%;
-    }
-
-    .carrito {
-      background: white;
-      max-width: 700px;
-      margin: 24px auto;
-      padding: 18px;
-      border-radius: 10px;
-      box-shadow: 0 2px 7px #00000018;
-    }
-
-    .carrito h2 {
-      color: #168447;
-      margin-top: 0;
-    }
-
-    .item-carrito {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 0;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .item-carrito span {
-      overflow-wrap: anywhere;
-    }
-
-    .boton-eliminar {
-      background: #c62828;
-      color: white;
-      padding: 7px 10px;
-    }
-
-    .resumen {
-      margin-top: 16px;
-      line-height: 1.8;
-    }
-
-    .total {
-      font-size: 21px;
-      font-weight: bold;
-      color: #168447;
-    }
-
-    .boton-whatsapp {
-      width: 100%;
-      margin-top: 12px;
-      padding: 14px;
-      background: #20b85a;
-      color: white;
-      font-size: 17px;
-      font-weight: bold;
-    }
-
-    .aviso {
-      color: #666;
-      font-size: 13px;
-    }
-
-    .mensaje-carga {
-      text-align: center;
-      padding: 20px;
-      color: #555;
-      grid-column: 1 / -1;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #168447;
-      color: white;
-      margin-top: 25px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSG Ventas</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
+header{background:#168447;color:white;text-align:center;padding:22px 12px}
+header h1{margin:0 0 8px}
+header p{margin:0}
+.buscador{display:block;width:92%;max-width:500px;margin:18px auto;padding:12px;border:1px solid #bbb;border-radius:8px;font-size:16px}
+.filtros{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;padding:0 10px 15px}
+button{cursor:pointer;border:none;border-radius:7px;padding:10px 14px;font-size:15px}
+.filtros button{background:#e8b52b;color:#222}
+.productos{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;padding:12px;max-width:1000px;margin:auto}
+.producto{background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 2px 7px #00000018}
+.producto img{width:100%;height:200px;object-fit:contain;border-radius:7px}
+.sin-foto{height:200px;display:flex;align-items:center;justify-content:center;background:#f3f7f0;border-radius:7px;color:#777;font-size:14px}
+.producto h3{font-size:17px;margin:10px 0}
+.descripcion{font-size:14px;color:#666}
+.precio{font-size:19px;font-weight:bold;color:#168447;margin:10px 0}
+.boton-agregar{background:#168447;color:white;width:100%}
+.carrito{background:white;max-width:700px;margin:24px auto;padding:18px;border-radius:10px;box-shadow:0 2px 7px #00000018}
+.carrito h2{color:#168447;margin-top:0}
+.item-carrito{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #ddd}
+.item-carrito span{overflow-wrap:anywhere}
+.boton-eliminar{background:#c62828;color:white;padding:7px 10px}
+.resumen{margin-top:16px;line-height:1.8}
+.total{font-size:21px;font-weight:bold;color:#168447}
+.boton-whatsapp{width:100%;margin-top:12px;padding:14px;background:#20b85a;color:white;font-size:17px;font-weight:bold}
+.aviso{color:#666;font-size:13px}
+.mensaje-carga{text-align:center;padding:20px;color:#555;grid-column:1/-1}
+footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:25px}
+</style>
 </head>
-
 <body>
 
 <header>
-  <h1>🛒 RSG Ventas</h1>
-  <p>Productos y recuerdos</p>
+<h1>🛒 RSG Ventas</h1>
+<p>Productos y recuerdos</p>
 </header>
 
-<input
-  class="buscador"
-  id="buscador"
-  type="search"
-  placeholder="¿Qué estás buscando?"
-  oninput="aplicarFiltros()"
->
+<input class="buscador" id="buscador" type="search" placeholder="¿Qué estás buscando?" oninput="aplicarFiltros()">
 
 <div class="filtros">
-  <button onclick="mostrarTodos()">Todos</button>
-  <button onclick="filtrar('Religiosos')">Religiosos</button>
-  <button onclick="filtrar('Llaveros')">Llaveros</button>
-  <button onclick="filtrar('Recuerdos')">Recuerdos</button>
+<button onclick="mostrarTodos()">Todos</button>
+<button onclick="filtrar('Religiosos')">Religiosos</button>
+<button onclick="filtrar('Llaveros')">Llaveros</button>
+<button onclick="filtrar('Recuerdos')">Recuerdos</button>
 </div>
 
 <main class="productos" id="productos">
-  <p class="mensaje-carga">Cargando productos...</p>
+<p class="mensaje-carga">Cargando productos...</p>
 </main>
 
-<section class="carrito" id="carrito">
-  <h2>🛒 Tu carrito</h2>
-
-  <p id="carritoVacio">Todavía no agregaste productos.</p>
-
-  <div id="listaCarrito"></div>
-
-  <div class="resumen">
-    <div>Productos: <strong id="cantidadCarrito">0</strong></div>
-    <div>Subtotal: <strong id="subtotal">$0</strong></div>
-    <div>Cargo de servicio (10%): <strong id="cargo">$0</strong></div>
-    <div class="total">Total: <span id="total">$0</span></div>
-  </div>
-
-  <p class="aviso">
-    El cargo de servicio se calcula sobre el subtotal de los productos.
-  </p>
-
-  <button class="boton-whatsapp" onclick="enviarWhatsApp()">
-    📲 Enviar pedido por WhatsApp
-  </button>
+<section class="carrito">
+<h2>🛒 Tu carrito</h2>
+<p id="carritoVacio">Todavía no agregaste productos.</p>
+<div id="listaCarrito"></div>
+<div class="resumen">
+<div>Productos: <strong id="cantidadCarrito">0</strong></div>
+<div>Subtotal: <strong id="subtotal">$0</strong></div>
+<div>Cargo de servicio (10%): <strong id="cargo">$0</strong></div>
+<div class="total">Total: <span id="total">$0</span></div>
+</div>
+<p class="aviso">El cargo de servicio se calcula sobre el subtotal.</p>
+<button class="boton-whatsapp" onclick="enviarWhatsApp()">📲 Enviar pedido por WhatsApp</button>
 </section>
 
 <footer>
-  <p>RSG Ventas</p>
-  <p>Gracias por elegirnos</p>
+<p>RSG Ventas</p>
+<p>Gracias por elegirnos</p>
 </footer>
 
 <script>
+const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
+const NUMERO_WHATSAPP="";
+let carrito=[];
+let productosDisponibles=[];
+let categoriaActiva="";
+const PORCENTAJE_SERVICIO=0.10;
 
-// ==================================
-// CONEXIÓN CON GOOGLE SHEETS
-// ==================================
-
-const URL_PRODUCTOS = "https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
-
-// ==================================
-// CONFIGURACIÓN DE WHATSAPP
-// ==================================
-
-// Colocar el número con código de país y área.
-// Sin espacios, sin + y sin guiones.
-
-const NUMERO_WHATSAPP = "";
-
-// ==================================
-// CONFIGURACIÓN GENERAL
-// ==================================
-
-let carrito = [];
-let productosDisponibles = [];
-let categoriaActiva = "";
-
-const PORCENTAJE_SERVICIO = 0.10;
-
-// ==================================
-// FORMATO DE PRECIOS
-// ==================================
-
-function formatoPrecio(numero) {
-  return "$" + Number(numero).toLocaleString("es-AR", {
-    maximumFractionDigits: 2
-  });
+function formatoPrecio(numero){
+return "$"+Number(numero).toLocaleString("es-AR",{maximumFractionDigits:2});
 }
 
-// ==================================
-// CONVERTIR PRECIO A NÚMERO
-// ==================================
-
-function convertirPrecio(valor) {
-  if (typeof valor === "number") return valor;
-
-  let texto = String(valor || "")
-    .replace(/[^\d,.-]/g, "")
-    .trim();
-
-  if (texto.includes(",")) {
-    texto = texto.replace(/\./g, "").replace(",", ".");
-  }
-
-  const numero = Number(texto);
-  return Number.isFinite(numero) ? numero : 0;
+function convertirPrecio(valor){
+if(typeof valor==="number")return valor;
+let texto=String(valor||"").replace(/[^\d,.-]/g,"").trim();
+if(texto.includes(","))texto=texto.replace(/\./g,"").replace(",",".");
+const numero=Number(texto);
+return Number.isFinite(numero)?numero:0;
 }
 
-// ==================================
-// OBTENER CATEGORÍA
-// ==================================
-
-function obtenerCategoria(producto) {
-  const categoria = String(
-    producto.categoria || producto.Categoria || ""
-  ).toLowerCase();
-
-  if (categoria) return categoria;
-
-  const texto = (
-    String(producto.nombre || producto.Nombre || "") + " " +
-    String(producto.descripcion || producto.Descripcion || "")
-  ).toLowerCase();
-
-  if (texto.includes("llavero")) return "llaveros";
-
-  if (
-    texto.includes("medalla") ||
-    texto.includes("rosario") ||
-    texto.includes("papa") ||
-    texto.includes("estampita") ||
-    texto.includes("relig")
-  ) {
-    return "religiosos";
-  }
-
-  return "recuerdos";
+function obtenerCategoria(producto){
+const categoria=String(producto.categoria||producto.Categoria||"").toLowerCase();
+if(categoria)return categoria;
+const texto=(String(producto.nombre||producto.Nombre||"")+" "+String(producto.descripcion||producto.Descripcion||producto["Descripción"]||"")).toLowerCase();
+if(texto.includes("llavero"))return "llaveros";
+if(["medalla","rosario","papa","estampita","relig"].some(x=>texto.includes(x)))return "religiosos";
+return "recuerdos";
 }
 
-// ==================================
-// NORMALIZAR PRODUCTOS
-// ==================================
-
-function normalizarProducto(producto) {
-  const nombre =
-    producto.nombre ||
-    producto.Nombre ||
-    producto.producto ||
-    producto.Producto ||
-    "";
-
-  const precio = convertirPrecio(
-    producto.precio || producto.Precio || 0
-  );
-
-  const descripcion =
-    producto.descripcion ||
-    producto.Descripcion ||
-    producto.descripción ||
-    producto["Descripción"] ||
-    "";
-
-  const foto =
-    producto.foto ||
-    producto.Foto ||
-    producto.imagen ||
-    producto.Imagen ||
-    "";
-
-  return {
-    nombre: String(nombre).trim(),
-    precio: precio,
-    descripcion: String(descripcion),
-    foto: String(foto).trim(),
-    categoria: obtenerCategoria(producto)
-  };
+function normalizarProducto(producto){
+const nombre=producto.nombre||producto.Nombre||producto.producto||producto.Producto||"";
+const precio=convertirPrecio(producto.precio||producto.Precio||0);
+const descripcion=producto.descripcion||producto.Descripcion||producto.descripción||producto["Descripción"]||"";
+const foto=producto.foto||producto.Foto||producto.imagen||producto.Imagen||"";
+return {nombre:String(nombre).trim(),precio,descripcion:String(descripcion).trim(),foto:String(foto).trim(),categoria:obtenerCategoria(producto)};
 }
 
-// ==================================
-// CARGAR PRODUCTOS DESDE GOOGLE SHEETS
-// ==================================
-
-async function cargarProductos() {
-  const contenedor = document.getElementById("productos");
-
-  contenedor.innerHTML =
-    '<p class="mensaje-carga">Cargando productos...</p>';
-
-  try {
-    const respuesta = await fetch(URL_PRODUCTOS, {
-      method: "GET",
-      cache: "no-store"
-    });
-
-    if (!respuesta.ok) {
-      throw new Error("No se pudo conectar con Google Sheets.");
-    }
-
-    const datos = await respuesta.json();
-
-    let lista = [];
-
-    if (Array.isArray(datos)) {
-      lista = datos;
-    } else if (datos && Array.isArray(datos.productos)) {
-      lista = datos.productos;
-    } else if (datos && Array.isArray(datos.data)) {
-      lista = datos.data;
-    } else if (datos && Array.isArray(datos.rows)) {
-      lista = datos.rows;
-    } else {
-      throw new Error("El formato de productos no es válido.");
-    }
-
-    productosDisponibles = lista
-      .map(normalizarProducto)
-      .filter(producto => producto.nombre && producto.precio > 0);
-
-    if (productosDisponibles.length === 0) {
-      contenedor.innerHTML =
-        '<p class="mensaje-carga">Todavía no hay productos disponibles.</p>';
-      return;
-    }
-
-    aplicarFiltros();
-
-  } catch (error) {
-    console.error("Error al cargar productos:", error);
-
-    contenedor.innerHTML =
-      '<p class="mensaje-carga">No se pudieron cargar los productos. Revisar la conexión con Google Sheets.</p>';
-  }
+function prepararFoto(enlace){
+enlace=String(enlace||"").trim();
+if(!enlace)return "";
+let coincidencia=enlace.match(/\/file\/d\/([^/?]+)/);
+if(!coincidencia)coincidencia=enlace.match(/[?&]id=([^&]+)/);
+if(coincidencia&&enlace.includes("drive.google.com")){
+return "https://drive.google.com/thumbnail?id="+coincidencia[1]+"&sz=w1000";
+}
+return enlace;
 }
 
-// ==================================
-// MOSTRAR PRODUCTOS
-// ==================================
+async function cargarProductos(){
+const contenedor=document.getElementById("productos");
+contenedor.innerHTML='<p class="mensaje-carga">Cargando productos...</p>';
+try{
+const respuesta=await fetch(URL_PRODUCTOS+"?t="+Date.now(),{cache:"no-store"});
+if(!respuesta.ok)throw new Error("Error de conexión: "+respuesta.status);
+const datos=await respuesta.json();
+let lista=[];
+if(Array.isArray(datos))lista=datos;
+else if(Array.isArray(datos.productos))lista=datos.productos;
+else if(Array.isArray(datos.data))lista=datos.data;
+else if(Array.isArray(datos.rows))lista=datos.rows;
+else throw new Error(datos.error||"Formato de datos incorrecto");
+productosDisponibles=lista.map(normalizarProducto).filter(p=>p.nombre&&p.precio>0);
+if(productosDisponibles.length===0){
+contenedor.innerHTML='<p class="mensaje-carga">No hay productos disponibles.</p>';
+return;
+}
+aplicarFiltros();
+}catch(error){
+console.error("Error al cargar productos:",error);
+contenedor.innerHTML='<p class="mensaje-carga">No se pudieron cargar los productos. Revisar Google Sheets y Apps Script.</p>';
+}
+}
 
-lista.forEach(function(producto) {
-  const tarjeta = document.createElement("article");
-  tarjeta.className = "producto";
-
-  if (producto.foto) {
-    const imagen = document.createElement("img");
-
-    let enlaceFoto = producto.foto.trim();
-
-    if (enlaceFoto.includes("drive.google.com/file/d/")) {
-      const idFoto = enlaceFoto.split("/d/")[1].split("/")[0];
-
-      enlaceFoto =
-        "https://drive.google.com/thumbnail?id=" +
-        idFoto + "&sz=w1000";
-    }
-
-    imagen.src = enlaceFoto;
-    imagen.alt = producto.nombre;
-    imagen.style.width = "100%";
-    imagen.style.height = "200px";
-    imagen.style.objectFit = "contain";
-
-    imagen.onerror = function() {
-      const reemplazo = document.createElement("div");
-      reemplazo.className = "sin-foto";
-      reemplazo.textContent = "Imagen no disponible";
-      imagen.replaceWith(reemplazo);
-    };
-
-    tarjeta.appendChild(imagen);
-
-  } else {
-    const sinFoto = document.createElement("div");
-    sinFoto.className = "sin-foto";
-    sinFoto.textContent = "Sin fotografía";
-    tarjeta.appendChild(sinFoto);
-  }
-
-  const titulo = document.createElement("h3");
-  titulo.textContent = producto.nombre;
-  tarjeta.appendChild(titulo);
-
-  if (producto.descripcion) {
-    const descripcion = document.createElement("p");
-    descripcion.className = "descripcion";
-    descripcion.textContent = producto.descripcion;
-    tarjeta.appendChild(descripcion);
-  }
-
-  const precio = document.createElement("div");
-  precio.className = "precio";
-  precio.textContent = formatoPrecio(producto.precio);
-  tarjeta.appendChild(precio);
-
-  const boton = document.createElement("button");
-  boton.className = "boton-agregar";
-  boton.textContent = "Agregar al carrito";
-
-  boton.addEventListener("click", function() {
-    agregarCarrito(producto.nombre, producto.precio);
-  });
-
-  tarjeta.appendChild(boton);
-  contenedor.appendChild(tarjeta);
+function mostrarProductos(lista){
+const contenedor=document.getElementById("productos");
+contenedor.replaceChildren();
+if(lista.length===0){
+contenedor.innerHTML='<p class="mensaje-carga">No se encontraron productos.</p>';
+return;
+}
+lista.forEach(function(producto){
+const tarjeta=document.createElement("article");
+tarjeta.className="producto";
+if(producto.foto){
+const imagen=document.createElement("img");
+imagen.src=prepararFoto(producto.foto);
+imagen.alt=producto.nombre;
+imagen.loading="lazy";
+imagen.onerror=function(){
+const reemplazo=document.createElement("div");
+reemplazo.className="sin-foto";
+reemplazo.textContent="Imagen no disponible";
+imagen.replaceWith(reemplazo);
+};
+tarjeta.appendChild(imagen);
+}else{
+const sinFoto=document.createElement("div");
+sinFoto.className="sin-foto";
+sinFoto.textContent="Sin fotografía";
+tarjeta.appendChild(sinFoto);
+}
+const titulo=document.createElement("h3");
+titulo.textContent=producto.nombre;
+tarjeta.appendChild(titulo);
+if(producto.descripcion){
+const descripcion=document.createElement("p");
+descripcion.className="descripcion";
+descripcion.textContent=producto.descripcion;
+tarjeta.appendChild(descripcion);
+}
+const precio=document.createElement("div");
+precio.className="precio";
+precio.textContent=formatoPrecio(producto.precio);
+tarjeta.appendChild(precio);
+const boton=document.createElement("button");
+boton.className="boton-agregar";
+boton.textContent="Agregar al carrito";
+boton.addEventListener("click",function(){
+agregarCarrito(producto.nombre,producto.precio);
+});
+tarjeta.appendChild(boton);
+contenedor.appendChild(tarjeta);
 });
 }
 
-// ==================================
-// FILTROS Y BUSCADOR
-// ==================================
-
-function aplicarFiltros() {
-  const buscador = document.getElementById("buscador");
-  const texto = buscador.value.toLowerCase().trim();
-
-  const filtrados = productosDisponibles.filter(function(producto) {
-    const coincideTexto =
-      producto.nombre.toLowerCase().includes(texto) ||
-      producto.descripcion.toLowerCase().includes(texto);
-
-    const coincideCategoria =
-      !categoriaActiva ||
-      producto.categoria.includes(categoriaActiva);
-
-    return coincideTexto && coincideCategoria;
-  });
-
-  mostrarProductos(filtrados);
-}
-
-function filtrar(categoria) {
-  categoriaActiva = categoria.toLowerCase();
-  aplicarFiltros();
-}
-
-function mostrarTodos() {
-  categoriaActiva = "";
-  document.getElementById("buscador").value = "";
-  aplicarFiltros();
-}
-
-// ==================================
-// AGREGAR AL CARRITO
-// ==================================
-
-function agregarCarrito(nombre, precio) {
-  carrito.push({
-    nombre: nombre,
-    precio: Number(precio)
-  });
-
-  actualizarCarrito();
-}
-
-// ==================================
-// ELIMINAR PRODUCTO
-// ==================================
-
-function eliminarProducto(indice) {
-  carrito.splice(indice, 1);
-  actualizarCarrito();
-}
-
-// ==================================
-// ACTUALIZAR CARRITO
-// ==================================
-
-function actualizarCarrito() {
-  const lista = document.getElementById("listaCarrito");
-  const carritoVacio = document.getElementById("carritoVacio");
-
-  lista.replaceChildren();
-
-  carritoVacio.style.display =
-    carrito.length === 0 ? "block" : "none";
-
-  let subtotal = 0;
-
-  carrito.forEach(function(producto, indice) {
-    subtotal += producto.precio;
-
-    const item = document.createElement("div");
-    item.className = "item-carrito";
-
-    const detalle = document.createElement("span");
-    detalle.textContent =
-      producto.nombre + " - " + formatoPrecio(producto.precio);
-
-    const boton = document.createElement("button");
-    boton.className = "boton-eliminar";
-    boton.textContent = "Eliminar";
-
-    boton.addEventListener("click", function() {
-      eliminarProducto(indice);
-    });
-
-    item.appendChild(detalle);
-    item.appendChild(boton);
-    lista.appendChild(item);
-  });
-
-  const cargo = subtotal * PORCENTAJE_SERVICIO;
-  const total = subtotal + cargo;
-
-  document.getElementById("cantidadCarrito").textContent =
-    carrito.length;
-
-  document.getElementById("subtotal").textContent =
-    formatoPrecio(subtotal);
-
-  document.getElementById("cargo").textContent =
-    formatoPrecio(cargo);
-
-  document.getElementById("total").textContent =
-    formatoPrecio(total);
-}
-
-// ==================================
-// ENVIAR PEDIDO POR WHATSAPP
-// ==================================
-
-function enviarWhatsApp() {
-  if (carrito.length === 0) {
-    alert("Primero agregá productos al carrito.");
-    return;
-  }
-
-  if (!NUMERO_WHATSAPP) {
-    alert("Falta configurar el número de WhatsApp de RSG Ventas.");
-    return;
-  }
-
-  let subtotal = 0;
-  let mensaje = "Hola, quiero realizar este pedido:\n\n";
-
-  carrito.forEach(function(producto) {
-    subtotal += producto.precio;
-
-    mensaje +=
-      producto.nombre + " - " +
-      formatoPrecio(producto.precio) + "\n";
-  });
-
-  const cargo = subtotal * PORCENTAJE_SERVICIO;
-  const total = subtotal + cargo;
-
-  mensaje += "\nSubtotal: " + formatoPrecio(subtotal);
-  mensaje += "\nCargo de servicio (10%): " + formatoPrecio(cargo);
-  mensaje += "\nTOTAL: " + formatoPrecio(total);
-
-  const enlace =
-    "https://wa.me/" +
-    NUMERO_WHATSAPP +
-    "?text=" +
-    encodeURIComponent(mensaje);
-
-  window.open(enlace, "_blank");
-}
-
-// ==================================
-// INICIAR LA PÁGINA
-// ==================================
-
-document.addEventListener("DOMContentLoaded", function() {
-  cargarProductos();
-  actualizarCarrito();
+function aplicarFiltros(){
+const texto=document.getElementById("buscador").value.toLowerCase().trim();
+const filtrados=productosDisponibles.filter(function(producto){
+const coincideTexto=producto.nombre.toLowerCase().includes(texto)||producto.descripcion.toLowerCase().includes(texto);
+const coincideCategoria=!categoriaActiva||producto.categoria.includes(categoriaActiva);
+return coincideTexto&&coincideCategoria;
 });
+mostrarProductos(filtrados);
+}
 
+function filtrar(categoria){
+categoriaActiva=categoria.toLowerCase();
+aplicarFiltros();
+}
+
+function mostrarTodos(){
+categoriaActiva="";
+document.getElementById("buscador").value="";
+aplicarFiltros();
+}
+
+function agregarCarrito(nombre,precio){
+carrito.push({nombre,precio:Number(precio)});
+actualizarCarrito();
+}
+
+function eliminarProducto(indice){
+carrito.splice(indice,1);
+actualizarCarrito();
+}
+
+function actualizarCarrito(){
+const lista=document.getElementById("listaCarrito");
+const carritoVacio=document.getElementById("carritoVacio");
+lista.replaceChildren();
+carritoVacio.style.display=carrito.length===0?"block":"none";
+let subtotal=0;
+carrito.forEach(function(producto,indice){
+subtotal+=producto.precio;
+const item=document.createElement("div");
+item.className="item-carrito";
+const detalle=document.createElement("span");
+detalle.textContent=producto.nombre+" - "+formatoPrecio(producto.precio);
+const boton=document.createElement("button");
+boton.className="boton-eliminar";
+boton.textContent="Eliminar";
+boton.addEventListener("click",function(){eliminarProducto(indice);});
+item.appendChild(detalle);
+item.appendChild(boton);
+lista.appendChild(item);
+});
+const cargo=subtotal*PORCENTAJE_SERVICIO;
+document.getElementById("cantidadCarrito").textContent=carrito.length;
+document.getElementById("subtotal").textContent=formatoPrecio(subtotal);
+document.getElementById("cargo").textContent=formatoPrecio(cargo);
+document.getElementById("total").textContent=formatoPrecio(subtotal+cargo);
+}
+
+function enviarWhatsApp(){
+if(carrito.length===0){
+alert("Primero agregá productos al carrito.");
+return;
+}
+if(!NUMERO_WHATSAPP){
+alert("Falta configurar el número de WhatsApp de RSG Ventas.");
+return;
+}
+let subtotal=0;
+let mensaje="Hola, quiero realizar este pedido:\n\n";
+carrito.forEach(function(producto){
+subtotal+=producto.precio;
+mensaje+=producto.nombre+" - "+formatoPrecio(producto.precio)+"\n";
+});
+const cargo=subtotal*PORCENTAJE_SERVICIO;
+mensaje+="\nSubtotal: "+formatoPrecio(subtotal);
+mensaje+="\nCargo de servicio (10%): "+formatoPrecio(cargo);
+mensaje+="\nTOTAL: "+formatoPrecio(subtotal+cargo);
+window.open("https://wa.me/"+NUMERO_WHATSAPP+"?text="+encodeURIComponent(mensaje),"_blank");
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+actualizarCarrito();
+cargarProductos();
+});
 </script>
 
 </body>
