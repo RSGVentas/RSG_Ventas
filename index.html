@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RSG Ventas</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
@@ -35,6 +36,7 @@ button{cursor:pointer;border:none;border-radius:7px;padding:10px 14px;font-size:
 footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:25px}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -59,12 +61,14 @@ footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:
 <h2>🛒 Tu carrito</h2>
 <p id="carritoVacio">Todavía no agregaste productos.</p>
 <div id="listaCarrito"></div>
+
 <div class="resumen">
 <div>Productos: <strong id="cantidadCarrito">0</strong></div>
 <div>Subtotal: <strong id="subtotal">$0</strong></div>
 <div>Cargo de servicio (10%): <strong id="cargo">$0</strong></div>
 <div class="total">Total: <span id="total">$0</span></div>
 </div>
+
 <p class="aviso">El cargo de servicio se calcula sobre el subtotal.</p>
 <button class="boton-whatsapp" onclick="enviarWhatsApp()">📲 Enviar pedido por WhatsApp</button>
 </section>
@@ -75,8 +79,11 @@ footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:
 </footer>
 
 <script>
+
 const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
+
 const NUMERO_WHATSAPP="";
+
 let carrito=[];
 let productosDisponibles=[];
 let categoriaActiva="";
@@ -97,7 +104,9 @@ return Number.isFinite(numero)?numero:0;
 function obtenerCategoria(producto){
 const categoria=String(producto.categoria||producto.Categoria||"").toLowerCase();
 if(categoria)return categoria;
+
 const texto=(String(producto.nombre||producto.Nombre||"")+" "+String(producto.descripcion||producto.Descripcion||producto["Descripción"]||"")).toLowerCase();
+
 if(texto.includes("llavero"))return "llaveros";
 if(["medalla","rosario","papa","estampita","relig"].some(x=>texto.includes(x)))return "religiosos";
 return "recuerdos";
@@ -108,39 +117,58 @@ const nombre=producto.nombre||producto.Nombre||producto.producto||producto.Produ
 const precio=convertirPrecio(producto.precio||producto.Precio||0);
 const descripcion=producto.descripcion||producto.Descripcion||producto.descripción||producto["Descripción"]||"";
 const foto=producto.foto||producto.Foto||producto.imagen||producto.Imagen||"";
-return {nombre:String(nombre).trim(),precio,descripcion:String(descripcion).trim(),foto:String(foto).trim(),categoria:obtenerCategoria(producto)};
+
+return {
+nombre:String(nombre).trim(),
+precio,
+descripcion:String(descripcion).trim(),
+foto:String(foto).trim(),
+categoria:obtenerCategoria(producto)
+};
 }
 
 function prepararFoto(enlace){
 enlace=String(enlace||"").trim();
 if(!enlace)return "";
+
 let coincidencia=enlace.match(/\/file\/d\/([^/?]+)/);
 if(!coincidencia)coincidencia=enlace.match(/[?&]id=([^&]+)/);
+
 if(coincidencia&&enlace.includes("drive.google.com")){
 return "https://drive.google.com/thumbnail?id="+coincidencia[1]+"&sz=w1000";
 }
+
 return enlace;
 }
 
 async function cargarProductos(){
 const contenedor=document.getElementById("productos");
 contenedor.innerHTML='<p class="mensaje-carga">Cargando productos...</p>';
+
 try{
 const respuesta=await fetch(URL_PRODUCTOS+"?t="+Date.now(),{cache:"no-store"});
+
 if(!respuesta.ok)throw new Error("Error de conexión: "+respuesta.status);
+
 const datos=await respuesta.json();
+
 let lista=[];
+
 if(Array.isArray(datos))lista=datos;
 else if(Array.isArray(datos.productos))lista=datos.productos;
 else if(Array.isArray(datos.data))lista=datos.data;
 else if(Array.isArray(datos.rows))lista=datos.rows;
 else throw new Error(datos.error||"Formato de datos incorrecto");
+
 productosDisponibles=lista.map(normalizarProducto).filter(p=>p.nombre&&p.precio>0);
+
 if(productosDisponibles.length===0){
 contenedor.innerHTML='<p class="mensaje-carga">No hay productos disponibles.</p>';
 return;
 }
+
 aplicarFiltros();
+
 }catch(error){
 console.error("Error al cargar productos:",error);
 contenedor.innerHTML='<p class="mensaje-carga">No se pudieron cargar los productos. Revisar Google Sheets y Apps Script.</p>';
@@ -150,50 +178,62 @@ contenedor.innerHTML='<p class="mensaje-carga">No se pudieron cargar los product
 function mostrarProductos(lista){
 const contenedor=document.getElementById("productos");
 contenedor.replaceChildren();
+
 if(lista.length===0){
 contenedor.innerHTML='<p class="mensaje-carga">No se encontraron productos.</p>';
 return;
 }
+
 lista.forEach(function(producto){
 const tarjeta=document.createElement("article");
 tarjeta.className="producto";
+
 if(producto.foto){
 const imagen=document.createElement("img");
 imagen.src=prepararFoto(producto.foto);
 imagen.alt=producto.nombre;
 imagen.loading="lazy";
+
 imagen.onerror=function(){
 const reemplazo=document.createElement("div");
 reemplazo.className="sin-foto";
 reemplazo.textContent="Imagen no disponible";
 imagen.replaceWith(reemplazo);
 };
+
 tarjeta.appendChild(imagen);
+
 }else{
 const sinFoto=document.createElement("div");
 sinFoto.className="sin-foto";
 sinFoto.textContent="Sin fotografía";
 tarjeta.appendChild(sinFoto);
 }
+
 const titulo=document.createElement("h3");
 titulo.textContent=producto.nombre;
 tarjeta.appendChild(titulo);
+
 if(producto.descripcion){
 const descripcion=document.createElement("p");
 descripcion.className="descripcion";
 descripcion.textContent=producto.descripcion;
 tarjeta.appendChild(descripcion);
 }
+
 const precio=document.createElement("div");
 precio.className="precio";
 precio.textContent=formatoPrecio(producto.precio);
 tarjeta.appendChild(precio);
+
 const boton=document.createElement("button");
 boton.className="boton-agregar";
 boton.textContent="Agregar al carrito";
+
 boton.addEventListener("click",function(){
 agregarCarrito(producto.nombre,producto.precio);
 });
+
 tarjeta.appendChild(boton);
 contenedor.appendChild(tarjeta);
 });
@@ -201,11 +241,13 @@ contenedor.appendChild(tarjeta);
 
 function aplicarFiltros(){
 const texto=document.getElementById("buscador").value.toLowerCase().trim();
+
 const filtrados=productosDisponibles.filter(function(producto){
 const coincideTexto=producto.nombre.toLowerCase().includes(texto)||producto.descripcion.toLowerCase().includes(texto);
 const coincideCategoria=!categoriaActiva||producto.categoria.includes(categoriaActiva);
 return coincideTexto&&coincideCategoria;
 });
+
 mostrarProductos(filtrados);
 }
 
@@ -233,24 +275,33 @@ actualizarCarrito();
 function actualizarCarrito(){
 const lista=document.getElementById("listaCarrito");
 const carritoVacio=document.getElementById("carritoVacio");
+
 lista.replaceChildren();
 carritoVacio.style.display=carrito.length===0?"block":"none";
+
 let subtotal=0;
+
 carrito.forEach(function(producto,indice){
 subtotal+=producto.precio;
+
 const item=document.createElement("div");
 item.className="item-carrito";
+
 const detalle=document.createElement("span");
 detalle.textContent=producto.nombre+" - "+formatoPrecio(producto.precio);
+
 const boton=document.createElement("button");
 boton.className="boton-eliminar";
 boton.textContent="Eliminar";
 boton.addEventListener("click",function(){eliminarProducto(indice);});
+
 item.appendChild(detalle);
 item.appendChild(boton);
 lista.appendChild(item);
 });
+
 const cargo=subtotal*PORCENTAJE_SERVICIO;
+
 document.getElementById("cantidadCarrito").textContent=carrito.length;
 document.getElementById("subtotal").textContent=formatoPrecio(subtotal);
 document.getElementById("cargo").textContent=formatoPrecio(cargo);
@@ -262,20 +313,26 @@ if(carrito.length===0){
 alert("Primero agregá productos al carrito.");
 return;
 }
+
 if(!NUMERO_WHATSAPP){
 alert("Falta configurar el número de WhatsApp de RSG Ventas.");
 return;
 }
+
 let subtotal=0;
 let mensaje="Hola, quiero realizar este pedido:\n\n";
+
 carrito.forEach(function(producto){
 subtotal+=producto.precio;
 mensaje+=producto.nombre+" - "+formatoPrecio(producto.precio)+"\n";
 });
+
 const cargo=subtotal*PORCENTAJE_SERVICIO;
+
 mensaje+="\nSubtotal: "+formatoPrecio(subtotal);
 mensaje+="\nCargo de servicio (10%): "+formatoPrecio(cargo);
 mensaje+="\nTOTAL: "+formatoPrecio(subtotal+cargo);
+
 window.open("https://wa.me/"+NUMERO_WHATSAPP+"?text="+encodeURIComponent(mensaje),"_blank");
 }
 
@@ -283,7 +340,7 @@ document.addEventListener("DOMContentLoaded",function(){
 actualizarCarrito();
 cargarProductos();
 });
-</script>
 
+</script>
 </body>
 </html>
