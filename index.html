@@ -6,9 +6,7 @@
   <title>RSG Ventas</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -24,13 +22,8 @@
       padding: 22px 12px;
     }
 
-    header h1 {
-      margin: 0 0 8px;
-    }
-
-    header p {
-      margin: 0;
-    }
+    header h1 { margin: 0 0 8px; }
+    header p { margin: 0; }
 
     .buscador {
       display: block;
@@ -200,273 +193,245 @@
 
 <body>
 
-  <header>
-    <h1>🛒 RSG Ventas</h1>
-    <p>Productos y recuerdos</p>
-  </header>
+<header>
+  <h1>🛒 RSG Ventas</h1>
+  <p>Productos y recuerdos</p>
+</header>
 
-  <input
-    class="buscador"
-    id="buscador"
-    type="search"
-    placeholder="¿Qué estás buscando?"
-    oninput="aplicarFiltros()"
-  >
+<input
+  class="buscador"
+  id="buscador"
+  type="search"
+  placeholder="¿Qué estás buscando?"
+  oninput="aplicarFiltros()"
+>
 
-  <div class="filtros">
-    <button onclick="mostrarTodos()">Todos</button>
-    <button onclick="filtrar('Religiosos')">Religiosos</button>
-    <button onclick="filtrar('Llaveros')">Llaveros</button>
-    <button onclick="filtrar('Recuerdos')">Recuerdos</button>
+<div class="filtros">
+  <button onclick="mostrarTodos()">Todos</button>
+  <button onclick="filtrar('Religiosos')">Religiosos</button>
+  <button onclick="filtrar('Llaveros')">Llaveros</button>
+  <button onclick="filtrar('Recuerdos')">Recuerdos</button>
+</div>
+
+<main class="productos" id="productos">
+  <p class="mensaje-carga">Cargando productos...</p>
+</main>
+
+<section class="carrito" id="carrito">
+  <h2>🛒 Tu carrito</h2>
+
+  <p id="carritoVacio">Todavía no agregaste productos.</p>
+
+  <div id="listaCarrito"></div>
+
+  <div class="resumen">
+    <div>Productos: <strong id="cantidadCarrito">0</strong></div>
+    <div>Subtotal: <strong id="subtotal">$0</strong></div>
+    <div>Cargo de servicio (10%): <strong id="cargo">$0</strong></div>
+    <div class="total">Total: <span id="total">$0</span></div>
   </div>
 
-  <main class="productos" id="productos">
-    <p class="mensaje-carga">Cargando productos...</p>
-  </main>
+  <p class="aviso">
+    El cargo de servicio se calcula sobre el subtotal de los productos.
+  </p>
 
-  <section class="carrito" id="carrito">
+  <button class="boton-whatsapp" onclick="enviarWhatsApp()">
+    📲 Enviar pedido por WhatsApp
+  </button>
+</section>
 
-    <h2>🛒 Tu carrito</h2>
+<footer>
+  <p>RSG Ventas</p>
+  <p>Gracias por elegirnos</p>
+</footer>
 
-    <p id="carritoVacio">
-      Todavía no agregaste productos.
-    </p>
+<script>
 
-    <div id="listaCarrito"></div>
+// ==================================
+// CONEXIÓN CON GOOGLE SHEETS
+// ==================================
 
-    <div class="resumen">
+const URL_PRODUCTOS = "https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
 
-      <div>
-        Productos:
-        <strong id="cantidadCarrito">0</strong>
-      </div>
+// ==================================
+// CONFIGURACIÓN DE WHATSAPP
+// ==================================
 
-      <div>
-        Subtotal:
-        <strong id="subtotal">$0</strong>
-      </div>
+// Colocar el número con código de país y área.
+// Sin espacios, sin + y sin guiones.
 
-      <div>
-        Cargo de servicio (10%):
-        <strong id="cargo">$0</strong>
-      </div>
+const NUMERO_WHATSAPP = "";
 
-      <div class="total">
-        Total:
-        <span id="total">$0</span>
-      </div>
+// ==================================
+// CONFIGURACIÓN GENERAL
+// ==================================
 
-    </div>
+let carrito = [];
+let productosDisponibles = [];
+let categoriaActiva = "";
 
-    <p class="aviso">
-      El cargo de servicio se calcula sobre el subtotal de los productos.
-    </p>
+const PORCENTAJE_SERVICIO = 0.10;
 
-    <button
-      class="boton-whatsapp"
-      onclick="enviarWhatsApp()"
-    >
-      📲 Enviar pedido por WhatsApp
-    </button>
+// ==================================
+// FORMATO DE PRECIOS
+// ==================================
 
-  </section>
+function formatoPrecio(numero) {
+  return "$" + Number(numero).toLocaleString("es-AR", {
+    maximumFractionDigits: 2
+  });
+}
 
-  <footer>
-    <p>RSG Ventas</p>
-    <p>Gracias por elegirnos</p>
-  </footer>
+// ==================================
+// CONVERTIR PRECIO A NÚMERO
+// ==================================
 
-  <script>
+function convertirPrecio(valor) {
+  if (typeof valor === "number") return valor;
 
-    // CONEXIÓN CON GOOGLE SHEETS
+  let texto = String(valor || "")
+    .replace(/[^\d,.-]/g, "")
+    .trim();
 
-    
-    
-const URL_PRODUCTOS = 
-"https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
-    // CONFIGURACIÓN DE WHATSAPP
-    // Colocar el número con código de país y área,
-    // sin espacios, sin + y sin guiones.
+  if (texto.includes(",")) {
+    texto = texto.replace(/\./g, "").replace(",", ".");
+  }
 
-    const NUMERO_WHATSAPP = "";
+  const numero = Number(texto);
+  return Number.isFinite(numero) ? numero : 0;
+}
 
+// ==================================
+// OBTENER CATEGORÍA
+// ==================================
 
-    // CONFIGURACIÓN DEL CARRITO
+function obtenerCategoria(producto) {
+  const categoria = String(
+    producto.categoria || producto.Categoria || ""
+  ).toLowerCase();
 
-    let carrito = [];
-    let productosDisponibles = [];
-    let categoriaActiva = "";
+  if (categoria) return categoria;
 
-    const PORCENTAJE_SERVICIO = 0.10;
+  const texto = (
+    String(producto.nombre || producto.Nombre || "") + " " +
+    String(producto.descripcion || producto.Descripcion || "")
+  ).toLowerCase();
 
+  if (texto.includes("llavero")) return "llaveros";
 
-    // FORMATO DE PRECIOS
+  if (
+    texto.includes("medalla") ||
+    texto.includes("rosario") ||
+    texto.includes("papa") ||
+    texto.includes("estampita") ||
+    texto.includes("relig")
+  ) {
+    return "religiosos";
+  }
 
-    function formatoPrecio(numero) {
-      return "$" + Number(numero).toLocaleString("es-AR", {
-        maximumFractionDigits: 2
-      });
+  return "recuerdos";
+}
+
+// ==================================
+// NORMALIZAR PRODUCTOS
+// ==================================
+
+function normalizarProducto(producto) {
+  const nombre =
+    producto.nombre ||
+    producto.Nombre ||
+    producto.producto ||
+    producto.Producto ||
+    "";
+
+  const precio = convertirPrecio(
+    producto.precio || producto.Precio || 0
+  );
+
+  const descripcion =
+    producto.descripcion ||
+    producto.Descripcion ||
+    producto.descripción ||
+    producto["Descripción"] ||
+    "";
+
+  const foto =
+    producto.foto ||
+    producto.Foto ||
+    producto.imagen ||
+    producto.Imagen ||
+    "";
+
+  return {
+    nombre: String(nombre).trim(),
+    precio: precio,
+    descripcion: String(descripcion),
+    foto: String(foto).trim(),
+    categoria: obtenerCategoria(producto)
+  };
+}
+
+// ==================================
+// CARGAR PRODUCTOS DESDE GOOGLE SHEETS
+// ==================================
+
+async function cargarProductos() {
+  const contenedor = document.getElementById("productos");
+
+  contenedor.innerHTML =
+    '<p class="mensaje-carga">Cargando productos...</p>';
+
+  try {
+    const respuesta = await fetch(URL_PRODUCTOS, {
+      method: "GET",
+      cache: "no-store"
+    });
+
+    if (!respuesta.ok) {
+      throw new Error("No se pudo conectar con Google Sheets.");
     }
 
+    const datos = await respuesta.json();
 
-    // CONVERTIR PRECIO A NÚMERO
+    let lista = [];
 
-    function convertirPrecio(valor) {
-
-      if (typeof valor === "number") {
-        return valor;
-      }
-
-      let texto = String(valor || "")
-        .replace(/[^\d,.-]/g, "")
-        .trim();
-
-      if (texto.includes(",")) {
-        texto = texto
-          .replace(/\./g, "")
-          .replace(",", ".");
-      }
-
-      const numero = Number(texto);
-
-      return Number.isFinite(numero) ? numero : 0;
+    if (Array.isArray(datos)) {
+      lista = datos;
+    } else if (datos && Array.isArray(datos.productos)) {
+      lista = datos.productos;
+    } else if (datos && Array.isArray(datos.data)) {
+      lista = datos.data;
+    } else if (datos && Array.isArray(datos.rows)) {
+      lista = datos.rows;
+    } else {
+      throw new Error("El formato de productos no es válido.");
     }
 
+    productosDisponibles = lista
+      .map(normalizarProducto)
+      .filter(producto => producto.nombre && producto.precio > 0);
 
-    // OBTENER CATEGORÍA
-
-    function obtenerCategoria(producto) {
-
-      const categoria = String(
-        producto.categoria || producto.Categoria || ""
-      ).toLowerCase();
-
-      if (categoria) {
-        return categoria;
-      }
-
-      const texto = (
-        String(producto.nombre || "") + " " +
-        String(producto.descripcion || "")
-      ).toLowerCase();
-
-      if (texto.includes("llavero")) {
-        return "llaveros";
-      }
-
-      if (
-        texto.includes("medalla") ||
-        texto.includes("rosario") ||
-        texto.includes("papa") ||
-        texto.includes("estampita") ||
-        texto.includes("relig")
-      ) {
-        return "religiosos";
-      }
-
-      return "recuerdos";
+    if (productosDisponibles.length === 0) {
+      contenedor.innerHTML =
+        '<p class="mensaje-carga">Todavía no hay productos disponibles.</p>';
+      return;
     }
 
+    aplicarFiltros();
 
-    // NORMALIZAR PRODUCTOS
+  } catch (error) {
+    console.error("Error al cargar productos:", error);
 
-    function normalizarProducto(producto) {
+    contenedor.innerHTML =
+      '<p class="mensaje-carga">No se pudieron cargar los productos. Revisar la conexión con Google Sheets.</p>';
+  }
+}
 
-      const nombre =
-        producto.nombre ||
-        producto.Nombre ||
-        producto.producto ||
-        producto.Producto ||
-        "";
+// ==================================
+// MOSTRAR PRODUCTOS
+// ==================================
 
-      const precio = convertirPrecio(
-        producto.precio ||
-        producto.Precio ||
-        0
-      );
-
-      const descripcion =
-        producto.descripcion ||
-        producto.Descripcion ||
-        producto.descripción ||
-        "";
-
-      const foto =
-        producto.foto ||
-        producto.Foto ||
-        producto.imagen ||
-        producto.Imagen ||
-        "";
-
-      return {
-        nombre: String(nombre),
-        precio: precio,
-        descripcion: String(descripcion),
-        foto: String(foto),
-        categoria: obtenerCategoria(producto)
-      };
-    }
-
-
-    // CARGAR PRODUCTOS DESDE GOOGLE SHEETS
-
-    async function cargarProductos() {
-
-      const contenedor = document.getElementById("productos");
-
-      try {
-
-        const respuesta = await fetch(URL_PRODUCTOS, {
-          method: "GET",
-          cache: "no-store"
-        });
-
-        if (!respuesta.ok) {
-          throw new Error("No se pudo conectar con Google Sheets.");
-        }
-
-        const datos = await respuesta.json();
-
-        let lista = [];
-
-        if (Array.isArray(datos)) {
-          lista = datos;
-        } else if (datos && Array.isArray(datos.productos)) {
-          lista = datos.productos;
-        } else if (datos && Array.isArray(datos.data)) {
-          lista = datos.data;
-        } else if (datos && Array.isArray(datos.rows)) {
-          lista = datos.rows;
-        } else {
-          throw new Error("El formato de productos recibido no es válido.");
-        }
-
-        productosDisponibles = lista
-          .map(normalizarProducto)
-          .filter(producto => producto.nombre && producto.precio > 0);
-
-        if (productosDisponibles.length === 0) {
-          contenedor.innerHTML =
-            '<p class="mensaje-carga">Todavía no hay productos disponibles.</p>';
-          return;
-        }
-
-        aplicarFiltros();
-
-      } catch (error) {
-
-        console.error("Error al cargar productos:", error);
-
-        contenedor.innerHTML =
-          '<p class="mensaje-carga">No se pudieron cargar los productos. Revisar la conexión con Google Sheets.</p>';
-
-      }
-
-    }
-
-
-   function mostrarProductos(lista) {
-
+function mostrarProductos(lista) {
   const contenedor = document.getElementById("productos");
 
   contenedor.replaceChildren();
@@ -480,19 +445,19 @@ const URL_PRODUCTOS =
   }
 
   lista.forEach(function(producto) {
-
     const tarjeta = document.createElement("article");
     tarjeta.className = "producto";
 
-    if (producto.foto && producto.foto.trim() !== "") {
-
+    if (producto.foto) {
       const imagen = document.createElement("img");
 
       let enlaceFoto = producto.foto.trim();
 
       if (enlaceFoto.includes("drive.google.com/file/d/")) {
         const idFoto = enlaceFoto.split("/d/")[1].split("/")[0];
-        enlaceFoto = "https://drive.google.com/uc?export=view&id=" + idFoto;
+        enlaceFoto =
+          "https://drive.google.com/thumbnail?id=" +
+          idFoto + "&sz=w1000";
       }
 
       imagen.src = enlaceFoto;
@@ -508,12 +473,10 @@ const URL_PRODUCTOS =
       tarjeta.appendChild(imagen);
 
     } else {
-
       const sinFoto = document.createElement("div");
       sinFoto.className = "sin-foto";
       sinFoto.textContent = "Sin fotografía";
       tarjeta.appendChild(sinFoto);
-
     }
 
     const titulo = document.createElement("h3");
@@ -542,6 +505,171 @@ const URL_PRODUCTOS =
 
     tarjeta.appendChild(boton);
     contenedor.appendChild(tarjeta);
-
   });
 }
+
+// ==================================
+// FILTROS Y BUSCADOR
+// ==================================
+
+function aplicarFiltros() {
+  const buscador = document.getElementById("buscador");
+  const texto = buscador.value.toLowerCase().trim();
+
+  const filtrados = productosDisponibles.filter(function(producto) {
+    const coincideTexto =
+      producto.nombre.toLowerCase().includes(texto) ||
+      producto.descripcion.toLowerCase().includes(texto);
+
+    const coincideCategoria =
+      !categoriaActiva ||
+      producto.categoria.includes(categoriaActiva);
+
+    return coincideTexto && coincideCategoria;
+  });
+
+  mostrarProductos(filtrados);
+}
+
+function filtrar(categoria) {
+  categoriaActiva = categoria.toLowerCase();
+  aplicarFiltros();
+}
+
+function mostrarTodos() {
+  categoriaActiva = "";
+  document.getElementById("buscador").value = "";
+  aplicarFiltros();
+}
+
+// ==================================
+// AGREGAR AL CARRITO
+// ==================================
+
+function agregarCarrito(nombre, precio) {
+  carrito.push({
+    nombre: nombre,
+    precio: Number(precio)
+  });
+
+  actualizarCarrito();
+}
+
+// ==================================
+// ELIMINAR PRODUCTO
+// ==================================
+
+function eliminarProducto(indice) {
+  carrito.splice(indice, 1);
+  actualizarCarrito();
+}
+
+// ==================================
+// ACTUALIZAR CARRITO
+// ==================================
+
+function actualizarCarrito() {
+  const lista = document.getElementById("listaCarrito");
+  const carritoVacio = document.getElementById("carritoVacio");
+
+  lista.replaceChildren();
+
+  carritoVacio.style.display =
+    carrito.length === 0 ? "block" : "none";
+
+  let subtotal = 0;
+
+  carrito.forEach(function(producto, indice) {
+    subtotal += producto.precio;
+
+    const item = document.createElement("div");
+    item.className = "item-carrito";
+
+    const detalle = document.createElement("span");
+    detalle.textContent =
+      producto.nombre + " - " + formatoPrecio(producto.precio);
+
+    const boton = document.createElement("button");
+    boton.className = "boton-eliminar";
+    boton.textContent = "Eliminar";
+
+    boton.addEventListener("click", function() {
+      eliminarProducto(indice);
+    });
+
+    item.appendChild(detalle);
+    item.appendChild(boton);
+    lista.appendChild(item);
+  });
+
+  const cargo = subtotal * PORCENTAJE_SERVICIO;
+  const total = subtotal + cargo;
+
+  document.getElementById("cantidadCarrito").textContent =
+    carrito.length;
+
+  document.getElementById("subtotal").textContent =
+    formatoPrecio(subtotal);
+
+  document.getElementById("cargo").textContent =
+    formatoPrecio(cargo);
+
+  document.getElementById("total").textContent =
+    formatoPrecio(total);
+}
+
+// ==================================
+// ENVIAR PEDIDO POR WHATSAPP
+// ==================================
+
+function enviarWhatsApp() {
+  if (carrito.length === 0) {
+    alert("Primero agregá productos al carrito.");
+    return;
+  }
+
+  if (!NUMERO_WHATSAPP) {
+    alert("Falta configurar el número de WhatsApp de RSG Ventas.");
+    return;
+  }
+
+  let subtotal = 0;
+  let mensaje = "Hola, quiero realizar este pedido:\n\n";
+
+  carrito.forEach(function(producto) {
+    subtotal += producto.precio;
+
+    mensaje +=
+      producto.nombre + " - " +
+      formatoPrecio(producto.precio) + "\n";
+  });
+
+  const cargo = subtotal * PORCENTAJE_SERVICIO;
+  const total = subtotal + cargo;
+
+  mensaje += "\nSubtotal: " + formatoPrecio(subtotal);
+  mensaje += "\nCargo de servicio (10%): " + formatoPrecio(cargo);
+  mensaje += "\nTOTAL: " + formatoPrecio(total);
+
+  const enlace =
+    "https://wa.me/" +
+    NUMERO_WHATSAPP +
+    "?text=" +
+    encodeURIComponent(mensaje);
+
+  window.open(enlace, "_blank");
+}
+
+// ==================================
+// INICIAR LA PÁGINA
+// ==================================
+
+document.addEventListener("DOMContentLoaded", function() {
+  cargarProductos();
+  actualizarCarrito();
+});
+
+</script>
+
+</body>
+</html>
