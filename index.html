@@ -431,81 +431,72 @@ async function cargarProductos() {
 // MOSTRAR PRODUCTOS
 // ==================================
 
-function mostrarProductos(lista) {
-  const contenedor = document.getElementById("productos");
+lista.forEach(function(producto) {
+  const tarjeta = document.createElement("article");
+  tarjeta.className = "producto";
 
-  contenedor.replaceChildren();
+  if (producto.foto) {
+    const imagen = document.createElement("img");
 
-  if (lista.length === 0) {
-    const mensaje = document.createElement("p");
-    mensaje.className = "mensaje-carga";
-    mensaje.textContent = "No se encontraron productos.";
-    contenedor.appendChild(mensaje);
-    return;
+    let enlaceFoto = producto.foto.trim();
+
+    if (enlaceFoto.includes("drive.google.com/file/d/")) {
+      const idFoto = enlaceFoto.split("/d/")[1].split("/")[0];
+
+      enlaceFoto =
+        "https://drive.google.com/thumbnail?id=" +
+        idFoto + "&sz=w1000";
+    }
+
+    imagen.src = enlaceFoto;
+    imagen.alt = producto.nombre;
+    imagen.style.width = "100%";
+    imagen.style.height = "200px";
+    imagen.style.objectFit = "contain";
+
+    imagen.onerror = function() {
+      const reemplazo = document.createElement("div");
+      reemplazo.className = "sin-foto";
+      reemplazo.textContent = "Imagen no disponible";
+      imagen.replaceWith(reemplazo);
+    };
+
+    tarjeta.appendChild(imagen);
+
+  } else {
+    const sinFoto = document.createElement("div");
+    sinFoto.className = "sin-foto";
+    sinFoto.textContent = "Sin fotografía";
+    tarjeta.appendChild(sinFoto);
   }
 
-  lista.forEach(function(producto) {
-    const tarjeta = document.createElement("article");
-    tarjeta.className = "producto";
+  const titulo = document.createElement("h3");
+  titulo.textContent = producto.nombre;
+  tarjeta.appendChild(titulo);
 
-    if (producto.foto) {
-      const imagen = document.createElement("img");
+  if (producto.descripcion) {
+    const descripcion = document.createElement("p");
+    descripcion.className = "descripcion";
+    descripcion.textContent = producto.descripcion;
+    tarjeta.appendChild(descripcion);
+  }
 
-      let enlaceFoto = producto.foto.trim();
+  const precio = document.createElement("div");
+  precio.className = "precio";
+  precio.textContent = formatoPrecio(producto.precio);
+  tarjeta.appendChild(precio);
 
-      if (enlaceFoto.includes("drive.google.com/file/d/")) {
-        const idFoto = enlaceFoto.split("/d/")[1].split("/")[0];
-        enlaceFoto =
-          "https://drive.google.com/thumbnail?id=" +
-          idFoto + "&sz=w1000";
-      }
+  const boton = document.createElement("button");
+  boton.className = "boton-agregar";
+  boton.textContent = "Agregar al carrito";
 
-      imagen.src = enlaceFoto;
-      imagen.alt = producto.nombre;
-
-      imagen.onerror = function() {
-        const reemplazo = document.createElement("div");
-        reemplazo.className = "sin-foto";
-        reemplazo.textContent = "Imagen no disponible";
-        imagen.replaceWith(reemplazo);
-      };
-
-      tarjeta.appendChild(imagen);
-
-    } else {
-      const sinFoto = document.createElement("div");
-      sinFoto.className = "sin-foto";
-      sinFoto.textContent = "Sin fotografía";
-      tarjeta.appendChild(sinFoto);
-    }
-
-    const titulo = document.createElement("h3");
-    titulo.textContent = producto.nombre;
-    tarjeta.appendChild(titulo);
-
-    if (producto.descripcion) {
-      const descripcion = document.createElement("p");
-      descripcion.className = "descripcion";
-      descripcion.textContent = producto.descripcion;
-      tarjeta.appendChild(descripcion);
-    }
-
-    const precio = document.createElement("div");
-    precio.className = "precio";
-    precio.textContent = formatoPrecio(producto.precio);
-    tarjeta.appendChild(precio);
-
-    const boton = document.createElement("button");
-    boton.className = "boton-agregar";
-    boton.textContent = "Agregar al carrito";
-
-    boton.addEventListener("click", function() {
-      agregarCarrito(producto.nombre, producto.precio);
-    });
-
-    tarjeta.appendChild(boton);
-    contenedor.appendChild(tarjeta);
+  boton.addEventListener("click", function() {
+    agregarCarrito(producto.nombre, producto.precio);
   });
+
+  tarjeta.appendChild(boton);
+  contenedor.appendChild(tarjeta);
+});
 }
 
 // ==================================
