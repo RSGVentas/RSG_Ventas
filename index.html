@@ -77,7 +77,41 @@ footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:
 <p>RSG Ventas</p>
 <p>Gracias por elegirnos</p>
 </footer>
+<!-- PUBLICAR PRODUCTOS DE COMERCIANTES -->
+<section style="background:#e8f5e9;padding:18px;margin:15px;border-radius:12px;text-align:center;">
+  <h2>🛍️ Publicá tus productos</h2>
+  <p>Sumá tus productos a RSG Ventas.</p>
 
+  <form
+    action="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec"
+    method="POST"
+    target="_blank"
+    style="display:flex;flex-direction:column;gap:10px;max-width:450px;margin:auto;">
+
+    <input name="comercio" placeholder="Nombre de tu comercio" required style="padding:12px;">
+
+    <input name="nombre" placeholder="Nombre del producto" required style="padding:12px;">
+
+    <input name="precio" type="number" placeholder="Precio" required style="padding:12px;">
+
+    <textarea name="descripcion" placeholder="Descripción del producto" style="padding:12px;"></textarea>
+
+    <input name="foto" placeholder="Enlace de la foto del producto" style="padding:12px;">
+
+    <select name="categoria" required style="padding:12px;">
+      <option value="">Elegir categoría</option>
+      <option value="Religiosos">Religiosos</option>
+      <option value="Llaveros">Llaveros</option>
+      <option value="Recuerdos">Recuerdos</option>
+      <option value="Otros">Otros</option>
+    </select>
+
+    <button type="submit"
+      style="background:#168447;color:white;padding:14px;border:0;border-radius:8px;font-size:17px;font-weight:bold;">
+      PUBLICAR PRODUCTO
+    </button>
+  </form>
+</section>
 <script>
 
 const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
