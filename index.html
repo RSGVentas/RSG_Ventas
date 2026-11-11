@@ -33,6 +33,10 @@ button{cursor:pointer;border:none;border-radius:7px;padding:10px 14px;font-size:
 .boton-whatsapp{width:100%;margin-top:12px;padding:14px;background:#20b85a;color:white;font-size:17px;font-weight:bold}
 .aviso{color:#666;font-size:13px}
 .mensaje-carga{text-align:center;padding:20px;color:#555;grid-column:1/-1}
+.publicar{background:#e8f5e9;padding:18px;margin:15px;border-radius:12px;text-align:center}
+.form-publicar{display:flex;flex-direction:column;gap:10px;max-width:450px;margin:auto}
+.form-publicar input,.form-publicar textarea,.form-publicar select{padding:12px;width:100%;border:1px solid #bbb;border-radius:7px;font-size:15px}
+.boton-publicar{background:#168447;color:white;padding:14px;border-radius:8px;font-size:17px;font-weight:bold}
 footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:25px}
 </style>
 </head>
@@ -73,45 +77,49 @@ footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:
 <button class="boton-whatsapp" onclick="enviarWhatsApp()">📲 Enviar pedido por WhatsApp</button>
 </section>
 
-<footer>
+<!-- PUBLICAR PRODUCTOS DE COMERCIANTES -->
+<section class="publicar">
 
+<h2>🛍️ Publicá tus productos</h2>
+<p>Sumá tus productos a RSG Ventas.</p>
+
+<form
+class="form-publicar"
+action="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec"
+method="POST"
+target="_blank">
+
+<input name="comercio" placeholder="Nombre de tu comercio" required>
+
+<input name="nombre" placeholder="Nombre del producto" required>
+
+<input name="precio" type="number" min="1" placeholder="Precio" required>
+
+<textarea name="descripcion" placeholder="Descripción del producto"></textarea>
+
+<input name="foto" placeholder="Enlace de la foto del producto">
+
+<select name="categoria" required>
+<option value="">Elegir categoría</option>
+<option value="Religiosos">Religiosos</option>
+<option value="Llaveros">Llaveros</option>
+<option value="Recuerdos">Recuerdos</option>
+<option value="Otros">Otros</option>
+</select>
+
+<button class="boton-publicar" type="submit">
+PUBLICAR PRODUCTO
+</button>
+
+</form>
+</section>
+
+<!-- PIE DE PÁGINA: AHORA SÍ, AL FINAL -->
+<footer>
+<p>RSG Ventas</p>
 <p>Gracias por elegirnos</p>
 </footer>
-<!-- PUBLICAR PRODUCTOS DE COMERCIANTES -->
-<section style="background:#e8f5e9;padding:18px;margin:15px;border-radius:12px;text-align:center;">
-  <h2>🛍️ Publicá tus productos</h2>
-  <p>Sumá tus productos a RSG Ventas.</p>
 
-  <form
-    action="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec"
-    method="POST"
-    target="_blank"
-    style="display:flex;flex-direction:column;gap:10px;max-width:450px;margin:auto;">
-
-    <input name="comercio" placeholder="Nombre de tu comercio" required style="padding:12px;">
-
-    <input name="nombre" placeholder="Nombre del producto" required style="padding:12px;">
-
-    <input name="precio" type="number" placeholder="Precio" required style="padding:12px;">
-
-    <textarea name="descripcion" placeholder="Descripción del producto" style="padding:12px;"></textarea>
-
-    <input name="foto" placeholder="Enlace de la foto del producto" style="padding:12px;">
-
-    <select name="categoria" required style="padding:12px;">
-      <option value="">Elegir categoría</option>
-      <option value="Religiosos">Religiosos</option>
-      <option value="Llaveros">Llaveros</option>
-      <option value="Recuerdos">Recuerdos</option>
-      <option value="Otros">Otros</option>
-    </select>
-
-    <button type="submit"
-      style="background:#168447;color:white;padding:14px;border:0;border-radius:8px;font-size:17px;font-weight:bold;">
-      PUBLICAR PRODUCTO
-    </button>
-  </form>
-</section>
 <script>
 
 const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
