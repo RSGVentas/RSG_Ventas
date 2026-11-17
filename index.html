@@ -7,435 +7,344 @@
 
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f3f7f0;
-  color:#222;
-}
-header{
-  background:#168447;
-  color:white;
-  text-align:center;
-  padding:22px 12px;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
+header{background:#168447;color:white;text-align:center;padding:22px 12px}
 header h1{margin:0 0 8px;font-size:30px}
 header p{margin:0}
-.contenedor{width:95%;max-width:1100px;margin:20px auto}
-.panel{
-  background:white;
-  padding:18px;
-  border-radius:12px;
-  margin-bottom:22px;
-  box-shadow:0 2px 8px #0002;
-}
-h2{color:#168447}
-input,textarea,select{
-  width:100%;
-  padding:12px;
-  margin:7px 0;
-  border:1px solid #ccc;
-  border-radius:7px;
-  font-size:16px;
-}
-textarea{min-height:75px}
-button{
-  border:0;
-  border-radius:7px;
-  padding:11px 16px;
-  cursor:pointer;
-  font-size:15px;
-  font-weight:bold;
-  background:#168447;
-  color:white;
-}
-#productos{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
-  gap:16px;
-}
-.producto{
-  background:white;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 2px 8px #0002;
-  padding:12px;
-}
-.producto img{
-  width:100%;
-  height:190px;
-  object-fit:contain;
-}
-.producto h3{color:#245b35}
-.precio{
-  font-size:20px;
-  font-weight:bold;
-  color:#168447;
-}
-.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.filtros button{background:#e1e9df;color:#245b35}
-.carrito-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:9px 0;
-  border-bottom:1px solid #ddd;
-}
-.eliminar{background:#c93636}
-.boton-whatsapp{
-  background:#20a653;
-  width:100%;
-  margin-top:10px;
-}
-footer{
-  background:#168447;
-  color:white;
-  text-align:center;
-  padding:18px;
-}
-@media(max-width:500px){
-  #productos{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .producto img{height:145px}
-}
+button{border:0;border-radius:7px;padding:11px 16px;font-size:15px;cursor:pointer}
+.boton-publicar{background:#ffcf33;color:#222;font-weight:bold;margin-top:14px}
+main{max-width:1100px;margin:auto;padding:15px}
+.panel{background:white;padding:16px;border-radius:10px;margin:15px 0;box-shadow:0 2px 7px #00000012}
+#formularioPublicar{display:none}
+input,textarea,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ccc;border-radius:6px;font-size:15px}
+textarea{min-height:75px;resize:vertical}
+.boton-verde{background:#168447;color:white;font-weight:bold}
+.boton-gris{background:#ddd;color:#222}
+.buscador{margin-bottom:12px}
+.filtros{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.filtros button{background:#e2e9e1}
+.filtros button.activo{background:#168447;color:white}
+#productos{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:15px}
+.producto{background:white;border-radius:10px;padding:12px;box-shadow:0 2px 7px #00000015;display:flex;flex-direction:column}
+.producto img{width:100%;height:165px;object-fit:contain;background:#f7f7f7;border-radius:7px}
+.producto h3{font-size:17px;margin:10px 0 5px}
+.producto p{font-size:14px;margin:5px 0 10px;flex:1}
+.precio{font-size:19px;font-weight:bold;color:#168447;margin:8px 0}
+.producto button{background:#168447;color:white;font-weight:bold}
+#carrito ul{padding-left:20px}
+#carrito li{margin:8px 0}
+.total{font-weight:bold;font-size:18px;margin:8px 0}
+.aviso{padding:10px;background:#eef6ed;border-radius:6px;margin:10px 0}
+footer{text-align:center;padding:20px;color:#666;font-size:13px}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>🛒 RSG Ventas</h1>
-  <p>Productos y recuerdos</p>
+<h1>🛒 RSG Ventas</h1>
+<p>Productos y recuerdos</p>
+<button class="boton-publicar" onclick="alternarFormulario()">＋ Publicar como comerciante</button>
 </header>
 
-<div class="contenedor">
-<section class="panel">
-  <h2>📦 Publicá tus productos</h2>
-  <p>Sumá tus productos a RSG Ventas.</p>
+<main>
 
-  <form id="formPublicar">
-    <input type="text" id="comercio" placeholder="Nombre de tu comercio" required>
-    <input type="text" id="nombreProducto" placeholder="Nombre del producto" required>
-    <input type="number" id="precioProducto" placeholder="Precio" required>
-    <textarea id="descripcionProducto" placeholder="Descripción del producto"></textarea>
-    <input type="url" id="fotoProducto" placeholder="Enlace de la foto">
-    <select id="categoriaProducto" required>
-      <option value="">Elegí una categoría</option>
-      <option value="Religiosos">Religiosos</option>
-      <option value="Llaveros">Llaveros</option>
-      <option value="Recuerdos">Recuerdos</option>
-      <option value="Otros">Otros</option>
-    </select>
-    <button type="submit" id="botonPublicar">Publicar producto</button>
-  </form>
+<section class="panel" id="formularioPublicar">
+<h2>Publicá tus productos</h2>
+<p>Sumá tus productos a RSG Ventas.</p>
 
-  <div id="mensajePublicacion"></div>
+<form id="formPublicacion" method="POST" target="respuestaPublicacion">
+<label>Nombre del comercio</label>
+<input name="comercio" required placeholder="Nombre de tu comercio">
+
+<label>Nombre del producto</label>
+<input name="nombre" required placeholder="¿Qué producto ofrecés?">
+
+<label>Precio</label>
+<input name="precio" required type="number" min="1" step="0.01" placeholder="Precio en pesos">
+
+<label>Descripción</label>
+<textarea name="descripcion" placeholder="Descripción del producto"></textarea>
+
+<label>Enlace de la fotografía</label>
+<input name="foto" type="url" placeholder="Pegá el enlace de la foto">
+
+<label>Categoría</label>
+<select name="categoria">
+<option value="Religiosos">Religiosos</option>
+<option value="Llaveros">Llaveros</option>
+<option value="Recuerdos">Recuerdos</option>
+<option value="Otros">Otros</option>
+</select>
+
+<button class="boton-verde" type="submit">Publicar producto</button>
+<button class="boton-gris" type="button" onclick="alternarFormulario()">Cerrar</button>
+</form>
+
+<iframe name="respuestaPublicacion" id="respuestaPublicacion" style="display:none"></iframe>
+<div id="mensajePublicacion" class="aviso" style="display:none"></div>
 </section>
 
 <section class="panel">
-  <h2>🛍️ Nuestros productos</h2>
+<h2>Buscá productos</h2>
+<input class="buscador" id="busqueda" type="search" placeholder="¿Qué estás buscando?" oninput="mostrarProductos()">
 
-  <input type="search" id="buscador" placeholder="¿Qué estás buscando?">
-
-  <div class="filtros">
-    <button onclick="filtrar('Todos')">Todos</button>
-    <button onclick="filtrar('Religiosos')">Religiosos</button>
-    <button onclick="filtrar('Llaveros')">Llaveros</button>
-    <button onclick="filtrar('Recuerdos')">Recuerdos</button>
-  </div>
-
-  <div id="estadoProductos">Cargando productos...</div>
-  <div id="productos"></div>
-</section>
-
-<section class="panel">
-  <h2>🛒 Mi carrito</h2>
-
-  <div id="listaCarrito">Todavía no agregaste productos.</div>
-
-  <hr>
-
-  <p>Subtotal: $<span id="subtotal">0</span></p>
-  <p>Servicio 10%: $<span id="servicio">0</span></p>
-  <h3>Total: $<span id="total">0</span></h3>
-
-  <button class="boton-whatsapp" onclick="enviarWhatsApp()">
-    📲 Enviar pedido por WhatsApp
-  </button>
-</section>
-
+<div class="filtros">
+<button class="activo" onclick="filtrar('Todos',this)">Todos</button>
+<button onclick="filtrar('Religiosos',this)">Religiosos</button>
+<button onclick="filtrar('Llaveros',this)">Llaveros</button>
+<button onclick="filtrar('Recuerdos',this)">Recuerdos</button>
 </div>
 
-<footer>
-  <p>RSG Ventas - Productos y recuerdos</p>
-</footer>
+<div id="estadoProductos" class="aviso">Cargando productos...</div>
+<div id="productos"></div>
+</section>
+
+<section class="panel" id="carrito">
+<h2>🛒 Mi carrito</h2>
+<ul id="listaCarrito"></ul>
+<p>Subtotal: <strong id="subtotal">$0</strong></p>
+<p>Servicio RSG Ventas (10%): <strong id="servicio">$0</strong></p>
+<p class="total">Total: <span id="total">$0</span></p>
+<button class="boton-verde" onclick="enviarPedido()">📲 Enviar pedido por WhatsApp</button>
+<button class="boton-gris" onclick="vaciarCarrito()">Vaciar carrito</button>
+</section>
+
+</main>
+
+<footer>RSG Ventas - Productos y recuerdos</footer>
 
 <script>
-
 const URL_PRODUCTOS = "https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
-
 const NUMERO_WHATSAPP = "";
 const PORCENTAJE_SERVICIO = 0.10;
 
-let productosDisponibles = [];
+let productos = [];
 let carrito = [];
 let categoriaActual = "Todos";
 
-function convertirPrecio(valor) {
-  if (typeof valor === "number") return valor;
-
-  let texto = String(valor || "")
-    .replace(/[^\d,.-]/g, "")
-    .trim();
-
-  if (texto.includes(",")) {
-    texto = texto.replace(/\./g, "").replace(",", ".");
-  } else if (/^-?\d{1,3}(\.\d{3})+$/.test(texto)) {
-    texto = texto.replace(/\./g, "");
-  }
-
-  const numero = Number(texto);
-  return Number.isFinite(numero) ? numero : 0;
+function alternarFormulario(){
+ const formulario = document.getElementById("formularioPublicar");
+ formulario.style.display = formulario.style.display === "block" ? "none" : "block";
 }
 
-function prepararFoto(enlace) {
-  if (!enlace) return "";
-
-  let url = String(enlace).trim();
-  const drive = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  const id = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  const archivo = drive ? drive[1] : (id ? id[1] : null);
-
-  if (archivo && url.includes("drive.google.com")) {
-    return "https://drive.google.com/thumbnail?id=" + archivo + "&sz=w1000";
-  }
-
-  return url;
+function filtrar(categoria, boton){
+ categoriaActual = categoria;
+ document.querySelectorAll(".filtros button").forEach(b=>b.classList.remove("activo"));
+ boton.classList.add("activo");
+ mostrarProductos();
 }
 
-function normalizarProducto(producto) {
-  return {
-    nombre: producto.nombre || producto.Nombre || producto.producto || "",
-    precio: convertirPrecio(producto.precio || producto.Precio || 0),
-    descripcion: producto.descripcion || producto.Descripción || "",
-    foto: prepararFoto(producto.foto || producto.Foto || ""),
-    categoria: producto.categoria || producto.Categoria || "Otros",
-    comercio: producto.comercio || producto.Comercio || ""
-  };
+function normalizarTexto(texto){
+ return String(texto || "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 }
 
-async function cargarProductos() {
-  const estado = document.getElementById("estadoProductos");
-  estado.textContent = "Cargando productos...";
-
-  try {
-    const respuesta = await fetch(URL_PRODUCTOS + "?t=" + Date.now());
-    if (!respuesta.ok) throw new Error("Error al cargar");
-
-    const datos = await respuesta.json();
-
-    let lista = Array.isArray(datos) ? datos :
-      (datos.productos || datos.data || []);
-
-    productosDisponibles = lista
-      .map(normalizarProducto)
-      .filter(p => p.nombre);
-
-    mostrarProductos();
-
-    estado.textContent = productosDisponibles.length ?
-      "" : "Todavía no hay productos publicados.";
-
-  } catch (error) {
-    console.error(error);
-    estado.textContent = "No se pudieron cargar los productos.";
-  }
+function convertirPrecio(valor){
+ if(typeof valor === "number") return valor;
+ let texto = String(valor || "").trim().replace(/\s/g,"").replace(/[$]/g,"");
+ if(texto.includes(",") && texto.includes(".")){
+  texto = texto.replace(/\./g,"").replace(",",".");
+ }else if(texto.includes(",")){
+  texto = texto.replace(",",".");
+ }else if(/^\d{1,3}(\.\d{3})+$/.test(texto)){
+  texto = texto.replace(/\./g,"");
+ }
+ return Number(texto) || 0;
 }
 
-function mostrarProductos() {
-  const contenedor = document.getElementById("productos");
-  const texto = document.getElementById("buscador").value.toLowerCase();
-
-  contenedor.innerHTML = "";
-
-  const lista = productosDisponibles.filter(p => {
-    const categoria = categoriaActual === "Todos" ||
-      p.categoria.toLowerCase() === categoriaActual.toLowerCase();
-
-    const busqueda = p.nombre.toLowerCase().includes(texto) ||
-      p.descripcion.toLowerCase().includes(texto) ||
-      p.comercio.toLowerCase().includes(texto);
-
-    return categoria && busqueda;
-  });
-
-  if (!lista.length) {
-    contenedor.innerHTML = "<p>No se encontraron productos.</p>";
-    return;
-  }
-
-  lista.forEach(producto => {
-    const tarjeta = document.createElement("div");
-    tarjeta.className = "producto";
-
-    tarjeta.innerHTML = `
-      ${producto.foto ? `<img src="${producto.foto}" alt="${producto.nombre}" onerror="this.style.display='none'">` : ""}
-      <h3>${escaparHTML(producto.nombre)}</h3>
-      <p>${escaparHTML(producto.descripcion)}</p>
-      <p>${escaparHTML(producto.comercio)}</p>
-      <div class="precio">${formatearPrecio(producto.precio)}</div>
-      <button class="agregar">Agregar al carrito</button>
-    `;
-
-    tarjeta.querySelector("button").onclick = () => agregarCarrito(producto);
-    contenedor.appendChild(tarjeta);
-  });
+function dinero(valor){
+ return new Intl.NumberFormat("es-AR",{
+  style:"currency",currency:"ARS",maximumFractionDigits:2
+ }).format(valor);
 }
 
-function escaparHTML(texto) {
-  return String(texto || "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#39;"
-  })[c]);
+function prepararFoto(url){
+ if(!url) return "";
+ url = String(url).trim();
+ let id = "";
+ const coincidencia = url.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+                      url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+ if(coincidencia) id = coincidencia[1];
+ if(id && url.includes("drive.google.com")){
+  return "https://drive.google.com/thumbnail?id="+id+"&sz=w1000";
+ }
+ return url;
 }
 
-function formatearPrecio(numero) {
-  return "$" + Number(numero || 0).toLocaleString("es-AR");
+function obtenerCampo(obj, nombres){
+ const claves = Object.keys(obj || {});
+ for(const nombre of nombres){
+  const buscada = normalizarTexto(nombre);
+  const clave = claves.find(k=>normalizarTexto(k)===buscada);
+  if(clave !== undefined && obj[clave] !== undefined) return obj[clave];
+ }
+ return "";
 }
 
-function filtrar(categoria) {
-  categoriaActual = categoria;
+function normalizarProducto(p){
+ return {
+  nombre: obtenerCampo(p,["nombre","producto","titulo"]),
+  precio: convertirPrecio(obtenerCampo(p,["precio","valor"])),
+  descripcion: obtenerCampo(p,["descripcion","detalle"]),
+  foto: prepararFoto(obtenerCampo(p,["foto","imagen","enlace foto"])),
+  categoria: obtenerCampo(p,["categoria","rubro"]) || "Otros"
+ };
+}
+
+async function cargarProductos(){
+ const estado = document.getElementById("estadoProductos");
+ estado.textContent = "Cargando productos...";
+ try{
+  const respuesta = await fetch(URL_PRODUCTOS + "?t=" + Date.now());
+  if(!respuesta.ok) throw new Error("No se pudo consultar la lista");
+  const datos = await respuesta.json();
+  const lista = Array.isArray(datos) ? datos : (datos.productos || datos.data || []);
+  productos = lista.map(normalizarProducto).filter(p=>p.nombre);
+  estado.textContent = productos.length ? "" : "Todavía no hay productos publicados.";
   mostrarProductos();
+ }catch(error){
+  estado.textContent = "No se pudieron cargar los productos. Revisá la conexión con Google Sheets.";
+  console.error(error);
+ }
 }
 
-function agregarCarrito(producto) {
-  carrito.push(producto);
-  actualizarCarrito();
+function crearElemento(etiqueta, texto, clase){
+ const elemento = document.createElement(etiqueta);
+ if(texto !== undefined) elemento.textContent = texto;
+ if(clase) elemento.className = clase;
+ return elemento;
 }
 
-function eliminarProducto(indice) {
-  carrito.splice(indice, 1);
-  actualizarCarrito();
-}
+function mostrarProductos(){
+ const contenedor = document.getElementById("productos");
+ const busqueda = normalizarTexto(document.getElementById("busqueda").value);
+ contenedor.replaceChildren();
 
-function actualizarCarrito() {
-  const lista = document.getElementById("listaCarrito");
+ const encontrados = productos.filter(p=>{
+  const coincideTexto = normalizarTexto(p.nombre+" "+p.descripcion).includes(busqueda);
+  const coincideCategoria = categoriaActual === "Todos" ||
+   normalizarTexto(p.categoria) === normalizarTexto(categoriaActual);
+  return coincideTexto && coincideCategoria;
+ });
 
-  if (!carrito.length) {
-    lista.textContent = "Todavía no agregaste productos.";
-  } else {
-    lista.innerHTML = "";
+ if(!encontrados.length){
+  if(productos.length) document.getElementById("estadoProductos").textContent = "No hay productos para esa búsqueda.";
+  return;
+ }
 
-    carrito.forEach((p, i) => {
-      const item = document.createElement("div");
-      item.className = "carrito-item";
+ document.getElementById("estadoProductos").textContent = "";
 
-      const nombre = document.createElement("span");
-      nombre.textContent = p.nombre + " - " + formatearPrecio(p.precio);
+ encontrados.forEach(p=>{
+  const tarjeta = crearElemento("article",undefined,"producto");
 
-      const boton = document.createElement("button");
-      boton.className = "eliminar";
-      boton.textContent = "Quitar";
-      boton.onclick = () => eliminarProducto(i);
-
-      item.appendChild(nombre);
-      item.appendChild(boton);
-      lista.appendChild(item);
-    });
-  }
-
-  const subtotal = carrito.reduce((s, p) => s + p.precio, 0);
-  const servicio = subtotal * PORCENTAJE_SERVICIO;
-  const total = subtotal + servicio;
-
-  document.getElementById("subtotal").textContent =
-    subtotal.toLocaleString("es-AR");
-
-  document.getElementById("servicio").textContent =
-    servicio.toLocaleString("es-AR");
-
-  document.getElementById("total").textContent =
-    total.toLocaleString("es-AR");
-}
-
-function enviarWhatsApp() {
-  if (!carrito.length) {
-    alert("Primero agregá productos al carrito.");
-    return;
-  }
-
-  if (!NUMERO_WHATSAPP) {
-    alert("Falta configurar el número de WhatsApp de RSG Ventas.");
-    return;
-  }
-
-  const subtotal = carrito.reduce((s, p) => s + p.precio, 0);
-  const servicio = subtotal * PORCENTAJE_SERVICIO;
-  const total = subtotal + servicio;
-
-  let mensaje = "Hola, quiero realizar este pedido:\n\n";
-
-  carrito.forEach(p => {
-    mensaje += p.nombre + " - " + formatearPrecio(p.precio) + "\n";
-  });
-
-  mensaje += "\nSubtotal: " + formatearPrecio(subtotal);
-  mensaje += "\nServicio 10%: " + formatearPrecio(servicio);
-  mensaje += "\nTOTAL: " + formatearPrecio(total);
-
-  window.open(
-    "https://wa.me/" + NUMERO_WHATSAPP +
-    "?text=" + encodeURIComponent(mensaje),
-    "_blank"
-  );
-}
-
-document.getElementById("formPublicar").addEventListener("submit",
-async function(event) {
-  event.preventDefault();
-
-  const boton = document.getElementById("botonPublicar");
-  const mensaje = document.getElementById("mensajePublicacion");
-
-  const datos = {
-    comercio: document.getElementById("comercio").value.trim(),
-    nombre: document.getElementById("nombreProducto").value.trim(),
-    precio: document.getElementById("precioProducto").value,
-    descripcion: document.getElementById("descripcionProducto").value.trim(),
-    foto: document.getElementById("fotoProducto").value.trim(),
-    categoria: document.getElementById("categoriaProducto").value
+  const imagen = document.createElement("img");
+  imagen.alt = p.nombre;
+  imagen.src = p.foto || "";
+  imagen.onerror = function(){
+   this.onerror = null;
+   this.style.display = "none";
   };
+  if(!p.foto) imagen.style.display = "none";
 
-  boton.disabled = true;
-  boton.textContent = "Publicando...";
-  mensaje.textContent = "";
+  const nombre = crearElemento("h3",p.nombre);
+  const descripcion = crearElemento("p",p.descripcion);
+  const precio = crearElemento("div",dinero(p.precio),"precio");
+  const boton = crearElemento("button","Agregar al carrito");
+  boton.type = "button";
+  boton.addEventListener("click",()=>agregarAlCarrito(p));
 
-  try {
-    await fetch(URL_PRODUCTOS, {
-      method: "POST",
-      mode: "no-cors",
-      body: new URLSearchParams(datos)
-    });
+  tarjeta.append(imagen,nombre,descripcion,precio,boton);
+  contenedor.appendChild(tarjeta);
+ });
+}
 
-    mensaje.textContent = "Producto enviado. Actualizando catálogo...";
-    this.reset();
+function agregarAlCarrito(producto){
+ const existente = carrito.find(p=>p.nombre===producto.nombre && p.precio===producto.precio);
+ if(existente) existente.cantidad++;
+ else carrito.push({...producto,cantidad:1});
+ actualizarCarrito();
+}
 
-    setTimeout(cargarProductos, 3000);
+function actualizarCarrito(){
+ const lista = document.getElementById("listaCarrito");
+ lista.replaceChildren();
+ let subtotal = 0;
 
-  } catch (error) {
-    mensaje.textContent = "No se pudo enviar el producto.";
-  }
+ carrito.forEach((p,index)=>{
+  subtotal += p.precio*p.cantidad;
+  const item = document.createElement("li");
+  item.textContent = p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+" ";
 
-  boton.disabled = false;
-  boton.textContent = "Publicar producto";
+  const quitar = crearElemento("button","Quitar");
+  quitar.type = "button";
+  quitar.className = "boton-gris";
+  quitar.addEventListener("click",()=>{
+   carrito.splice(index,1);
+   actualizarCarrito();
+  });
+  item.appendChild(quitar);
+  lista.appendChild(item);
+ });
+
+ const servicio = subtotal*PORCENTAJE_SERVICIO;
+ document.getElementById("subtotal").textContent = dinero(subtotal);
+ document.getElementById("servicio").textContent = dinero(servicio);
+ document.getElementById("total").textContent = dinero(subtotal+servicio);
+}
+
+function vaciarCarrito(){
+ carrito = [];
+ actualizarCarrito();
+}
+
+function enviarPedido(){
+ if(!carrito.length){
+  alert("El carrito está vacío.");
+  return;
+ }
+ if(!NUMERO_WHATSAPP){
+  alert("Falta configurar el número de WhatsApp en el código de la página.");
+  return;
+ }
+
+ let subtotal = carrito.reduce((s,p)=>s+p.precio*p.cantidad,0);
+ let servicio = subtotal*PORCENTAJE_SERVICIO;
+ let mensaje = "Hola, quiero realizar este pedido en RSG Ventas:\n\n";
+
+ carrito.forEach(p=>{
+  mensaje += p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+"\n";
+ });
+
+ mensaje += "\nSubtotal: "+dinero(subtotal);
+ mensaje += "\nServicio RSG Ventas (10%): "+dinero(servicio);
+ mensaje += "\nTOTAL: "+dinero(subtotal+servicio);
+
+ window.open("https://wa.me/"+NUMERO_WHATSAPP+"?text="+encodeURIComponent(mensaje),"_blank");
+}
+
+document.getElementById("formPublicacion").addEventListener("submit",function(e){
+ e.preventDefault();
+
+ const formulario = this;
+ const mensaje = document.getElementById("mensajePublicacion");
+ formulario.action = URL_PRODUCTOS;
+
+ mensaje.style.display = "block";
+ mensaje.textContent = "Enviando publicación...";
+
+ formulario.submit();
+
+ setTimeout(()=>{
+  mensaje.textContent = "Solicitud enviada. Revisá la página en unos instantes para comprobar que el producto aparezca publicado.";
+  formulario.reset();
+  cargarProductos();
+ },2500);
 });
-
-document.getElementById("buscador").addEventListener("input", mostrarProductos);
 
 actualizarCarrito();
 cargarProductos();
-
 </script>
+
 </body>
 </html>
 
