@@ -54,6 +54,7 @@ footer{text-align:center;padding:20px;color:#666;font-size:13px}
 <p>Sumá tus productos a RSG Ventas.</p>
 
 <form id="formPublicacion" method="POST" target="respuestaPublicacion">
+
 <label>Nombre del comercio</label>
 <input name="comercio" required placeholder="Nombre de tu comercio">
 
@@ -76,6 +77,9 @@ footer{text-align:center;padding:20px;color:#666;font-size:13px}
 <option value="Recuerdos">Recuerdos</option>
 <option value="Otros">Otros</option>
 </select>
+
+<label>WhatsApp del comercio</label>
+<input name="whatsapp" type="tel" required placeholder="Ejemplo: 5493447123456">
 
 <button class="boton-verde" type="submit">Publicar producto</button>
 <button class="boton-gris" type="button" onclick="alternarFormulario()">Cerrar</button>
@@ -116,7 +120,6 @@ footer{text-align:center;padding:20px;color:#666;font-size:13px}
 
 <script>
 const URL_PRODUCTOS = "https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
-const NUMERO_WHATSAPP = "";
 const PORCENTAJE_SERVICIO = 0.10;
 
 let productos = [];
@@ -158,6 +161,10 @@ function dinero(valor){
  }).format(valor);
 }
 
+function limpiarTelefono(valor){
+ return String(valor || "").replace(/\D/g,"");
+}
+
 function prepararFoto(url){
  if(!url) return "";
  url = String(url).trim();
@@ -187,7 +194,9 @@ function normalizarProducto(p){
   precio: convertirPrecio(obtenerCampo(p,["precio","valor"])),
   descripcion: obtenerCampo(p,["descripcion","detalle"]),
   foto: prepararFoto(obtenerCampo(p,["foto","imagen","enlace foto"])),
-  categoria: obtenerCampo(p,["categoria","rubro"]) || "Otros"
+  categoria: obtenerCampo(p,["categoria","rubro"]) || "Otros",
+  comercio: obtenerCampo(p,["comercio","vendedor"]),
+  whatsapp: limpiarTelefono(obtenerCampo(p,["whatsapp","telefono","telefono whatsapp","numero whatsapp"]))
  };
 }
 
@@ -259,7 +268,11 @@ function mostrarProductos(){
 }
 
 function agregarAlCarrito(producto){
- const existente = carrito.find(p=>p.nombre===producto.nombre && p.precio===producto.precio);
+ const existente = carrito.find(p=>
+  p.nombre===producto.nombre &&
+  p.precio===producto.precio &&
+  p.whatsapp===producto.whatsapp
+ );
  if(existente) existente.cantidad++;
  else carrito.push({...producto,cantidad:1});
  actualizarCarrito();
@@ -302,24 +315,48 @@ function enviarPedido(){
   alert("El carrito está vacío.");
   return;
  }
- if(!NUMERO_WHATSAPP){
-  alert("Falta configurar el número de WhatsApp en el código de la página.");
+
+ const grupos = {};
+
+ carrito.forEach(p=>{
+  const telefono = limpiarTelefono(p.whatsapp);
+  if(!telefono) return;
+  if(!grupos[telefono]) grupos[telefono] = [];
+  grupos[telefono].push(p);
+ });
+
+ const faltantes = carrito.filter(p=>!limpiarTelefono(p.whatsapp));
+
+ if(faltantes.length){
+  alert("Hay productos sin WhatsApp de comerciante guardado. No se puede enviar el pedido completo. Revisá esas publicaciones.");
   return;
  }
 
- let subtotal = carrito.reduce((s,p)=>s+p.precio*p.cantidad,0);
- let servicio = subtotal*PORCENTAJE_SERVICIO;
- let mensaje = "Hola, quiero realizar este pedido en RSG Ventas:\n\n";
+ const telefonos = Object.keys(grupos);
 
- carrito.forEach(p=>{
-  mensaje += p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+"\n";
+ if(!telefonos.length){
+  alert("No se encontraron números de WhatsApp para los comercios.");
+  return;
+ }
+
+ telefonos.forEach(telefono=>{
+  const productosDelComercio = grupos[telefono];
+  const subtotal = productosDelComercio.reduce((s,p)=>s+p.precio*p.cantidad,0);
+  const servicio = subtotal*PORCENTAJE_SERVICIO;
+
+  let mensaje = "Hola, quiero realizar este pedido en RSG Ventas:\n\n";
+
+  productosDelComercio.forEach(p=>{
+   mensaje += p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+"\n";
+  });
+
+  mensaje += "\nSubtotal: "+dinero(subtotal);
+  mensaje += "\nServicio RSG Ventas (10%): "+dinero(servicio);
+  mensaje += "\nTOTAL: "+dinero(subtotal+servicio);
+
+  const enlace = "https://wa.me/"+telefono+"?text="+encodeURIComponent(mensaje);
+  window.open(enlace,"_blank");
  });
-
- mensaje += "\nSubtotal: "+dinero(subtotal);
- mensaje += "\nServicio RSG Ventas (10%): "+dinero(servicio);
- mensaje += "\nTOTAL: "+dinero(subtotal+servicio);
-
- window.open("https://wa.me/"+NUMERO_WHATSAPP+"?text="+encodeURIComponent(mensaje),"_blank");
 }
 
 document.getElementById("formPublicacion").addEventListener("submit",function(e){
