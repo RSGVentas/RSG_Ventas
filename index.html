@@ -7,388 +7,437 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
-header{background:#168447;color:white;text-align:center;padding:22px 12px}
-header h1{margin:0 0 8px}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f7f0;
+  color:#222;
+}
+header{
+  background:#168447;
+  color:white;
+  text-align:center;
+  padding:22px 12px;
+}
+header h1{margin:0 0 8px;font-size:30px}
 header p{margin:0}
-.buscador{display:block;width:92%;max-width:500px;margin:18px auto;padding:12px;border:1px solid #bbb;border-radius:8px;font-size:16px}
-.filtros{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;padding:0 10px 15px}
-button{cursor:pointer;border:none;border-radius:7px;padding:10px 14px;font-size:15px}
-.filtros button{background:#e8b52b;color:#222}
-.productos{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;padding:12px;max-width:1000px;margin:auto}
-.producto{background:white;border-radius:10px;padding:12px;text-align:center;box-shadow:0 2px 7px #00000018}
-.producto img{width:100%;height:200px;object-fit:contain;border-radius:7px}
-.sin-foto{height:200px;display:flex;align-items:center;justify-content:center;background:#f3f7f0;border-radius:7px;color:#777;font-size:14px}
-.producto h3{font-size:17px;margin:10px 0}
-.descripcion{font-size:14px;color:#666}
-.precio{font-size:19px;font-weight:bold;color:#168447;margin:10px 0}
-.boton-agregar{background:#168447;color:white;width:100%}
-.carrito{background:white;max-width:700px;margin:24px auto;padding:18px;border-radius:10px;box-shadow:0 2px 7px #00000018}
-.carrito h2{color:#168447;margin-top:0}
-.item-carrito{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #ddd}
-.item-carrito span{overflow-wrap:anywhere}
-.boton-eliminar{background:#c62828;color:white;padding:7px 10px}
-.resumen{margin-top:16px;line-height:1.8}
-.total{font-size:21px;font-weight:bold;color:#168447}
-.boton-whatsapp{width:100%;margin-top:12px;padding:14px;background:#20b85a;color:white;font-size:17px;font-weight:bold}
-.aviso{color:#666;font-size:13px}
-.mensaje-carga{text-align:center;padding:20px;color:#555;grid-column:1/-1}
-.publicar{background:#e8f5e9;padding:18px;margin:15px;border-radius:12px;text-align:center}
-.form-publicar{display:flex;flex-direction:column;gap:10px;max-width:450px;margin:auto}
-.form-publicar input,.form-publicar textarea,.form-publicar select{padding:12px;width:100%;border:1px solid #bbb;border-radius:7px;font-size:15px}
-.boton-publicar{background:#168447;color:white;padding:14px;border-radius:8px;font-size:17px;font-weight:bold}
-footer{text-align:center;padding:20px;background:#168447;color:white;margin-top:25px}
+.contenedor{width:95%;max-width:1100px;margin:20px auto}
+.panel{
+  background:white;
+  padding:18px;
+  border-radius:12px;
+  margin-bottom:22px;
+  box-shadow:0 2px 8px #0002;
+}
+h2{color:#168447}
+input,textarea,select{
+  width:100%;
+  padding:12px;
+  margin:7px 0;
+  border:1px solid #ccc;
+  border-radius:7px;
+  font-size:16px;
+}
+textarea{min-height:75px}
+button{
+  border:0;
+  border-radius:7px;
+  padding:11px 16px;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:bold;
+  background:#168447;
+  color:white;
+}
+#productos{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:16px;
+}
+.producto{
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 8px #0002;
+  padding:12px;
+}
+.producto img{
+  width:100%;
+  height:190px;
+  object-fit:contain;
+}
+.producto h3{color:#245b35}
+.precio{
+  font-size:20px;
+  font-weight:bold;
+  color:#168447;
+}
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.filtros button{background:#e1e9df;color:#245b35}
+.carrito-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:9px 0;
+  border-bottom:1px solid #ddd;
+}
+.eliminar{background:#c93636}
+.boton-whatsapp{
+  background:#20a653;
+  width:100%;
+  margin-top:10px;
+}
+footer{
+  background:#168447;
+  color:white;
+  text-align:center;
+  padding:18px;
+}
+@media(max-width:500px){
+  #productos{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .producto img{height:145px}
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🛒 RSG Ventas</h1>
-<p>Productos y recuerdos</p>
+  <h1>🛒 RSG Ventas</h1>
+  <p>Productos y recuerdos</p>
 </header>
 
-<input class="buscador" id="buscador" type="search" placeholder="¿Qué estás buscando?" oninput="aplicarFiltros()">
+<div class="contenedor">
+<section class="panel">
+  <h2>📦 Publicá tus productos</h2>
+  <p>Sumá tus productos a RSG Ventas.</p>
 
-<div class="filtros">
-<button onclick="mostrarTodos()">Todos</button>
-<button onclick="filtrar('Religiosos')">Religiosos</button>
-<button onclick="filtrar('Llaveros')">Llaveros</button>
-<button onclick="filtrar('Recuerdos')">Recuerdos</button>
-</div>
+  <form id="formPublicar">
+    <input type="text" id="comercio" placeholder="Nombre de tu comercio" required>
+    <input type="text" id="nombreProducto" placeholder="Nombre del producto" required>
+    <input type="number" id="precioProducto" placeholder="Precio" required>
+    <textarea id="descripcionProducto" placeholder="Descripción del producto"></textarea>
+    <input type="url" id="fotoProducto" placeholder="Enlace de la foto">
+    <select id="categoriaProducto" required>
+      <option value="">Elegí una categoría</option>
+      <option value="Religiosos">Religiosos</option>
+      <option value="Llaveros">Llaveros</option>
+      <option value="Recuerdos">Recuerdos</option>
+      <option value="Otros">Otros</option>
+    </select>
+    <button type="submit" id="botonPublicar">Publicar producto</button>
+  </form>
 
-<main class="productos" id="productos">
-<p class="mensaje-carga">Cargando productos...</p>
-</main>
-
-<section class="carrito">
-<h2>🛒 Tu carrito</h2>
-<p id="carritoVacio">Todavía no agregaste productos.</p>
-<div id="listaCarrito"></div>
-
-<div class="resumen">
-<div>Productos: <strong id="cantidadCarrito">0</strong></div>
-<div>Subtotal: <strong id="subtotal">$0</strong></div>
-<div>Cargo de servicio (10%): <strong id="cargo">$0</strong></div>
-<div class="total">Total: <span id="total">$0</span></div>
-</div>
-
-<p class="aviso">El cargo de servicio se calcula sobre el subtotal.</p>
-<button class="boton-whatsapp" onclick="enviarWhatsApp()">📲 Enviar pedido por WhatsApp</button>
+  <div id="mensajePublicacion"></div>
 </section>
 
-<!-- PUBLICAR PRODUCTOS DE COMERCIANTES -->
-<section class="publicar">
+<section class="panel">
+  <h2>🛍️ Nuestros productos</h2>
 
-<h2>🛍️ Publicá tus productos</h2>
-<p>Sumá tus productos a RSG Ventas.</p>
+  <input type="search" id="buscador" placeholder="¿Qué estás buscando?">
 
-<form
-class="form-publicar"
-action="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec"
-method="POST"
-target="_blank">
+  <div class="filtros">
+    <button onclick="filtrar('Todos')">Todos</button>
+    <button onclick="filtrar('Religiosos')">Religiosos</button>
+    <button onclick="filtrar('Llaveros')">Llaveros</button>
+    <button onclick="filtrar('Recuerdos')">Recuerdos</button>
+  </div>
 
-<input name="comercio" placeholder="Nombre de tu comercio" required>
-
-<input name="nombre" placeholder="Nombre del producto" required>
-
-<input name="precio" type="number" min="1" placeholder="Precio" required>
-
-<textarea name="descripcion" placeholder="Descripción del producto"></textarea>
-
-<input name="foto" placeholder="Enlace de la foto del producto">
-
-<select name="categoria" required>
-<option value="">Elegir categoría</option>
-<option value="Religiosos">Religiosos</option>
-<option value="Llaveros">Llaveros</option>
-<option value="Recuerdos">Recuerdos</option>
-<option value="Otros">Otros</option>
-</select>
-
-<button class="boton-publicar" type="submit">
-PUBLICAR PRODUCTO
-</button>
-
-</form>
+  <div id="estadoProductos">Cargando productos...</div>
+  <div id="productos"></div>
 </section>
 
-<!-- PIE DE PÁGINA: AHORA SÍ, AL FINAL -->
+<section class="panel">
+  <h2>🛒 Mi carrito</h2>
+
+  <div id="listaCarrito">Todavía no agregaste productos.</div>
+
+  <hr>
+
+  <p>Subtotal: $<span id="subtotal">0</span></p>
+  <p>Servicio 10%: $<span id="servicio">0</span></p>
+  <h3>Total: $<span id="total">0</span></h3>
+
+  <button class="boton-whatsapp" onclick="enviarWhatsApp()">
+    📲 Enviar pedido por WhatsApp
+  </button>
+</section>
+
+</div>
+
 <footer>
-<p>RSG Ventas</p>
-<p>Gracias por elegirnos</p>
+  <p>RSG Ventas - Productos y recuerdos</p>
 </footer>
 
 <script>
 
-const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
+const URL_PRODUCTOS = "https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
 
-const NUMERO_WHATSAPP="";
+const NUMERO_WHATSAPP = "";
+const PORCENTAJE_SERVICIO = 0.10;
 
-let carrito=[];
-let productosDisponibles=[];
-let categoriaActiva="";
-const PORCENTAJE_SERVICIO=0.10;
+let productosDisponibles = [];
+let carrito = [];
+let categoriaActual = "Todos";
 
-function formatoPrecio(numero){
-return "$"+Number(numero).toLocaleString("es-AR",{maximumFractionDigits:2});
+function convertirPrecio(valor) {
+  if (typeof valor === "number") return valor;
+
+  let texto = String(valor || "")
+    .replace(/[^\d,.-]/g, "")
+    .trim();
+
+  if (texto.includes(",")) {
+    texto = texto.replace(/\./g, "").replace(",", ".");
+  } else if (/^-?\d{1,3}(\.\d{3})+$/.test(texto)) {
+    texto = texto.replace(/\./g, "");
+  }
+
+  const numero = Number(texto);
+  return Number.isFinite(numero) ? numero : 0;
 }
 
-function convertirPrecio(valor){
-if(typeof valor==="number")return valor;
-let texto=String(valor||"").replace(/[^\d,.-]/g,"").trim();
-if(texto.includes(","))texto=texto.replace(/\./g,"").replace(",",".");
-const numero=Number(texto);
-return Number.isFinite(numero)?numero:0;
+function prepararFoto(enlace) {
+  if (!enlace) return "";
+
+  let url = String(enlace).trim();
+  const drive = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  const id = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  const archivo = drive ? drive[1] : (id ? id[1] : null);
+
+  if (archivo && url.includes("drive.google.com")) {
+    return "https://drive.google.com/thumbnail?id=" + archivo + "&sz=w1000";
+  }
+
+  return url;
 }
 
-function obtenerCategoria(producto){
-const categoria=String(producto.categoria||producto.Categoria||"").toLowerCase();
-if(categoria)return categoria;
-
-const texto=(String(producto.nombre||producto.Nombre||"")+" "+String(producto.descripcion||producto.Descripcion||producto["Descripción"]||"")).toLowerCase();
-
-if(texto.includes("llavero"))return "llaveros";
-if(["medalla","rosario","papa","estampita","relig"].some(x=>texto.includes(x)))return "religiosos";
-return "recuerdos";
+function normalizarProducto(producto) {
+  return {
+    nombre: producto.nombre || producto.Nombre || producto.producto || "",
+    precio: convertirPrecio(producto.precio || producto.Precio || 0),
+    descripcion: producto.descripcion || producto.Descripción || "",
+    foto: prepararFoto(producto.foto || producto.Foto || ""),
+    categoria: producto.categoria || producto.Categoria || "Otros",
+    comercio: producto.comercio || producto.Comercio || ""
+  };
 }
 
-function normalizarProducto(producto){
-const nombre=producto.nombre||producto.Nombre||producto.producto||producto.Producto||"";
-const precio=convertirPrecio(producto.precio||producto.Precio||0);
-const descripcion=producto.descripcion||producto.Descripcion||producto.descripción||producto["Descripción"]||"";
-const foto=producto.foto||producto.Foto||producto.imagen||producto.Imagen||"";
+async function cargarProductos() {
+  const estado = document.getElementById("estadoProductos");
+  estado.textContent = "Cargando productos...";
 
-return {
-nombre:String(nombre).trim(),
-precio,
-descripcion:String(descripcion).trim(),
-foto:String(foto).trim(),
-categoria:obtenerCategoria(producto)
-};
+  try {
+    const respuesta = await fetch(URL_PRODUCTOS + "?t=" + Date.now());
+    if (!respuesta.ok) throw new Error("Error al cargar");
+
+    const datos = await respuesta.json();
+
+    let lista = Array.isArray(datos) ? datos :
+      (datos.productos || datos.data || []);
+
+    productosDisponibles = lista
+      .map(normalizarProducto)
+      .filter(p => p.nombre);
+
+    mostrarProductos();
+
+    estado.textContent = productosDisponibles.length ?
+      "" : "Todavía no hay productos publicados.";
+
+  } catch (error) {
+    console.error(error);
+    estado.textContent = "No se pudieron cargar los productos.";
+  }
 }
 
-function prepararFoto(enlace){
-enlace=String(enlace||"").trim();
-if(!enlace)return "";
+function mostrarProductos() {
+  const contenedor = document.getElementById("productos");
+  const texto = document.getElementById("buscador").value.toLowerCase();
 
-let coincidencia=enlace.match(/\/file\/d\/([^/?]+)/);
-if(!coincidencia)coincidencia=enlace.match(/[?&]id=([^&]+)/);
+  contenedor.innerHTML = "";
 
-if(coincidencia&&enlace.includes("drive.google.com")){
-return "https://drive.google.com/thumbnail?id="+coincidencia[1]+"&sz=w1000";
+  const lista = productosDisponibles.filter(p => {
+    const categoria = categoriaActual === "Todos" ||
+      p.categoria.toLowerCase() === categoriaActual.toLowerCase();
+
+    const busqueda = p.nombre.toLowerCase().includes(texto) ||
+      p.descripcion.toLowerCase().includes(texto) ||
+      p.comercio.toLowerCase().includes(texto);
+
+    return categoria && busqueda;
+  });
+
+  if (!lista.length) {
+    contenedor.innerHTML = "<p>No se encontraron productos.</p>";
+    return;
+  }
+
+  lista.forEach(producto => {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "producto";
+
+    tarjeta.innerHTML = `
+      ${producto.foto ? `<img src="${producto.foto}" alt="${producto.nombre}" onerror="this.style.display='none'">` : ""}
+      <h3>${escaparHTML(producto.nombre)}</h3>
+      <p>${escaparHTML(producto.descripcion)}</p>
+      <p>${escaparHTML(producto.comercio)}</p>
+      <div class="precio">${formatearPrecio(producto.precio)}</div>
+      <button class="agregar">Agregar al carrito</button>
+    `;
+
+    tarjeta.querySelector("button").onclick = () => agregarCarrito(producto);
+    contenedor.appendChild(tarjeta);
+  });
 }
 
-return enlace;
+function escaparHTML(texto) {
+  return String(texto || "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[c]);
 }
 
-async function cargarProductos(){
-const contenedor=document.getElementById("productos");
-contenedor.innerHTML='<p class="mensaje-carga">Cargando productos...</p>';
-
-try{
-const respuesta=await fetch(URL_PRODUCTOS+"?t="+Date.now(),{cache:"no-store"});
-
-if(!respuesta.ok)throw new Error("Error de conexión: "+respuesta.status);
-
-const datos=await respuesta.json();
-
-let lista=[];
-
-if(Array.isArray(datos))lista=datos;
-else if(Array.isArray(datos.productos))lista=datos.productos;
-else if(Array.isArray(datos.data))lista=datos.data;
-else if(Array.isArray(datos.rows))lista=datos.rows;
-else throw new Error(datos.error||"Formato de datos incorrecto");
-
-productosDisponibles=lista.map(normalizarProducto).filter(p=>p.nombre&&p.precio>0);
-
-if(productosDisponibles.length===0){
-contenedor.innerHTML='<p class="mensaje-carga">No hay productos disponibles.</p>';
-return;
+function formatearPrecio(numero) {
+  return "$" + Number(numero || 0).toLocaleString("es-AR");
 }
 
-aplicarFiltros();
-
-}catch(error){
-console.error("Error al cargar productos:",error);
-contenedor.innerHTML='<p class="mensaje-carga">No se pudieron cargar los productos. Revisar Google Sheets y Apps Script.</p>';
-}
+function filtrar(categoria) {
+  categoriaActual = categoria;
+  mostrarProductos();
 }
 
-function mostrarProductos(lista){
-const contenedor=document.getElementById("productos");
-contenedor.replaceChildren();
-
-if(lista.length===0){
-contenedor.innerHTML='<p class="mensaje-carga">No se encontraron productos.</p>';
-return;
+function agregarCarrito(producto) {
+  carrito.push(producto);
+  actualizarCarrito();
 }
 
-lista.forEach(function(producto){
-const tarjeta=document.createElement("article");
-tarjeta.className="producto";
-
-if(producto.foto){
-const imagen=document.createElement("img");
-imagen.src=prepararFoto(producto.foto);
-imagen.alt=producto.nombre;
-imagen.loading="lazy";
-
-imagen.onerror=function(){
-const reemplazo=document.createElement("div");
-reemplazo.className="sin-foto";
-reemplazo.textContent="Imagen no disponible";
-imagen.replaceWith(reemplazo);
-};
-
-tarjeta.appendChild(imagen);
-
-}else{
-const sinFoto=document.createElement("div");
-sinFoto.className="sin-foto";
-sinFoto.textContent="Sin fotografía";
-tarjeta.appendChild(sinFoto);
+function eliminarProducto(indice) {
+  carrito.splice(indice, 1);
+  actualizarCarrito();
 }
 
-const titulo=document.createElement("h3");
-titulo.textContent=producto.nombre;
-tarjeta.appendChild(titulo);
+function actualizarCarrito() {
+  const lista = document.getElementById("listaCarrito");
 
-if(producto.descripcion){
-const descripcion=document.createElement("p");
-descripcion.className="descripcion";
-descripcion.textContent=producto.descripcion;
-tarjeta.appendChild(descripcion);
+  if (!carrito.length) {
+    lista.textContent = "Todavía no agregaste productos.";
+  } else {
+    lista.innerHTML = "";
+
+    carrito.forEach((p, i) => {
+      const item = document.createElement("div");
+      item.className = "carrito-item";
+
+      const nombre = document.createElement("span");
+      nombre.textContent = p.nombre + " - " + formatearPrecio(p.precio);
+
+      const boton = document.createElement("button");
+      boton.className = "eliminar";
+      boton.textContent = "Quitar";
+      boton.onclick = () => eliminarProducto(i);
+
+      item.appendChild(nombre);
+      item.appendChild(boton);
+      lista.appendChild(item);
+    });
+  }
+
+  const subtotal = carrito.reduce((s, p) => s + p.precio, 0);
+  const servicio = subtotal * PORCENTAJE_SERVICIO;
+  const total = subtotal + servicio;
+
+  document.getElementById("subtotal").textContent =
+    subtotal.toLocaleString("es-AR");
+
+  document.getElementById("servicio").textContent =
+    servicio.toLocaleString("es-AR");
+
+  document.getElementById("total").textContent =
+    total.toLocaleString("es-AR");
 }
 
-const precio=document.createElement("div");
-precio.className="precio";
-precio.textContent=formatoPrecio(producto.precio);
-tarjeta.appendChild(precio);
+function enviarWhatsApp() {
+  if (!carrito.length) {
+    alert("Primero agregá productos al carrito.");
+    return;
+  }
 
-const boton=document.createElement("button");
-boton.className="boton-agregar";
-boton.textContent="Agregar al carrito";
+  if (!NUMERO_WHATSAPP) {
+    alert("Falta configurar el número de WhatsApp de RSG Ventas.");
+    return;
+  }
 
-boton.addEventListener("click",function(){
-agregarCarrito(producto.nombre,producto.precio);
+  const subtotal = carrito.reduce((s, p) => s + p.precio, 0);
+  const servicio = subtotal * PORCENTAJE_SERVICIO;
+  const total = subtotal + servicio;
+
+  let mensaje = "Hola, quiero realizar este pedido:\n\n";
+
+  carrito.forEach(p => {
+    mensaje += p.nombre + " - " + formatearPrecio(p.precio) + "\n";
+  });
+
+  mensaje += "\nSubtotal: " + formatearPrecio(subtotal);
+  mensaje += "\nServicio 10%: " + formatearPrecio(servicio);
+  mensaje += "\nTOTAL: " + formatearPrecio(total);
+
+  window.open(
+    "https://wa.me/" + NUMERO_WHATSAPP +
+    "?text=" + encodeURIComponent(mensaje),
+    "_blank"
+  );
+}
+
+document.getElementById("formPublicar").addEventListener("submit",
+async function(event) {
+  event.preventDefault();
+
+  const boton = document.getElementById("botonPublicar");
+  const mensaje = document.getElementById("mensajePublicacion");
+
+  const datos = {
+    comercio: document.getElementById("comercio").value.trim(),
+    nombre: document.getElementById("nombreProducto").value.trim(),
+    precio: document.getElementById("precioProducto").value,
+    descripcion: document.getElementById("descripcionProducto").value.trim(),
+    foto: document.getElementById("fotoProducto").value.trim(),
+    categoria: document.getElementById("categoriaProducto").value
+  };
+
+  boton.disabled = true;
+  boton.textContent = "Publicando...";
+  mensaje.textContent = "";
+
+  try {
+    await fetch(URL_PRODUCTOS, {
+      method: "POST",
+      mode: "no-cors",
+      body: new URLSearchParams(datos)
+    });
+
+    mensaje.textContent = "Producto enviado. Actualizando catálogo...";
+    this.reset();
+
+    setTimeout(cargarProductos, 3000);
+
+  } catch (error) {
+    mensaje.textContent = "No se pudo enviar el producto.";
+  }
+
+  boton.disabled = false;
+  boton.textContent = "Publicar producto";
 });
 
-tarjeta.appendChild(boton);
-contenedor.appendChild(tarjeta);
-});
-}
+document.getElementById("buscador").addEventListener("input", mostrarProductos);
 
-function aplicarFiltros(){
-const texto=document.getElementById("buscador").value.toLowerCase().trim();
-
-const filtrados=productosDisponibles.filter(function(producto){
-const coincideTexto=producto.nombre.toLowerCase().includes(texto)||producto.descripcion.toLowerCase().includes(texto);
-const coincideCategoria=!categoriaActiva||producto.categoria.includes(categoriaActiva);
-return coincideTexto&&coincideCategoria;
-});
-
-mostrarProductos(filtrados);
-}
-
-function filtrar(categoria){
-categoriaActiva=categoria.toLowerCase();
-aplicarFiltros();
-}
-
-function mostrarTodos(){
-categoriaActiva="";
-document.getElementById("buscador").value="";
-aplicarFiltros();
-}
-
-function agregarCarrito(nombre,precio){
-carrito.push({nombre,precio:Number(precio)});
-actualizarCarrito();
-}
-
-function eliminarProducto(indice){
-carrito.splice(indice,1);
-actualizarCarrito();
-}
-
-function actualizarCarrito(){
-const lista=document.getElementById("listaCarrito");
-const carritoVacio=document.getElementById("carritoVacio");
-
-lista.replaceChildren();
-carritoVacio.style.display=carrito.length===0?"block":"none";
-
-let subtotal=0;
-
-carrito.forEach(function(producto,indice){
-subtotal+=producto.precio;
-
-const item=document.createElement("div");
-item.className="item-carrito";
-
-const detalle=document.createElement("span");
-detalle.textContent=producto.nombre+" - "+formatoPrecio(producto.precio);
-
-const boton=document.createElement("button");
-boton.className="boton-eliminar";
-boton.textContent="Eliminar";
-boton.addEventListener("click",function(){eliminarProducto(indice);});
-
-item.appendChild(detalle);
-item.appendChild(boton);
-lista.appendChild(item);
-});
-
-const cargo=subtotal*PORCENTAJE_SERVICIO;
-
-document.getElementById("cantidadCarrito").textContent=carrito.length;
-document.getElementById("subtotal").textContent=formatoPrecio(subtotal);
-document.getElementById("cargo").textContent=formatoPrecio(cargo);
-document.getElementById("total").textContent=formatoPrecio(subtotal+cargo);
-}
-
-function enviarWhatsApp(){
-if(carrito.length===0){
-alert("Primero agregá productos al carrito.");
-return;
-}
-
-if(!NUMERO_WHATSAPP){
-alert("Falta configurar el número de WhatsApp de RSG Ventas.");
-return;
-}
-
-let subtotal=0;
-let mensaje="Hola, quiero realizar este pedido:\n\n";
-
-carrito.forEach(function(producto){
-subtotal+=producto.precio;
-mensaje+=producto.nombre+" - "+formatoPrecio(producto.precio)+"\n";
-});
-
-const cargo=subtotal*PORCENTAJE_SERVICIO;
-
-mensaje+="\nSubtotal: "+formatoPrecio(subtotal);
-mensaje+="\nCargo de servicio (10%): "+formatoPrecio(cargo);
-mensaje+="\nTOTAL: "+formatoPrecio(subtotal+cargo);
-
-window.open("https://wa.me/"+NUMERO_WHATSAPP+"?text="+encodeURIComponent(mensaje),"_blank");
-}
-
-document.addEventListener("DOMContentLoaded",function(){
 actualizarCarrito();
 cargarProductos();
-});
 
 </script>
 </body>
 </html>
-
-
-
 
 
 
