@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RSG Ventas</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
@@ -38,7 +37,6 @@ textarea{min-height:75px;resize:vertical}
 footer{text-align:center;padding:20px;color:#666;font-size:13px}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -54,7 +52,6 @@ footer{text-align:center;padding:20px;color:#666;font-size:13px}
 <p>Sumá tus productos a RSG Ventas.</p>
 
 <form id="formPublicacion" method="POST" target="respuestaPublicacion">
-
 <label>Nombre del comercio</label>
 <input name="comercio" required placeholder="Nombre de tu comercio">
 
@@ -119,178 +116,175 @@ footer{text-align:center;padding:20px;color:#666;font-size:13px}
 <footer>RSG Ventas - Productos y recuerdos</footer>
 
 <script>
-const URL_PRODUCTOS = "https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
-const PORCENTAJE_SERVICIO = 0.10;
+const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
+const PORCENTAJE_SERVICIO=0.10;
 
-let productos = [];
-let carrito = [];
-let categoriaActual = "Todos";
+let productos=[];
+let carrito=[];
+let categoriaActual="Todos";
 
 function alternarFormulario(){
- const formulario = document.getElementById("formularioPublicar");
- formulario.style.display = formulario.style.display === "block" ? "none" : "block";
-}
-
-function filtrar(categoria, boton){
- categoriaActual = categoria;
- document.querySelectorAll(".filtros button").forEach(b=>b.classList.remove("activo"));
- boton.classList.add("activo");
- mostrarProductos();
+ const f=document.getElementById("formularioPublicar");
+ f.style.display=f.style.display==="block"?"none":"block";
 }
 
 function normalizarTexto(texto){
- return String(texto || "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+ return String(texto||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 }
 
 function convertirPrecio(valor){
- if(typeof valor === "number") return valor;
- let texto = String(valor || "").trim().replace(/\s/g,"").replace(/[$]/g,"");
- if(texto.includes(",") && texto.includes(".")){
-  texto = texto.replace(/\./g,"").replace(",",".");
- }else if(texto.includes(",")){
-  texto = texto.replace(",",".");
- }else if(/^\d{1,3}(\.\d{3})+$/.test(texto)){
-  texto = texto.replace(/\./g,"");
- }
- return Number(texto) || 0;
+ if(typeof valor==="number")return valor;
+ let t=String(valor||"").trim().replace(/\s/g,"").replace(/[$]/g,"");
+ if(t.includes(",")&&t.includes("."))t=t.replace(/\./g,"").replace(",",".");
+ else if(t.includes(","))t=t.replace(",",".");
+ else if(/^\d{1,3}(\.\d{3})+$/.test(t))t=t.replace(/\./g,"");
+ return Number(t)||0;
 }
 
 function dinero(valor){
- return new Intl.NumberFormat("es-AR",{
-  style:"currency",currency:"ARS",maximumFractionDigits:2
- }).format(valor);
+ return new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2}).format(valor);
 }
 
 function limpiarTelefono(valor){
- return String(valor || "").replace(/\D/g,"");
+ return String(valor||"").replace(/\D/g,"");
 }
 
 function prepararFoto(url){
- if(!url) return "";
- url = String(url).trim();
- let id = "";
- const coincidencia = url.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                      url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
- if(coincidencia) id = coincidencia[1];
- if(id && url.includes("drive.google.com")){
-  return "https://drive.google.com/thumbnail?id="+id+"&sz=w1000";
+ if(!url)return "";
+ url=String(url).trim();
+ const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/)||url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+ if(m&&url.includes("drive.google.com")){
+  return "https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000";
  }
  return url;
 }
 
-function obtenerCampo(obj, nombres){
- const claves = Object.keys(obj || {});
+function obtenerCampo(obj,nombres){
+ const claves=Object.keys(obj||{});
  for(const nombre of nombres){
-  const buscada = normalizarTexto(nombre);
-  const clave = claves.find(k=>normalizarTexto(k)===buscada);
-  if(clave !== undefined && obj[clave] !== undefined) return obj[clave];
+  const buscada=normalizarTexto(nombre);
+  const clave=claves.find(k=>normalizarTexto(k)===buscada);
+  if(clave!==undefined&&obj[clave]!==undefined)return obj[clave];
  }
  return "";
 }
 
 function normalizarProducto(p){
  return {
-  nombre: obtenerCampo(p,["nombre","producto","titulo"]),
-  precio: convertirPrecio(obtenerCampo(p,["precio","valor"])),
-  descripcion: obtenerCampo(p,["descripcion","detalle"]),
-  foto: prepararFoto(obtenerCampo(p,["foto","imagen","enlace foto"])),
-  categoria: obtenerCampo(p,["categoria","rubro"]) || "Otros",
-  comercio: obtenerCampo(p,["comercio","vendedor"]),
-  whatsapp: limpiarTelefono(obtenerCampo(p,["whatsapp","telefono","telefono whatsapp","numero whatsapp"]))
+  nombre:obtenerCampo(p,["nombre","producto","titulo"]),
+  precio:convertirPrecio(obtenerCampo(p,["precio","valor"])),
+  descripcion:obtenerCampo(p,["descripcion","detalle"]),
+  foto:prepararFoto(obtenerCampo(p,["foto","imagen","enlace foto"])),
+  categoria:obtenerCampo(p,["categoria","rubro"])||"Otros",
+  comercio:obtenerCampo(p,["comercio","vendedor"]),
+  whatsapp:limpiarTelefono(obtenerCampo(p,[
+   "whatsapp","telefono","telefono whatsapp","numero whatsapp",
+   "whatsapp del comercio","whatsapp comercio","telefono del comercio"
+  ]))
  };
 }
 
 async function cargarProductos(){
- const estado = document.getElementById("estadoProductos");
- estado.textContent = "Cargando productos...";
+ const estado=document.getElementById("estadoProductos");
+ estado.textContent="Cargando productos...";
  try{
-  const respuesta = await fetch(URL_PRODUCTOS + "?t=" + Date.now());
-  if(!respuesta.ok) throw new Error("No se pudo consultar la lista");
-  const datos = await respuesta.json();
-  const lista = Array.isArray(datos) ? datos : (datos.productos || datos.data || []);
-  productos = lista.map(normalizarProducto).filter(p=>p.nombre);
-  estado.textContent = productos.length ? "" : "Todavía no hay productos publicados.";
+  const respuesta=await fetch(URL_PRODUCTOS+"?t="+Date.now());
+  if(!respuesta.ok)throw new Error("No se pudo consultar la lista");
+  const datos=await respuesta.json();
+  const lista=Array.isArray(datos)?datos:(datos.productos||datos.data||[]);
+  productos=lista.map(normalizarProducto).filter(p=>p.nombre);
+  estado.textContent=productos.length?"":"Todavía no hay productos publicados.";
   mostrarProductos();
  }catch(error){
-  estado.textContent = "No se pudieron cargar los productos. Revisá la conexión con Google Sheets.";
+  estado.textContent="No se pudieron cargar los productos. Revisá la conexión con Google Sheets.";
   console.error(error);
  }
 }
 
-function crearElemento(etiqueta, texto, clase){
- const elemento = document.createElement(etiqueta);
- if(texto !== undefined) elemento.textContent = texto;
- if(clase) elemento.className = clase;
+function crearElemento(etiqueta,texto,clase){
+ const elemento=document.createElement(etiqueta);
+ if(texto!==undefined)elemento.textContent=texto;
+ if(clase)elemento.className=clase;
  return elemento;
 }
 
+function filtrar(categoria,boton){
+ categoriaActual=categoria;
+ document.querySelectorAll(".filtros button").forEach(b=>b.classList.remove("activo"));
+ boton.classList.add("activo");
+ mostrarProductos();
+}
+
 function mostrarProductos(){
- const contenedor = document.getElementById("productos");
- const busqueda = normalizarTexto(document.getElementById("busqueda").value);
+ const contenedor=document.getElementById("productos");
+ const busqueda=normalizarTexto(document.getElementById("busqueda").value);
  contenedor.replaceChildren();
 
- const encontrados = productos.filter(p=>{
-  const coincideTexto = normalizarTexto(p.nombre+" "+p.descripcion).includes(busqueda);
-  const coincideCategoria = categoriaActual === "Todos" ||
-   normalizarTexto(p.categoria) === normalizarTexto(categoriaActual);
-  return coincideTexto && coincideCategoria;
+ const encontrados=productos.filter(p=>{
+  const texto=normalizarTexto(p.nombre+" "+p.descripcion+" "+p.comercio);
+  const coincideTexto=texto.includes(busqueda);
+  const coincideCategoria=categoriaActual==="Todos"||
+   normalizarTexto(p.categoria)===normalizarTexto(categoriaActual);
+  return coincideTexto&&coincideCategoria;
  });
 
  if(!encontrados.length){
-  if(productos.length) document.getElementById("estadoProductos").textContent = "No hay productos para esa búsqueda.";
+  document.getElementById("estadoProductos").textContent=
+   productos.length?"No hay productos para esa búsqueda.":"Todavía no hay productos publicados.";
   return;
  }
 
- document.getElementById("estadoProductos").textContent = "";
-
+ document.getElementById("estadoProductos").textContent="";
  encontrados.forEach(p=>{
-  const tarjeta = crearElemento("article",undefined,"producto");
+  const tarjeta=crearElemento("article",undefined,"producto");
+  const imagen=document.createElement("img");
+  imagen.alt=p.nombre;
+  imagen.src=p.foto||"";
+  imagen.onerror=function(){this.onerror=null;this.style.display="none";};
+  if(!p.foto)imagen.style.display="none";
 
-  const imagen = document.createElement("img");
-  imagen.alt = p.nombre;
-  imagen.src = p.foto || "";
-  imagen.onerror = function(){
-   this.onerror = null;
-   this.style.display = "none";
-  };
-  if(!p.foto) imagen.style.display = "none";
+  tarjeta.append(
+   imagen,
+   crearElemento("h3",p.nombre),
+   crearElemento("p",p.descripcion),
+   crearElemento("div",dinero(p.precio),"precio")
+  );
 
-  const nombre = crearElemento("h3",p.nombre);
-  const descripcion = crearElemento("p",p.descripcion);
-  const precio = crearElemento("div",dinero(p.precio),"precio");
-  const boton = crearElemento("button","Agregar al carrito");
-  boton.type = "button";
+  if(p.comercio)tarjeta.appendChild(crearElemento("small","Comercio: "+p.comercio));
+
+  const boton=crearElemento("button","Agregar al carrito");
+  boton.type="button";
   boton.addEventListener("click",()=>agregarAlCarrito(p));
-
-  tarjeta.append(imagen,nombre,descripcion,precio,boton);
+  tarjeta.appendChild(boton);
   contenedor.appendChild(tarjeta);
  });
 }
 
 function agregarAlCarrito(producto){
- const existente = carrito.find(p=>
-  p.nombre===producto.nombre &&
-  p.precio===producto.precio &&
-  p.whatsapp===producto.whatsapp
+ const existente=carrito.find(p=>
+  p.nombre===producto.nombre&&
+  p.precio===producto.precio&&
+  p.whatsapp===producto.whatsapp&&
+  p.comercio===producto.comercio
  );
- if(existente) existente.cantidad++;
+ if(existente)existente.cantidad++;
  else carrito.push({...producto,cantidad:1});
  actualizarCarrito();
 }
 
 function actualizarCarrito(){
- const lista = document.getElementById("listaCarrito");
+ const lista=document.getElementById("listaCarrito");
  lista.replaceChildren();
- let subtotal = 0;
+ let subtotal=0;
 
  carrito.forEach((p,index)=>{
-  subtotal += p.precio*p.cantidad;
-  const item = document.createElement("li");
-  item.textContent = p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+" ";
+  subtotal+=p.precio*p.cantidad;
+  const item=document.createElement("li");
+  item.textContent=p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+" ";
 
-  const quitar = crearElemento("button","Quitar");
-  quitar.type = "button";
-  quitar.className = "boton-gris";
+  const quitar=crearElemento("button","Quitar");
+  quitar.type="button";
+  quitar.className="boton-gris";
   quitar.addEventListener("click",()=>{
    carrito.splice(index,1);
    actualizarCarrito();
@@ -299,14 +293,14 @@ function actualizarCarrito(){
   lista.appendChild(item);
  });
 
- const servicio = subtotal*PORCENTAJE_SERVICIO;
- document.getElementById("subtotal").textContent = dinero(subtotal);
- document.getElementById("servicio").textContent = dinero(servicio);
- document.getElementById("total").textContent = dinero(subtotal+servicio);
+ const servicio=subtotal*PORCENTAJE_SERVICIO;
+ document.getElementById("subtotal").textContent=dinero(subtotal);
+ document.getElementById("servicio").textContent=dinero(servicio);
+ document.getElementById("total").textContent=dinero(subtotal+servicio);
 }
 
 function vaciarCarrito(){
- carrito = [];
+ carrito=[];
  actualizarCarrito();
 }
 
@@ -316,45 +310,49 @@ function enviarPedido(){
   return;
  }
 
- const grupos = {};
-
+ const grupos={};
  carrito.forEach(p=>{
-  const telefono = limpiarTelefono(p.whatsapp);
-  if(!telefono) return;
-  if(!grupos[telefono]) grupos[telefono] = [];
+  const telefono=limpiarTelefono(p.whatsapp);
+  if(!telefono)return;
+  if(!grupos[telefono])grupos[telefono]=[];
   grupos[telefono].push(p);
  });
 
- const faltantes = carrito.filter(p=>!limpiarTelefono(p.whatsapp));
-
+ const faltantes=carrito.filter(p=>!limpiarTelefono(p.whatsapp));
  if(faltantes.length){
   alert("Hay productos sin WhatsApp de comerciante guardado. No se puede enviar el pedido completo. Revisá esas publicaciones.");
   return;
  }
 
- const telefonos = Object.keys(grupos);
-
+ const telefonos=Object.keys(grupos);
  if(!telefonos.length){
   alert("No se encontraron números de WhatsApp para los comercios.");
   return;
  }
 
+ const enlaces=[];
+
  telefonos.forEach(telefono=>{
-  const productosDelComercio = grupos[telefono];
-  const subtotal = productosDelComercio.reduce((s,p)=>s+p.precio*p.cantidad,0);
-  const servicio = subtotal*PORCENTAJE_SERVICIO;
+  const items=grupos[telefono];
+  const subtotal=items.reduce((s,p)=>s+p.precio*p.cantidad,0);
+  const servicio=subtotal*PORCENTAJE_SERVICIO;
 
-  let mensaje = "Hola, quiero realizar este pedido en RSG Ventas:\n\n";
-
-  productosDelComercio.forEach(p=>{
-   mensaje += p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+"\n";
+  let mensaje="Hola, quiero realizar este pedido en RSG Ventas:\n\n";
+  items.forEach(p=>{
+   mensaje+=p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+"\n";
   });
+  mensaje+="\nSubtotal: "+dinero(subtotal);
+  mensaje+="\nServicio RSG Ventas (10%): "+dinero(servicio);
+  mensaje+="\nTOTAL: "+dinero(subtotal+servicio);
 
-  mensaje += "\nSubtotal: "+dinero(subtotal);
-  mensaje += "\nServicio RSG Ventas (10%): "+dinero(servicio);
-  mensaje += "\nTOTAL: "+dinero(subtotal+servicio);
+  enlaces.push("https://wa.me/"+telefono+"?text="+encodeURIComponent(mensaje));
+ });
 
-  const enlace = "https://wa.me/"+telefono+"?text="+encodeURIComponent(mensaje);
+ if(enlaces.length>1){
+  alert("Tenés productos de "+enlaces.length+" comercios. Se abrirá un pedido separado para cada vendedor. Si el navegador bloquea alguna ventana, permití las ventanas emergentes.");
+ }
+
+ enlaces.forEach(enlace=>{
   window.open(enlace,"_blank");
  });
 }
@@ -362,17 +360,17 @@ function enviarPedido(){
 document.getElementById("formPublicacion").addEventListener("submit",function(e){
  e.preventDefault();
 
- const formulario = this;
- const mensaje = document.getElementById("mensajePublicacion");
- formulario.action = URL_PRODUCTOS;
+ const formulario=this;
+ const mensaje=document.getElementById("mensajePublicacion");
+ formulario.action=URL_PRODUCTOS;
 
- mensaje.style.display = "block";
- mensaje.textContent = "Enviando publicación...";
+ mensaje.style.display="block";
+ mensaje.textContent="Enviando publicación...";
 
  formulario.submit();
 
  setTimeout(()=>{
-  mensaje.textContent = "Solicitud enviada. Revisá la página en unos instantes para comprobar que el producto aparezca publicado.";
+  mensaje.textContent="Solicitud enviada. Revisá la página en unos instantes para comprobar que el producto aparezca publicado.";
   formulario.reset();
   cargarProductos();
  },2500);
@@ -381,7 +379,6 @@ document.getElementById("formPublicacion").addEventListener("submit",function(e)
 actualizarCarrito();
 cargarProductos();
 </script>
-
 </body>
 </html>
 
