@@ -1,386 +1,180 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RSG Ventas</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
-header{background:#168447;color:white;text-align:center;padding:22px 12px}
-header h1{margin:0 0 8px;font-size:30px}
-header p{margin:0}
-button{border:0;border-radius:7px;padding:11px 16px;font-size:15px;cursor:pointer}
-.boton-publicar{background:#ffcf33;color:#222;font-weight:bold;margin-top:14px}
-main{max-width:1100px;margin:auto;padding:15px}
-.panel{background:white;padding:16px;border-radius:10px;margin:15px 0;box-shadow:0 2px 7px #00000012}
-#formularioPublicar{display:none}
-input,textarea,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ccc;border-radius:6px;font-size:15px}
-textarea{min-height:75px;resize:vertical}
-.boton-verde{background:#168447;color:white;font-weight:bold}
-.boton-gris{background:#ddd;color:#222}
-.buscador{margin-bottom:12px}
-.filtros{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.filtros button{background:#e2e9e1}
-.filtros button.activo{background:#168447;color:white}
-#productos{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:15px}
-.producto{background:white;border-radius:10px;padding:12px;box-shadow:0 2px 7px #00000015;display:flex;flex-direction:column}
-.producto img{width:100%;height:165px;object-fit:contain;background:#f7f7f7;border-radius:7px}
-.producto h3{font-size:17px;margin:10px 0 5px}
-.producto p{font-size:14px;margin:5px 0 10px;flex:1}
-.precio{font-size:19px;font-weight:bold;color:#168447;margin:8px 0}
-.producto button{background:#168447;color:white;font-weight:bold}
-#carrito ul{padding-left:20px}
-#carrito li{margin:8px 0}
-.total{font-weight:bold;font-size:18px;margin:8px 0}
-.aviso{padding:10px;background:#eef6ed;border-radius:6px;margin:10px 0}
-footer{text-align:center;padding:20px;color:#666;font-size:13px}
-</style>
-</head>
-<body>
+function obtenerHoja() {
+  const libro = SpreadsheetApp.getActiveSpreadsheet();
+  const hoja = libro.getSheetByName("Hoja 1");
 
-<header>
-<h1>🛒 RSG Ventas</h1>
-<p>Productos y recuerdos</p>
-<button class="boton-publicar" onclick="alternarFormulario()">＋ Publicar como comerciante</button>
-</header>
+  if (!hoja) {
+    throw new Error('No se encontró la pestaña "Hoja 1".');
+  }
 
-<main>
-
-<section class="panel" id="formularioPublicar">
-<h2>Publicá tus productos</h2>
-<p>Sumá tus productos a RSG Ventas.</p>
-
-<form id="formPublicacion" method="POST" target="respuestaPublicacion">
-<label>Nombre del comercio</label>
-<input name="comercio" required placeholder="Nombre de tu comercio">
-
-<label>Nombre del producto</label>
-<input name="nombre" required placeholder="¿Qué producto ofrecés?">
-
-<label>Precio</label>
-<input name="precio" required type="number" min="1" step="0.01" placeholder="Precio en pesos">
-
-<label>Descripción</label>
-<textarea name="descripcion" placeholder="Descripción del producto"></textarea>
-
-<label>Enlace de la fotografía</label>
-<input name="foto" type="url" placeholder="Pegá el enlace de la foto">
-
-<label>Categoría</label>
-<select name="categoria">
-<option value="Religiosos">Religiosos</option>
-<option value="Llaveros">Llaveros</option>
-<option value="Recuerdos">Recuerdos</option>
-<option value="Otros">Otros</option>
-</select>
-
-<label>WhatsApp del comercio</label>
-<input name="whatsapp" type="tel" required placeholder="Ejemplo: 5493447123456">
-
-<button class="boton-verde" type="submit">Publicar producto</button>
-<button class="boton-gris" type="button" onclick="alternarFormulario()">Cerrar</button>
-</form>
-
-<iframe name="respuestaPublicacion" id="respuestaPublicacion" style="display:none"></iframe>
-<div id="mensajePublicacion" class="aviso" style="display:none"></div>
-</section>
-
-<section class="panel">
-<h2>Buscá productos</h2>
-<input class="buscador" id="busqueda" type="search" placeholder="¿Qué estás buscando?" oninput="mostrarProductos()">
-
-<div class="filtros">
-<button class="activo" onclick="filtrar('Todos',this)">Todos</button>
-<button onclick="filtrar('Religiosos',this)">Religiosos</button>
-<button onclick="filtrar('Llaveros',this)">Llaveros</button>
-<button onclick="filtrar('Recuerdos',this)">Recuerdos</button>
-</div>
-
-<div id="estadoProductos" class="aviso">Cargando productos...</div>
-<div id="productos"></div>
-</section>
-
-<section class="panel" id="carrito">
-<h2>🛒 Mi carrito</h2>
-<ul id="listaCarrito"></ul>
-<p>Subtotal: <strong id="subtotal">$0</strong></p>
-<p>Servicio RSG Ventas (10%): <strong id="servicio">$0</strong></p>
-<p class="total">Total: <span id="total">$0</span></p>
-<button class="boton-verde" onclick="enviarPedido()">📲 Enviar pedido por WhatsApp</button>
-<button class="boton-gris" onclick="vaciarCarrito()">Vaciar carrito</button>
-</section>
-
-</main>
-
-<footer>RSG Ventas - Productos y recuerdos</footer>
-
-<script>
-const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
-const PORCENTAJE_SERVICIO=0.10;
-
-let productos=[];
-let carrito=[];
-let categoriaActual="Todos";
-
-function alternarFormulario(){
- const f=document.getElementById("formularioPublicar");
- f.style.display=f.style.display==="block"?"none":"block";
+  return hoja;
 }
 
-function normalizarTexto(texto){
- return String(texto||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+function responder(datos) {
+  return ContentService
+    .createTextOutput(JSON.stringify(datos))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
-function convertirPrecio(valor){
- if(typeof valor==="number")return valor;
- let t=String(valor||"").trim().replace(/\s/g,"").replace(/[$]/g,"");
- if(t.includes(",")&&t.includes("."))t=t.replace(/\./g,"").replace(",",".");
- else if(t.includes(","))t=t.replace(",",".");
- else if(/^\d{1,3}(\.\d{3})+$/.test(t))t=t.replace(/\./g,"");
- return Number(t)||0;
+function normalizar(texto) {
+  return String(texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
 }
 
-function dinero(valor){
- return new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2}).format(valor);
+function limpiarWhatsApp(numero) {
+  return String(numero || "").replace(/\D/g, "");
 }
 
-function limpiarTelefono(valor){
- return String(valor||"").replace(/\D/g,"");
+function buscarColumna(encabezados, nombres) {
+  return encabezados.findIndex(h => nombres.includes(h));
 }
 
-function prepararFoto(url){
- if(!url)return "";
- url=String(url).trim();
- const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/)||url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
- if(m&&url.includes("drive.google.com")){
-  return "https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000";
- }
- return url;
+function doGet(e) {
+  try {
+    const hoja = obtenerHoja();
+    const datos = hoja.getDataRange().getDisplayValues();
+
+    if (datos.length < 2) {
+      return responder([]);
+    }
+
+    const encabezados = datos[0].map(normalizar);
+
+    const columnas = {
+      nombre: buscarColumna(encabezados, ["nombre", "producto"]),
+      precio: buscarColumna(encabezados, ["precio"]),
+      descripcion: buscarColumna(encabezados, ["descripcion"]),
+      foto: buscarColumna(encabezados, ["foto", "imagen"]),
+      comercio: buscarColumna(encabezados, ["comercio", "vendedor"]),
+      categoria: buscarColumna(encabezados, ["categoria"]),
+      whatsapp: buscarColumna(encabezados, [
+        "whatsapp",
+        "telefono",
+        "telefono whatsapp",
+        "numero whatsapp",
+        "whatsapp del comercio",
+        "whatsapp comercio",
+        "telefono del comercio"
+      ])
+    };
+
+    // Si no encuentra el encabezado, utiliza la columna G.
+    if (columnas.whatsapp < 0) {
+      columnas.whatsapp = 6;
+    }
+
+    Logger.log("Columna WhatsApp utilizada: " + (columnas.whatsapp + 1));
+    Logger.log("Encabezados: " + JSON.stringify(encabezados));
+
+    const productos = datos.slice(1)
+      .filter(fila =>
+        columnas.nombre >= 0 && fila[columnas.nombre]
+      )
+      .map(fila => ({
+        nombre: fila[columnas.nombre] || "",
+        precio: columnas.precio >= 0 ? fila[columnas.precio] : "",
+        descripcion: columnas.descripcion >= 0 ? fila[columnas.descripcion] : "",
+        foto: columnas.foto >= 0 ? fila[columnas.foto] : "",
+        comercio: columnas.comercio >= 0 ? fila[columnas.comercio] : "",
+        categoria: columnas.categoria >= 0 ? fila[columnas.categoria] : "",
+        whatsapp: limpiarWhatsApp(fila[columnas.whatsapp] || "")
+      }));
+
+    return responder(productos);
+
+  } catch (error) {
+    Logger.log(error.message);
+    return responder({ error: error.message });
+  }
 }
 
-function obtenerCampo(obj,nombres){
- const claves=Object.keys(obj||{});
- for(const nombre of nombres){
-  const buscada=normalizarTexto(nombre);
-  const clave=claves.find(k=>normalizarTexto(k)===buscada);
-  if(clave!==undefined&&obj[clave]!==undefined)return obj[clave];
- }
- return "";
+function doPost(e) {
+  try {
+    const hoja = obtenerHoja();
+    const datos = e && e.parameter ? e.parameter : {};
+
+    const valores = {
+      nombre: String(datos.nombre || "").trim(),
+      precio: String(datos.precio || "").trim(),
+      descripcion: datos.descripcion || "",
+      foto: datos.foto || "",
+      comercio: datos.comercio || "",
+      categoria: datos.categoria || "",
+      whatsapp: limpiarWhatsApp(datos.whatsapp || "")
+    };
+
+    if (!valores.nombre || !valores.precio || !valores.whatsapp) {
+      return responder({
+        ok: false,
+        mensaje: "Falta el nombre, el precio o el WhatsApp del comercio."
+      });
+    }
+
+    const encabezadosNecesarios = [
+      "Nombre",
+      "Precio",
+      "Descripción",
+      "Foto",
+      "Comercio",
+      "Categoría",
+      "WhatsApp"
+    ];
+
+    if (hoja.getLastRow() === 0) {
+      hoja.appendRow(encabezadosNecesarios);
+    }
+
+    let ultimaColumna = Math.max(hoja.getLastColumn(), 1);
+
+    let encabezados = hoja
+      .getRange(1, 1, 1, ultimaColumna)
+      .getDisplayValues()[0]
+      .map(normalizar);
+
+    encabezadosNecesarios.forEach(encabezado => {
+      if (!encabezados.includes(normalizar(encabezado))) {
+        hoja.getRange(1, hoja.getLastColumn() + 1)
+          .setValue(encabezado);
+        encabezados.push(normalizar(encabezado));
+      }
+    });
+
+    ultimaColumna = hoja.getLastColumn();
+
+    encabezados = hoja
+      .getRange(1, 1, 1, ultimaColumna)
+      .getDisplayValues()[0]
+      .map(normalizar);
+
+    const nuevaFila = new Array(ultimaColumna).fill("");
+
+    Object.keys(valores).forEach(campo => {
+      const columna = encabezados.indexOf(normalizar(campo));
+
+      if (columna >= 0) {
+        nuevaFila[columna] = valores[campo];
+      }
+    });
+
+    hoja.appendRow(nuevaFila);
+
+    return responder({
+      ok: true,
+      mensaje: "Producto guardado correctamente.",
+      whatsappGuardado: true
+    });
+
+  } catch (error) {
+    Logger.log(error.message);
+
+    return responder({
+      ok: false,
+      mensaje: error.message
+    });
+  }
 }
-
-function normalizarProducto(p){
- return {
-  nombre:obtenerCampo(p,["nombre","producto","titulo"]),
-  precio:convertirPrecio(obtenerCampo(p,["precio","valor"])),
-  descripcion:obtenerCampo(p,["descripcion","detalle"]),
-  foto:prepararFoto(obtenerCampo(p,["foto","imagen","enlace foto"])),
-  categoria:obtenerCampo(p,["categoria","rubro"])||"Otros",
-  comercio:obtenerCampo(p,["comercio","vendedor"]),
-  whatsapp:limpiarTelefono(obtenerCampo(p,[
-   "whatsapp","telefono","telefono whatsapp","numero whatsapp",
-   "whatsapp del comercio","whatsapp comercio","telefono del comercio"
-  ]))
- };
-}
-
-async function cargarProductos(){
- const estado=document.getElementById("estadoProductos");
- estado.textContent="Cargando productos...";
- try{
-  const respuesta=await fetch(URL_PRODUCTOS+"?t="+Date.now());
-  if(!respuesta.ok)throw new Error("No se pudo consultar la lista");
-  const datos=await respuesta.json();
-  const lista=Array.isArray(datos)?datos:(datos.productos||datos.data||[]);
-  productos=lista.map(normalizarProducto).filter(p=>p.nombre);
-  estado.textContent=productos.length?"":"Todavía no hay productos publicados.";
-  mostrarProductos();
- }catch(error){
-  estado.textContent="No se pudieron cargar los productos. Revisá la conexión con Google Sheets.";
-  console.error(error);
- }
-}
-
-function crearElemento(etiqueta,texto,clase){
- const elemento=document.createElement(etiqueta);
- if(texto!==undefined)elemento.textContent=texto;
- if(clase)elemento.className=clase;
- return elemento;
-}
-
-function filtrar(categoria,boton){
- categoriaActual=categoria;
- document.querySelectorAll(".filtros button").forEach(b=>b.classList.remove("activo"));
- boton.classList.add("activo");
- mostrarProductos();
-}
-
-function mostrarProductos(){
- const contenedor=document.getElementById("productos");
- const busqueda=normalizarTexto(document.getElementById("busqueda").value);
- contenedor.replaceChildren();
-
- const encontrados=productos.filter(p=>{
-  const texto=normalizarTexto(p.nombre+" "+p.descripcion+" "+p.comercio);
-  const coincideTexto=texto.includes(busqueda);
-  const coincideCategoria=categoriaActual==="Todos"||
-   normalizarTexto(p.categoria)===normalizarTexto(categoriaActual);
-  return coincideTexto&&coincideCategoria;
- });
-
- if(!encontrados.length){
-  document.getElementById("estadoProductos").textContent=
-   productos.length?"No hay productos para esa búsqueda.":"Todavía no hay productos publicados.";
-  return;
- }
-
- document.getElementById("estadoProductos").textContent="";
- encontrados.forEach(p=>{
-  const tarjeta=crearElemento("article",undefined,"producto");
-  const imagen=document.createElement("img");
-  imagen.alt=p.nombre;
-  imagen.src=p.foto||"";
-  imagen.onerror=function(){this.onerror=null;this.style.display="none";};
-  if(!p.foto)imagen.style.display="none";
-
-  tarjeta.append(
-   imagen,
-   crearElemento("h3",p.nombre),
-   crearElemento("p",p.descripcion),
-   crearElemento("div",dinero(p.precio),"precio")
-  );
-
-  if(p.comercio)tarjeta.appendChild(crearElemento("small","Comercio: "+p.comercio));
-
-  const boton=crearElemento("button","Agregar al carrito");
-  boton.type="button";
-  boton.addEventListener("click",()=>agregarAlCarrito(p));
-  tarjeta.appendChild(boton);
-  contenedor.appendChild(tarjeta);
- });
-}
-
-function agregarAlCarrito(producto){
- const existente=carrito.find(p=>
-  p.nombre===producto.nombre&&
-  p.precio===producto.precio&&
-  p.whatsapp===producto.whatsapp&&
-  p.comercio===producto.comercio
- );
- if(existente)existente.cantidad++;
- else carrito.push({...producto,cantidad:1});
- actualizarCarrito();
-}
-
-function actualizarCarrito(){
- const lista=document.getElementById("listaCarrito");
- lista.replaceChildren();
- let subtotal=0;
-
- carrito.forEach((p,index)=>{
-  subtotal+=p.precio*p.cantidad;
-  const item=document.createElement("li");
-  item.textContent=p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+" ";
-
-  const quitar=crearElemento("button","Quitar");
-  quitar.type="button";
-  quitar.className="boton-gris";
-  quitar.addEventListener("click",()=>{
-   carrito.splice(index,1);
-   actualizarCarrito();
-  });
-  item.appendChild(quitar);
-  lista.appendChild(item);
- });
-
- const servicio=subtotal*PORCENTAJE_SERVICIO;
- document.getElementById("subtotal").textContent=dinero(subtotal);
- document.getElementById("servicio").textContent=dinero(servicio);
- document.getElementById("total").textContent=dinero(subtotal+servicio);
-}
-
-function vaciarCarrito(){
- carrito=[];
- actualizarCarrito();
-}
-
-function enviarPedido(){
- if(!carrito.length){
-  alert("El carrito está vacío.");
-  return;
- }
-
- const grupos={};
- carrito.forEach(p=>{
-  const telefono=limpiarTelefono(p.whatsapp);
-  if(!telefono)return;
-  if(!grupos[telefono])grupos[telefono]=[];
-  grupos[telefono].push(p);
- });
-
- const faltantes=carrito.filter(p=>!limpiarTelefono(p.whatsapp));
- if(faltantes.length){
-  alert("Hay productos sin WhatsApp de comerciante guardado. No se puede enviar el pedido completo. Revisá esas publicaciones.");
-  return;
- }
-
- const telefonos=Object.keys(grupos);
- if(!telefonos.length){
-  alert("No se encontraron números de WhatsApp para los comercios.");
-  return;
- }
-
- const enlaces=[];
-
- telefonos.forEach(telefono=>{
-  const items=grupos[telefono];
-  const subtotal=items.reduce((s,p)=>s+p.precio*p.cantidad,0);
-  const servicio=subtotal*PORCENTAJE_SERVICIO;
-
-  let mensaje="Hola, quiero realizar este pedido en RSG Ventas:\n\n";
-  items.forEach(p=>{
-   mensaje+=p.nombre+" x "+p.cantidad+" - "+dinero(p.precio*p.cantidad)+"\n";
-  });
-  mensaje+="\nSubtotal: "+dinero(subtotal);
-  mensaje+="\nServicio RSG Ventas (10%): "+dinero(servicio);
-  mensaje+="\nTOTAL: "+dinero(subtotal+servicio);
-
-  enlaces.push("https://wa.me/"+telefono+"?text="+encodeURIComponent(mensaje));
- });
-
- if(enlaces.length>1){
-  alert("Tenés productos de "+enlaces.length+" comercios. Se abrirá un pedido separado para cada vendedor. Si el navegador bloquea alguna ventana, permití las ventanas emergentes.");
- }
-
- enlaces.forEach(enlace=>{
-  window.open(enlace,"_blank");
- });
-}
-
-document.getElementById("formPublicacion").addEventListener("submit",function(e){
- e.preventDefault();
-
- const formulario=this;
- const mensaje=document.getElementById("mensajePublicacion");
- formulario.action=URL_PRODUCTOS;
-
- mensaje.style.display="block";
- mensaje.textContent="Enviando publicación...";
-
- formulario.submit();
-
- setTimeout(()=>{
-  mensaje.textContent="Solicitud enviada. Revisá la página en unos instantes para comprobar que el producto aparezca publicado.";
-  formulario.reset();
-  cargarProductos();
- },2500);
-});
-
-actualizarCarrito();
-cargarProductos();
-</script>
-</body>
-</html>
 
 
 
