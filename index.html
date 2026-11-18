@@ -41,6 +41,79 @@ footer{text-align:center;background:#168447;color:white;padding:18px;margin-top:
 <body>
 
 <header>
+  <section id="zonaComerciantes">
+  <h2>🏪 Vendedores y comerciantes</h2>
+  <p>¿Tenés un comercio? Publicá tus productos en RSG Ventas.</p>
+
+  <button
+    type="button"
+    id="botonComerciante"
+    class="boton-verde"
+    onclick="alternarFormulario()">
+    ➕ PUBLICAR COMO COMERCIANTE
+  </button>
+
+  <div id="formularioComerciante" style="display:none; margin-top:18px;">
+    <h3>📦 Datos del producto</h3>
+
+    <form id="formulario"
+      action="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec"
+      method="POST"
+      target="respuestaFormulario">
+
+      <input type="text" name="comercio"
+        placeholder="Nombre de tu comercio" required>
+
+      <input type="text" name="nombre"
+        placeholder="Nombre del producto" required>
+
+      <input type="number" name="precio"
+        placeholder="Precio" min="1" required>
+
+      <textarea name="descripcion"
+        placeholder="Descripción del producto"></textarea>
+
+      <input type="url" name="foto"
+        placeholder="Enlace de la foto">
+
+      <select name="categoria">
+        <option value="">Elegí una categoría</option>
+        <option value="Religiosos">Religiosos</option>
+        <option value="Llaveros">Llaveros</option>
+        <option value="Recuerdos">Recuerdos</option>
+        <option value="Otros">Otros</option>
+      </select>
+
+      <input type="tel" name="whatsapp"
+        placeholder="WhatsApp del comercio con código de país" required>
+
+      <button type="submit" class="boton-verde">
+        📤 PUBLICAR PRODUCTO
+      </button>
+    </form>
+
+    <iframe name="respuestaFormulario"
+      id="respuestaFormulario"
+      style="display:none"></iframe>
+
+    <p id="mensaje"></p>
+  </div>
+</section>
+
+<script>
+function alternarFormulario() {
+  const formulario = document.getElementById("formularioComerciante");
+  const boton = document.getElementById("botonComerciante");
+
+  if (formulario.style.display === "none") {
+    formulario.style.display = "block";
+    boton.textContent = "✖ CERRAR FORMULARIO";
+  } else {
+    formulario.style.display = "none";
+    boton.textContent = "➕ PUBLICAR COMO COMERCIANTE";
+  }
+}
+</script>
 <h1>🛒 RSG Ventas</h1>
 <p>Productos y recuerdos</p>
 </header>
