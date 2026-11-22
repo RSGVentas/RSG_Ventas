@@ -270,6 +270,7 @@ document.getElementById("total").textContent=formatearPrecio(sub+serv);
 
 function prepararPedidos(){
 if(!carrito.length){alert("El carrito está vacío.");return;}
+
 const sinTelefono=carrito.filter(p=>!p.whatsapp);
 if(sinTelefono.length){
 alert("Hay productos sin WhatsApp de comerciante guardado. Revisá sus publicaciones antes de continuar.");
@@ -290,26 +291,38 @@ cont.innerHTML="<h3>Pedidos listos para enviar</h3><p>Elegí cada comercio para 
 Object.keys(grupos).forEach(tel=>{
 const g=grupos[tel];
 let mensaje="Hola, quiero realizar este pedido:\n\n";
+
 g.productos.forEach(p=>{
 mensaje+="• "+p.nombre+"\nCantidad: "+p.cantidad+"\nPrecio: "+formatearPrecio(p.precio)+"\nSubtotal: "+formatearPrecio(p.precio*p.cantidad)+"\n\n";
 });
+
 const servicio=g.subtotal*PORCENTAJE_SERVICIO;
 mensaje+="Comercio: "+g.comercio+"\nSubtotal: "+formatearPrecio(g.subtotal)+"\nServicio 10%: "+formatearPrecio(servicio)+"\nTotal: "+formatearPrecio(g.subtotal+servicio);
+
 const enlace="https://wa.me/"+tel+"?text="+encodeURIComponent(mensaje);
 
 const tarjeta=document.createElement("div");
 tarjeta.className="envio-comercio";
-const titulo=document.createElement("h3");titulo.textContent=g.comercio;
-const detalle=document.createElement("p");detalle.textContent=g.productos.length+" producto(s) · "+formatearPrecio(g.subtotal+servicio);
-const boton=document.createElement("button");boton.textContent="📲 ENVIAR PEDIDO A "+g.comercio;
+
+const titulo=document.createElement("h3");
+titulo.textContent=g.comercio;
+
+const detalle=document.createElement("p");
+detalle.textContent=g.productos.length+" producto(s) · "+formatearPrecio(g.subtotal+servicio);
+
+const boton=document.createElement("button");
+boton.textContent="📲 ENVIAR PEDIDO A "+g.comercio;
 boton.addEventListener("click",()=>window.open(enlace,"_blank"));
+
 tarjeta.append(titulo,detalle,boton);
 cont.appendChild(tarjeta);
 });
+
 cont.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 let formularioEnviado=false;
+
 document.getElementById("formPublicar").addEventListener("submit",function(){
 formularioEnviado=true;
 const boton=document.getElementById("botonPublicar");
