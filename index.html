@@ -2,61 +2,55 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RSG Ventas</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
-header{background:#168447;color:white;text-align:center;padding:22px 12px}
-header h1{margin:0 0 15px;font-size:30px}
-header p{margin:12px 0 0}
-.boton-comerciante{display:block;width:100%;max-width:420px;margin:auto;padding:15px;background:#FFD700;color:#222;font-weight:bold;font-size:17px;border:2px solid #E5B800;border-radius:8px;cursor:pointer}
-.contenedor{max-width:1100px;margin:20px auto;padding:0 12px}
-#formularioComerciante{display:none;background:white;padding:18px;border-radius:10px;margin-bottom:22px;box-shadow:0 2px 8px #0002}
-#formularioComerciante h2,.titulo-seccion,#carrito h2{color:#168447;text-align:center}
-input,select,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:6px;font-size:16px}
-textarea{min-height:80px;resize:vertical}
-.boton-publicar{width:100%;padding:14px;border:0;border-radius:7px;background:#168447;color:white;font-size:17px;font-weight:bold;cursor:pointer}
-.boton-publicar:disabled{opacity:.6}
-#mensajeFormulario{text-align:center;font-weight:bold;margin-top:12px}
-.busqueda{margin:15px 0}
-.filtros{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0 20px}
-.filtros button{padding:10px 15px;border:0;border-radius:20px;background:#168447;color:white;cursor:pointer}
-.filtros button.activo{background:#0b5730}
-#productos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
-.producto{background:white;border-radius:10px;padding:12px;box-shadow:0 2px 8px #0002;display:flex;flex-direction:column}
-.producto img{width:100%;height:190px;object-fit:contain;background:white}
+header{background:#168447;color:white;text-align:center;padding:22px 10px}
+header h1{margin:0;font-size:30px}
+.contenedor{width:94%;max-width:1100px;margin:18px auto}
+h2{color:#168447}
+button{cursor:pointer}
+.boton-comerciante{width:100%;padding:16px;background:#ffd400;color:#222;border:0;border-radius:9px;font-size:18px;font-weight:bold;margin-bottom:18px}
+#formularioComerciante{display:none;background:white;padding:18px;border-radius:10px;margin-bottom:20px}
+input,textarea,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ccc;border-radius:7px;font-size:16px}
+textarea{min-height:75px}
+.boton-publicar{background:#168447;color:white;border:0;padding:14px;width:100%;border-radius:7px;font-size:17px;font-weight:bold}
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
+.filtros button{background:#168447;color:white;border:0;border-radius:20px;padding:10px 15px}
+.filtros button.activo{background:#ffd400;color:#222;font-weight:bold}
+#productos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
+.producto{background:white;border-radius:10px;padding:12px;box-shadow:0 2px 7px #0002;display:flex;flex-direction:column}
+.producto img{width:100%;height:190px;object-fit:contain;background:#f8f8f8}
 .producto h3{margin:10px 0 5px}
-.producto p{margin:5px 0;line-height:1.4}
-.precio{color:#168447;font-size:20px;font-weight:bold;margin:8px 0}
-.boton-agregar{margin-top:auto;padding:11px;background:#168447;color:white;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
-#carrito{background:white;padding:18px;border-radius:10px;margin:25px 0;box-shadow:0 2px 8px #0002}
-.item-carrito{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #ddd;padding:10px 0}
-.item-carrito button{background:#c62828;color:white;border:0;border-radius:5px;padding:6px 10px;cursor:pointer}
-.total-linea{display:flex;justify-content:space-between;margin:10px 0}
-.total-final{font-size:21px;font-weight:bold;color:#168447}
-.boton-whatsapp{display:block;width:100%;padding:15px;margin-top:15px;border:0;border-radius:7px;background:#25D366;color:white;font-size:17px;font-weight:bold;cursor:pointer}
-.envio-comercio{background:#f3f7f0;border:1px solid #ddd;padding:13px;border-radius:8px;margin:12px 0}
-.envio-comercio button{width:100%;padding:13px;background:#25D366;color:white;border:0;border-radius:7px;font-weight:bold;font-size:16px;cursor:pointer}
-footer{background:#168447;color:white;text-align:center;padding:18px;margin-top:25px}
-@media(max-width:480px){
-header h1{font-size:26px}
-#productos{grid-template-columns:repeat(2,minmax(0,1fr))}
-.producto img{height:145px}
-}
+.producto p{overflow-wrap:anywhere}
+.precio{color:#168447;font-size:21px;font-weight:bold;margin:8px 0}
+.boton-agregar{margin-top:auto;background:#168447;color:white;border:0;padding:12px;border-radius:7px;font-size:16px}
+#carrito{background:white;padding:18px;margin-top:25px;border-radius:10px;box-shadow:0 2px 7px #0002}
+.item-carrito{border-bottom:1px solid #ddd;padding:10px 0}
+.item-carrito button{margin:5px;padding:6px 10px}
+.totales{margin-top:15px;line-height:1.9;font-size:17px}
+.total-final{font-size:22px;font-weight:bold;color:#168447}
+.boton-whatsapp{width:100%;background:#168447;color:white;border:0;border-radius:8px;padding:15px;margin-top:15px;font-size:17px;font-weight:bold}
+.envio-comercio{background:#f3f7f0;padding:13px;border-radius:8px;margin:12px 0;overflow-wrap:anywhere}
+.envio-comercio a{display:block;background:#168447;color:white;text-decoration:none;text-align:center;padding:12px;border-radius:7px;margin-top:8px}
+.aviso{color:#a33;font-weight:bold}
+footer{text-align:center;padding:20px;color:#555}
 </style>
 </head>
 <body>
 
 <header>
 <h1>🛒 RSG Ventas</h1>
-<button type="button" class="boton-comerciante" onclick="alternarFormulario()">
-➕ PUBLICAR COMO COMERCIANTE
-</button>
 <p>Productos y recuerdos</p>
 </header>
 
 <main class="contenedor">
+
+<button class="boton-comerciante" onclick="mostrarFormulario()">
+🟡 PUBLICÁ TUS PRODUCTOS
+</button>
 
 <section id="formularioComerciante">
 <h2>Publicá tus productos</h2>
@@ -66,56 +60,70 @@ header h1{font-size:26px}
 action="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec"
 method="POST" target="respuestaFormulario">
 
-<input type="text" name="comercio" placeholder="Nombre de tu comercio" required>
-<input type="text" name="nombre" placeholder="Nombre del producto" required>
-<input type="number" name="precio" placeholder="Precio" min="1" required>
-<textarea name="descripcion" placeholder="Descripción del producto"></textarea>
-<input type="url" name="foto" placeholder="Enlace de la foto del producto">
+<label>Nombre del comercio</label>
+<input type="text" name="comercio" required>
 
+<label>Nombre del producto</label>
+<input type="text" name="nombre" required>
+
+<label>Precio</label>
+<input type="number" name="precio" min="1" step="1" required>
+
+<label>Descripción</label>
+<textarea name="descripcion"></textarea>
+
+<label>Enlace de la fotografía</label>
+<input type="url" name="foto" placeholder="https://...">
+
+<label>Categoría</label>
 <select name="categoria" required>
-<option value="">Elegí una categoría</option>
+<option value="">Elegir categoría</option>
 <option value="Religiosos">Religiosos</option>
 <option value="Llaveros">Llaveros</option>
 <option value="Recuerdos">Recuerdos</option>
 <option value="Otros">Otros</option>
 </select>
 
-<input type="tel" name="whatsapp" placeholder="WhatsApp con código de país (ej. 549...)"
-pattern="[0-9+() -]{8,25}" required>
+<label>WhatsApp del comercio</label>
+<input type="tel" name="whatsapp" placeholder="5493447XXXXXXXX" required>
 
-<button type="submit" class="boton-publicar" id="botonPublicar">📤 PUBLICAR PRODUCTO</button>
+<button class="boton-publicar" id="botonPublicar" type="submit">
+📤 PUBLICAR PRODUCTO
+</button>
+<p id="mensajeFormulario"></p>
 </form>
 
 <iframe name="respuestaFormulario" id="respuestaFormulario" style="display:none"></iframe>
-<div id="mensajeFormulario"></div>
 </section>
 
-<section>
-<h2 class="titulo-seccion">Nuestros productos</h2>
-<input type="search" id="buscador" class="busqueda"
-placeholder="¿Qué estás buscando?" oninput="filtrarProductos()">
+<h2>Productos disponibles</h2>
+<input type="search" id="buscador" placeholder="¿Qué estás buscando?" oninput="mostrarProductos()">
 
 <div class="filtros">
-<button class="activo" onclick="elegirCategoria('Todos',this)">Todos</button>
-<button onclick="elegirCategoria('Religiosos',this)">Religiosos</button>
-<button onclick="elegirCategoria('Llaveros',this)">Llaveros</button>
-<button onclick="elegirCategoria('Recuerdos',this)">Recuerdos</button>
+<button class="activo" onclick="seleccionarCategoria('Todos',this)">Todos</button>
+<button onclick="seleccionarCategoria('Religiosos',this)">Religiosos</button>
+<button onclick="seleccionarCategoria('Llaveros',this)">Llaveros</button>
+<button onclick="seleccionarCategoria('Recuerdos',this)">Recuerdos</button>
 </div>
 
-<div id="productos"><p>Cargando productos...</p></div>
-</section>
+<div id="estadoProductos">Cargando productos...</div>
+<div id="productos"></div>
 
 <section id="carrito">
 <h2>🛒 Mi carrito</h2>
-<div id="listaCarrito"><p>Tu carrito está vacío.</p></div>
-<hr>
-<div class="total-linea"><span>Subtotal:</span><strong id="subtotal">$0</strong></div>
-<div class="total-linea"><span>Servicio 10%:</span><strong id="servicio">$0</strong></div>
-<div class="total-linea total-final"><span>Total:</span><strong id="total">$0</strong></div>
-<button class="boton-whatsapp" onclick="prepararPedidos()">📲 PREPARAR PEDIDOS POR WHATSAPP</button>
+<div id="listaCarrito">Tu carrito está vacío.</div>
+
+<div class="totales">
+<div>Subtotal: $<span id="subtotal">0</span></div>
+<div>Servicio 10%: $<span id="servicio">0</span></div>
+<div class="total-final">Total: $<span id="total">0</span></div>
+</div>
+
+<button class="boton-whatsapp" onclick="prepararPedidos()">
+📲 PREPARAR PEDIDOS POR WHATSAPP
+</button>
 <div id="enviosComercios"></div>
 </section>
-
 </main>
 
 <footer>RSG Ventas - Productos y recuerdos</footer>
@@ -124,228 +132,263 @@ placeholder="¿Qué estás buscando?" oninput="filtrarProductos()">
 const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbzYqUry0JmUIznVVlyBz6SjfUNV9AnPixm6m3gYstyPTnqrlbLnJYQ_mAkuhmPaS3c4/exec";
 const PORCENTAJE_SERVICIO=0.10;
 
-let todosLosProductos=[];
-let productosVisibles=[];
+let productos=[];
 let carrito=[];
 let categoriaActual="Todos";
 
-function alternarFormulario(){
+function normalizar(v){
+return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+}
+
+function formatearPrecio(n){
+return Math.round(Number(n)||0).toLocaleString("es-AR");
+}
+
+function convertirFoto(url){
+if(!url)return "";
+const m=String(url).match(/(?:id=|\/d\/)([a-zA-Z0-9_-]{20,})/);
+return m?"https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000":String(url).trim();
+}
+
+function mostrarFormulario(){
 const f=document.getElementById("formularioComerciante");
 f.style.display=f.style.display==="block"?"none":"block";
-if(f.style.display==="block") f.scrollIntoView({behavior:"smooth"});
+if(f.style.display==="block")f.scrollIntoView({behavior:"smooth"});
 }
 
-function normalizar(t){
-return String(t||"").toLowerCase().normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"").trim();
-}
+const formulario=document.getElementById("formPublicar");
+formulario.addEventListener("submit",function(){
+const boton=document.getElementById("botonPublicar");
+boton.disabled=true;
+boton.textContent="ENVIANDO...";
+document.getElementById("mensajeFormulario").textContent="Enviando publicación...";
+setTimeout(function(){
+boton.disabled=false;
+boton.textContent="📤 PUBLICAR PRODUCTO";
+document.getElementById("mensajeFormulario").textContent="Solicitud enviada. Actualizá el catálogo para comprobar la publicación.";
+cargarProductos();
+},4000);
+});
 
-function campo(o,nombres){
-for(const n of nombres){
-if(o[n]!==undefined && o[n]!==null && o[n]!=="") return o[n];
-const buscado=normalizar(n);
-for(const k in o){
-if(normalizar(k)===buscado && o[k]!==undefined && o[k]!==null) return o[k];
-}
-}
-return "";
-}
-
-function limpiarWhatsApp(n){return String(n||"").replace(/\D/g,"");}
-
-function convertirPrecio(v){
-if(typeof v==="number") return v;
-let t=String(v||"").replace(/[^\d,.-]/g,"").trim();
-if(t.includes(",")&&t.includes(".")) t=t.replace(/\./g,"").replace(",",".");
-else if(t.includes(",")) t=t.replace(",",".");
-return Number(t)||0;
-}
-
-function escaparHTML(t){
-return String(t||"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;',"'":"&#039;"
-})[c]);
-}
-
-function prepararProducto(p){
+function prepararProducto(p,i){
 return {
-nombre:campo(p,["nombre","producto"]),
-precio:convertirPrecio(campo(p,["precio"])),
-descripcion:campo(p,["descripcion","descripción"]),
-foto:campo(p,["foto","imagen"]),
-comercio:campo(p,["comercio","vendedor"]),
-categoria:campo(p,["categoria","categoría"]),
-whatsapp:limpiarWhatsApp(campo(p,["whatsapp","wasap","telefono","teléfono","numero whatsapp"]))
+id:i,
+nombre:p.nombre||p.Nombre||"",
+precio:Number(String(p.precio||p.Precio||"0").replace(",", "."))||0,
+descripcion:p.descripcion||p.Descripcion||"",
+foto:convertirFoto(p.foto||p.Foto||""),
+comercio:p.comercio||p.Comercio||"",
+categoria:p.categoria||p.Categoria||"Otros",
+whatsapp:p.whatsapp||p.WhatsApp||p.telefono||p.Telefono||""
 };
 }
 
 async function cargarProductos(){
-const cont=document.getElementById("productos");
+const estado=document.getElementById("estadoProductos");
+estado.textContent="Cargando productos...";
 try{
 const r=await fetch(URL_PRODUCTOS+"?t="+Date.now());
-if(!r.ok) throw new Error("Error al consultar productos");
+if(!r.ok)throw new Error("Error de conexión");
 const datos=await r.json();
-let lista=Array.isArray(datos)?datos:
-Array.isArray(datos.productos)?datos.productos:
-Array.isArray(datos.data)?datos.data:
-Array.isArray(datos.datos)?datos.datos:[];
-if(datos.error) throw new Error(datos.mensaje||"Error de Apps Script");
-todosLosProductos=lista.map(prepararProducto).filter(p=>p.nombre&&p.precio>0);
-filtrarProductos();
+const lista=Array.isArray(datos)?datos:(datos.productos||datos.data||[]);
+productos=lista.map(prepararProducto);
+estado.textContent=productos.length?"":"Todavía no hay productos publicados.";
+mostrarProductos();
 }catch(e){
+estado.textContent="No se pudieron cargar los productos. Revisá la conexión con la planilla.";
 console.error(e);
-cont.innerHTML="<p>No se pudieron cargar los productos. Revisá la conexión e intentá nuevamente.</p>";
 }
 }
 
-function formatearPrecio(v){
-return "$"+Number(v||0).toLocaleString("es-AR",{maximumFractionDigits:2});
-}
-
-function mostrarProductos(lista){
+function mostrarProductos(){
 const cont=document.getElementById("productos");
-productosVisibles=lista;
-if(!lista.length){cont.innerHTML="<p>No hay productos para mostrar.</p>";return;}
-cont.innerHTML=lista.map((p,i)=>`
-<article class="producto">
-${p.foto?`<img src="${escaparHTML(p.foto)}" alt="${escaparHTML(p.nombre)}" onerror="this.style.display='none'">`:`<div style="height:145px;display:grid;place-items:center">📦</div>`}
-<h3>${escaparHTML(p.nombre)}</h3>
-<p>${escaparHTML(p.descripcion)}</p>
-<p><strong>Comercio:</strong> ${escaparHTML(p.comercio||"Vendedor")}</p>
-<p><strong>Categoría:</strong> ${escaparHTML(p.categoria)}</p>
-<div class="precio">${formatearPrecio(p.precio)}</div>
-<button class="boton-agregar" onclick="agregarAlCarrito(${i})">Agregar al carrito</button>
-</article>`).join("");
+cont.innerHTML="";
+const busqueda=normalizar(document.getElementById("buscador").value);
+const filtrados=productos.filter(p=>{
+const categoria=categoriaActual==="Todos"||normalizar(p.categoria)===normalizar(categoriaActual);
+const texto=normalizar(p.nombre+" "+p.descripcion+" "+p.comercio);
+return categoria&&texto.includes(busqueda);
+});
+
+if(!filtrados.length){
+cont.innerHTML="<p>No hay productos para mostrar.</p>";
+return;
 }
 
-function elegirCategoria(cat,boton){
-categoriaActual=cat;
+filtrados.forEach(p=>{
+const tarjeta=document.createElement("article");
+tarjeta.className="producto";
+
+if(p.foto){
+const img=document.createElement("img");
+img.src=p.foto;
+img.alt=p.nombre;
+img.onerror=function(){this.style.display="none";};
+tarjeta.appendChild(img);
+}
+
+const titulo=document.createElement("h3");
+titulo.textContent=p.nombre;
+
+const descripcion=document.createElement("p");
+descripcion.textContent=p.descripcion;
+
+const comercio=document.createElement("p");
+comercio.textContent=p.comercio?"Comercio: "+p.comercio:"";
+
+const precio=document.createElement("div");
+precio.className="precio";
+precio.textContent="$"+formatearPrecio(p.precio);
+
+const boton=document.createElement("button");
+boton.className="boton-agregar";
+boton.textContent="Agregar al carrito";
+boton.onclick=()=>agregarAlCarrito(p);
+
+tarjeta.append(titulo,descripcion,comercio,precio,boton);
+cont.appendChild(tarjeta);
+});
+}
+
+function seleccionarCategoria(categoria,boton){
+categoriaActual=categoria;
 document.querySelectorAll(".filtros button").forEach(b=>b.classList.remove("activo"));
 boton.classList.add("activo");
-filtrarProductos();
+mostrarProductos();
 }
 
-function filtrarProductos(){
-const busqueda=normalizar(document.getElementById("buscador").value);
-const filtrados=todosLosProductos.filter(p=>{
-const cat=categoriaActual==="Todos"||normalizar(p.categoria)===normalizar(categoriaActual);
-const texto=normalizar(p.nombre+" "+p.descripcion+" "+p.comercio);
-return cat&&texto.includes(busqueda);
-});
-mostrarProductos(filtrados);
-}
-
-function agregarAlCarrito(i){
-const p=productosVisibles[i];
-if(!p)return;
-const existente=carrito.find(x=>x.nombre===p.nombre&&x.comercio===p.comercio&&x.whatsapp===p.whatsapp&&x.precio===p.precio);
-if(existente) existente.cantidad++;
+function agregarAlCarrito(p){
+const existente=carrito.find(x=>x.nombre===p.nombre&&x.comercio===p.comercio&&x.whatsapp===p.whatsapp);
+if(existente)existente.cantidad++;
 else carrito.push({...p,cantidad:1});
-document.getElementById("enviosComercios").innerHTML="";
 actualizarCarrito();
 }
 
-function quitarDelCarrito(i){
-carrito.splice(i,1);
-document.getElementById("enviosComercios").innerHTML="";
+function cambiarCantidad(i,cambio){
+carrito[i].cantidad+=cambio;
+if(carrito[i].cantidad<=0)carrito.splice(i,1);
 actualizarCarrito();
 }
 
 function actualizarCarrito(){
 const lista=document.getElementById("listaCarrito");
-if(!carrito.length) lista.innerHTML="<p>Tu carrito está vacío.</p>";
-else lista.innerHTML=carrito.map((p,i)=>`
-<div class="item-carrito">
-<div><strong>${escaparHTML(p.nombre)}</strong><br>${p.cantidad} x ${formatearPrecio(p.precio)}</div>
-<div><strong>${formatearPrecio(p.precio*p.cantidad)}</strong>
-<button onclick="quitarDelCarrito(${i})">X</button></div>
-</div>`).join("");
+lista.innerHTML="";
 
-const sub=carrito.reduce((s,p)=>s+p.precio*p.cantidad,0);
-const serv=sub*PORCENTAJE_SERVICIO;
-document.getElementById("subtotal").textContent=formatearPrecio(sub);
-document.getElementById("servicio").textContent=formatearPrecio(serv);
-document.getElementById("total").textContent=formatearPrecio(sub+serv);
+if(!carrito.length)lista.textContent="Tu carrito está vacío.";
+
+carrito.forEach((p,i)=>{
+const item=document.createElement("div");
+item.className="item-carrito";
+
+const nombre=document.createElement("strong");
+nombre.textContent=p.nombre;
+
+const detalle=document.createElement("div");
+detalle.textContent="$"+formatearPrecio(p.precio)+" x "+p.cantidad+" = $"+formatearPrecio(p.precio*p.cantidad);
+
+const menos=document.createElement("button");
+menos.textContent="−";
+menos.onclick=()=>cambiarCantidad(i,-1);
+
+const cantidad=document.createElement("span");
+cantidad.textContent=" "+p.cantidad+" ";
+
+const mas=document.createElement("button");
+mas.textContent="+";
+mas.onclick=()=>cambiarCantidad(i,1);
+
+const quitar=document.createElement("button");
+quitar.textContent="Eliminar";
+quitar.onclick=()=>{
+carrito.splice(i,1);
+actualizarCarrito();
+};
+
+item.append(nombre,detalle,menos,cantidad,mas,quitar);
+lista.appendChild(item);
+});
+
+const subtotal=carrito.reduce((s,p)=>s+p.precio*p.cantidad,0);
+const servicio=Math.round(subtotal*PORCENTAJE_SERVICIO);
+const total=subtotal+servicio;
+
+document.getElementById("subtotal").textContent=formatearPrecio(subtotal);
+document.getElementById("servicio").textContent=formatearPrecio(servicio);
+document.getElementById("total").textContent=formatearPrecio(total);
 }
 
 function prepararPedidos(){
-if(!carrito.length){alert("El carrito está vacío.");return;}
+const cont=document.getElementById("enviosComercios");
+cont.innerHTML="";
 
-const sinTelefono=carrito.filter(p=>!p.whatsapp);
-if(sinTelefono.length){
-alert("Hay productos sin WhatsApp de comerciante guardado. Revisá sus publicaciones antes de continuar.");
+if(!carrito.length){
+cont.textContent="Primero agregá productos al carrito.";
 return;
 }
 
 const grupos={};
+
 carrito.forEach(p=>{
-const tel=p.whatsapp;
-if(!grupos[tel]) grupos[tel]={comercio:p.comercio||"Comercio",productos:[],subtotal:0};
-grupos[tel].productos.push(p);
-grupos[tel].subtotal+=p.precio*p.cantidad;
+const telefono=String(p.whatsapp||"").replace(/\D/g,"");
+if(!telefono)return;
+
+if(!grupos[telefono]){
+grupos[telefono]={
+comercio:p.comercio||"Comercio",
+telefono:telefono,
+productos:[],
+subtotal:0
+};
+}
+
+grupos[telefono].productos.push(p);
+grupos[telefono].subtotal+=p.precio*p.cantidad;
 });
 
-const cont=document.getElementById("enviosComercios");
-cont.innerHTML="<h3>Pedidos listos para enviar</h3><p>Elegí cada comercio para enviarle su pedido por WhatsApp.</p>";
+const telefonos=Object.keys(grupos);
 
-Object.keys(grupos).forEach(tel=>{
-const g=grupos[tel];
+if(!telefonos.length){
+cont.innerHTML='<p class="aviso">Los productos no tienen un WhatsApp de comercio guardado. Hay que guardar ese dato en Apps Script y en la planilla.</p>';
+return;
+}
+
+telefonos.forEach(telefono=>{
+const grupo=grupos[telefono];
+const servicio=Math.round(grupo.subtotal*PORCENTAJE_SERVICIO);
 let mensaje="Hola, quiero realizar este pedido:\n\n";
 
-g.productos.forEach(p=>{
-mensaje+="• "+p.nombre+"\nCantidad: "+p.cantidad+"\nPrecio: "+formatearPrecio(p.precio)+"\nSubtotal: "+formatearPrecio(p.precio*p.cantidad)+"\n\n";
+grupo.productos.forEach(p=>{
+mensaje+=p.nombre+" x "+p.cantidad+" - $"+formatearPrecio(p.precio*p.cantidad)+"\n";
 });
 
-const servicio=g.subtotal*PORCENTAJE_SERVICIO;
-mensaje+="Comercio: "+g.comercio+"\nSubtotal: "+formatearPrecio(g.subtotal)+"\nServicio 10%: "+formatearPrecio(servicio)+"\nTotal: "+formatearPrecio(g.subtotal+servicio);
-
-const enlace="https://wa.me/"+tel+"?text="+encodeURIComponent(mensaje);
+mensaje+="\nSubtotal: $"+formatearPrecio(grupo.subtotal);
+mensaje+="\nServicio 10%: $"+formatearPrecio(servicio);
+mensaje+="\nTotal: $"+formatearPrecio(grupo.subtotal+servicio);
+mensaje+="\n\nPedido realizado desde RSG Ventas.";
 
 const tarjeta=document.createElement("div");
 tarjeta.className="envio-comercio";
 
-const titulo=document.createElement("h3");
-titulo.textContent=g.comercio;
+const titulo=document.createElement("strong");
+titulo.textContent="Pedido para "+grupo.comercio;
 
-const detalle=document.createElement("p");
-detalle.textContent=g.productos.length+" producto(s) · "+formatearPrecio(g.subtotal+servicio);
+const enlace=document.createElement("a");
+enlace.href="https://wa.me/"+telefono+"?text="+encodeURIComponent(mensaje);
+enlace.target="_blank";
+enlace.rel="noopener";
+enlace.textContent="📲 ENVIAR PEDIDO A "+grupo.comercio;
 
-const boton=document.createElement("button");
-boton.textContent="📲 ENVIAR PEDIDO A "+g.comercio;
-boton.addEventListener("click",()=>window.open(enlace,"_blank"));
-
-tarjeta.append(titulo,detalle,boton);
+tarjeta.append(titulo,enlace);
 cont.appendChild(tarjeta);
 });
-
-cont.scrollIntoView({behavior:"smooth",block:"start"});
 }
-
-let formularioEnviado=false;
-
-document.getElementById("formPublicar").addEventListener("submit",function(){
-formularioEnviado=true;
-const boton=document.getElementById("botonPublicar");
-boton.disabled=true;
-boton.textContent="PUBLICANDO...";
-document.getElementById("mensajeFormulario").textContent="Enviando publicación. Esperá unos segundos...";
-});
-
-document.getElementById("respuestaFormulario").addEventListener("load",function(){
-if(!formularioEnviado)return;
-formularioEnviado=false;
-const boton=document.getElementById("botonPublicar");
-boton.disabled=false;
-boton.textContent="📤 PUBLICAR PRODUCTO";
-document.getElementById("mensajeFormulario").textContent="Se recibió la respuesta. Actualizando el catálogo...";
-setTimeout(cargarProductos,2000);
-});
 
 actualizarCarrito();
 cargarProductos();
 </script>
 </body>
 </html>
+
 
 
 
