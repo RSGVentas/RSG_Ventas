@@ -6,9 +6,7 @@
   <title>RSG Ventas</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -25,15 +23,8 @@
       padding: 22px 12px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-    }
-
-    header p {
-      margin: 7px 0 0;
-      font-size: 16px;
-    }
+    header h1 { margin: 0; font-size: 30px; }
+    header p { margin: 7px 0 0; font-size: 16px; }
 
     .contenedor {
       width: 95%;
@@ -55,7 +46,8 @@
       cursor: pointer;
     }
 
-    .formulario-publicar {
+    .formulario-publicar,
+    .formulario-compra {
       display: none;
       background: white;
       padding: 18px;
@@ -64,7 +56,8 @@
       box-shadow: 0 2px 7px #0002;
     }
 
-    .formulario-publicar h2 {
+    .formulario-publicar h2,
+    .formulario-compra h2 {
       margin-top: 0;
       color: #168447;
     }
@@ -95,9 +88,7 @@
       cursor: pointer;
     }
 
-    .buscador {
-      margin-bottom: 12px;
-    }
+    .buscador { margin-bottom: 12px; }
 
     .filtros {
       display: flex;
@@ -143,15 +134,8 @@
       border-radius: 7px;
     }
 
-    .producto h3 {
-      margin: 10px 0 5px;
-      font-size: 18px;
-    }
-
-    .producto p {
-      margin: 5px 0;
-      color: #555;
-    }
+    .producto h3 { margin: 10px 0 5px; font-size: 18px; }
+    .producto p { margin: 5px 0; color: #555; }
 
     .precio {
       color: #168447 !important;
@@ -212,18 +196,23 @@
       color: #168447;
     }
 
-    .boton-whatsapp {
+    .boton-compra {
       display: block;
       width: 100%;
       padding: 14px;
       margin-top: 15px;
-      background: #25D366;
+      background: #168447;
       color: white;
       border: none;
       border-radius: 7px;
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
+    }
+
+    .boton-compra:disabled {
+      background: #999;
+      cursor: not-allowed;
     }
 
     .mensaje {
@@ -240,9 +229,7 @@
       color: white;
     }
 
-    .oculto {
-      display: none;
-    }
+    .oculto { display: none; }
   </style>
 </head>
 
@@ -273,42 +260,24 @@
         target="respuestaFormulario">
 
         <label for="comercio">Nombre del comercio</label>
-        <input
-          type="text"
-          id="comercio"
-          name="comercio"
-          placeholder="Nombre de tu comercio"
-          required>
+        <input type="text" id="comercio" name="comercio"
+          placeholder="Nombre de tu comercio" required>
 
         <label for="nombre">Nombre del producto</label>
-        <input
-          type="text"
-          id="nombre"
-          name="nombre"
-          placeholder="Nombre del producto"
-          required>
+        <input type="text" id="nombre" name="nombre"
+          placeholder="Nombre del producto" required>
 
         <label for="precio">Precio</label>
-        <input
-          type="number"
-          id="precio"
-          name="precio"
-          placeholder="Precio del producto"
-          min="1"
-          step="0.01"
-          required>
+        <input type="number" id="precio" name="precio"
+          placeholder="Precio del producto" min="1"
+          step="0.01" required>
 
         <label for="descripcion">Descripción</label>
-        <textarea
-          id="descripcion"
-          name="descripcion"
+        <textarea id="descripcion" name="descripcion"
           placeholder="Descripción del producto"></textarea>
 
         <label for="foto">Enlace de la fotografía</label>
-        <input
-          type="url"
-          id="foto"
-          name="foto"
+        <input type="url" id="foto" name="foto"
           placeholder="Pegá el enlace de la foto">
 
         <label for="categoria">Categoría</label>
@@ -318,14 +287,6 @@
           <option value="Recuerdos">Recuerdos</option>
           <option value="Otros">Otros</option>
         </select>
-
-        <label for="whatsapp">WhatsApp del comercio</label>
-        <input
-          type="tel"
-          id="whatsapp"
-          name="whatsapp"
-          placeholder="Ejemplo: 5493447123456"
-          required>
 
         <button type="submit" class="boton-enviar" id="botonEnviar">
           PUBLICAR PRODUCTO
@@ -378,10 +339,52 @@
 
       <button
         type="button"
-        class="boton-whatsapp"
+        class="boton-compra"
         id="botonPedido">
-        📲 ENVIAR PEDIDO POR WHATSAPP
+        🛒 CONFIRMAR COMPRA
       </button>
+    </section>
+
+    <section class="formulario-compra" id="formularioCompra">
+      <h2>Datos del comprador</h2>
+      <p>Completá tus datos para continuar con el pedido.</p>
+
+      <form id="formDatosCompra">
+        <label for="nombreComprador">Nombre y apellido</label>
+        <input
+          type="text"
+          id="nombreComprador"
+          name="nombreComprador"
+          placeholder="Tu nombre completo"
+          required>
+
+        <label for="telefonoComprador">Teléfono de contacto</label>
+        <input
+          type="tel"
+          id="telefonoComprador"
+          name="telefonoComprador"
+          placeholder="Tu teléfono"
+          required>
+
+        <label for="emailComprador">Correo electrónico</label>
+        <input
+          type="email"
+          id="emailComprador"
+          name="emailComprador"
+          placeholder="Tu correo electrónico">
+
+        <label for="direccionComprador">Dirección de entrega</label>
+        <textarea
+          id="direccionComprador"
+          name="direccionComprador"
+          placeholder="Dirección y localidad"></textarea>
+
+        <button type="submit" class="boton-enviar">
+          CONTINUAR CON EL PEDIDO
+        </button>
+      </form>
+
+      <p id="mensajeCompra" class="mensaje"></p>
     </section>
 
   </main>
@@ -416,9 +419,7 @@
     }
 
     function numeroPrecio(valor) {
-      if (typeof valor === "number") {
-        return valor;
-      }
+      if (typeof valor === "number") return valor;
 
       let texto = String(valor ?? "").trim();
       texto = texto.replace(/[^\d,.-]/g, "");
@@ -442,12 +443,9 @@
     }
 
     function convertirFoto(url) {
-      if (!url) {
-        return "";
-      }
+      if (!url) return "";
 
       const texto = String(url).trim();
-
       const coincidencia = texto.match(/drive\.google\.com\/file\/d\/([^/]+)/);
 
       if (coincidencia) {
@@ -487,8 +485,7 @@
               descripcion: producto.descripcion || "",
               foto: convertirFoto(producto.foto || ""),
               comercio: producto.comercio || "",
-              categoria: producto.categoria || "Otros",
-              whatsapp: String(producto.whatsapp || "").replace(/\D/g, "")
+              categoria: producto.categoria || "Otros"
             };
           });
 
@@ -559,10 +556,7 @@
 
     function agregarAlCarrito(indice) {
       const producto = productos[indice];
-
-      if (!producto) {
-        return;
-      }
+      if (!producto) return;
 
       const existente = carrito.find(function(item) {
         return item.producto === producto;
@@ -633,79 +627,35 @@
         formatoPrecio(total);
     }
 
-    function enviarPedido() {
-      if (carrito.length === 0) {
-        alert("Primero agregá productos al carrito.");
-        return;
-      }
-
-      const grupos = {};
-
-      carrito.forEach(function(item) {
-        const telefono = item.producto.whatsapp;
-
-        if (!telefono) {
+    document.getElementById("botonPedido")
+      .addEventListener("click", function() {
+        if (carrito.length === 0) {
+          alert("Primero agregá productos al carrito.");
           return;
         }
 
-        if (!grupos[telefono]) {
-          grupos[telefono] = [];
+        const formulario = document.getElementById("formularioCompra");
+
+        formulario.style.display =
+          formulario.style.display === "block" ? "none" : "block";
+
+        if (formulario.style.display === "block") {
+          formulario.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+
+    document.getElementById("formDatosCompra")
+      .addEventListener("submit", function(evento) {
+        evento.preventDefault();
+
+        if (carrito.length === 0) {
+          alert("El carrito está vacío.");
+          return;
         }
 
-        grupos[telefono].push(item);
+        document.getElementById("mensajeCompra").textContent =
+          "Tus datos están completos. Falta conectar el registro de pedidos con Google Apps Script para enviar la compra al comerciante. Todavía no se registró el pedido ni se realizó ningún cobro.";
       });
-
-      const telefonos = Object.keys(grupos);
-
-      if (telefonos.length === 0) {
-        alert(
-          "Los productos no tienen un WhatsApp de comercio guardado. " +
-          "Hay que guardar ese dato en la columna H de la planilla."
-        );
-        return;
-      }
-
-      if (telefonos.length < carrito.reduce(function(total, item) {
-        return total + (item.producto.whatsapp ? 0 : item.cantidad);
-      }, 0) + telefonos.length) {
-        alert(
-          "Hay productos sin WhatsApp de comercio. " +
-          "Se enviarán solamente los pedidos de los comercios que tienen número guardado."
-        );
-      }
-
-      telefonos.forEach(function(telefono) {
-        let subtotalComercio = 0;
-
-        let mensaje = "Hola, quiero realizar este pedido desde RSG Ventas:%0A%0A";
-
-        grupos[telefono].forEach(function(item) {
-          const importe = item.producto.precio * item.cantidad;
-          subtotalComercio += importe;
-
-          mensaje +=
-            encodeURIComponent(item.producto.nombre) +
-            " x " + item.cantidad +
-            " - " + encodeURIComponent(formatoPrecio(importe)) +
-            "%0A";
-        });
-
-        const servicioComercio = subtotalComercio * PORCENTAJE_SERVICIO;
-        const totalComercio = subtotalComercio + servicioComercio;
-
-        mensaje += "%0ASubtotal: " +
-          encodeURIComponent(formatoPrecio(subtotalComercio));
-
-        mensaje += "%0AServicio 10%: " +
-          encodeURIComponent(formatoPrecio(servicioComercio));
-
-        mensaje += "%0ATotal: " +
-          encodeURIComponent(formatoPrecio(totalComercio));
-
-        const enlace = "https://wa.me/" + telefono + "?text=" + mensaje;
-        window.open(enlace, "_blank");
-      });
-    }
 
     document.getElementById("botonMostrarFormulario")
       .addEventListener("click", function() {
@@ -731,9 +681,6 @@
 
     buscador.addEventListener("input", mostrarProductos);
 
-    document.getElementById("botonPedido")
-      .addEventListener("click", enviarPedido);
-
     const formularioPublicar = document.getElementById("formPublicar");
     const iframeRespuesta = document.getElementById("respuestaFormulario");
     const botonEnviar = document.getElementById("botonEnviar");
@@ -749,9 +696,7 @@
     });
 
     iframeRespuesta.addEventListener("load", function() {
-      if (!esperandoRespuesta) {
-        return;
-      }
+      if (!esperandoRespuesta) return;
 
       esperandoRespuesta = false;
       botonEnviar.disabled = false;
@@ -775,12 +720,6 @@
 
 </body>
 </html>
-
-
-
-
-
-
 
 
 
