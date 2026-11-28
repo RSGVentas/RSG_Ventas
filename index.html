@@ -1,365 +1,323 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RSG Ventas</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}
-header{background:#168447;color:white;text-align:center;padding:22px 12px}
-header h1{margin:0;font-size:30px}
-header p{margin:7px 0 0}
-.contenedor{width:95%;max-width:1100px;margin:20px auto}
-button{cursor:pointer}
-.boton-publicar{width:100%;padding:16px;margin:15px 0 20px;background:#ffcc00;color:#222;border:0;border-radius:9px;font-size:18px;font-weight:bold}
-.formulario-publicar,.formulario-compra{display:none;background:white;padding:18px;border-radius:10px;margin-bottom:22px;box-shadow:0 2px 7px #0002}
-h2{color:#168447}
-input,textarea,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ccc;border-radius:6px;font-size:16px}
-textarea{min-height:75px}
-.boton-enviar,.boton-compra{width:100%;padding:14px;background:#168447;color:white;border:0;border-radius:7px;font-size:17px;font-weight:bold}
-.buscador{margin-bottom:12px}
-.filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-.filtros button{padding:10px 14px;border:0;border-radius:20px;background:#ddd}
-.filtros button.activo{background:#168447;color:white}
-#productos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
-.producto{background:white;border-radius:10px;padding:12px;box-shadow:0 2px 7px #0002;display:flex;flex-direction:column}
-.producto img{width:100%;height:190px;object-fit:contain}
-.producto h3{margin:10px 0 5px}
-.producto p{margin:5px 0;color:#555}
-.precio{color:#168447!important;font-size:20px;font-weight:bold}
-.producto button{margin-top:auto;padding:11px;background:#168447;color:white;border:0;border-radius:6px}
-.carrito{margin-top:25px;padding:18px;background:white;border-radius:10px;box-shadow:0 2px 7px #0002}
-.item-carrito{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #ddd;padding:10px 0}
-.item-carrito button{background:#c62828;color:white;border:0;padding:6px 10px;border-radius:5px}
-.totales p{font-size:17px;margin:8px 0}
-.total-final{font-size:22px!important;font-weight:bold;color:#168447}
-.boton-compra{margin-top:15px}
-.mensaje{text-align:center;padding:15px;color:#555}
-footer{margin-top:30px;padding:18px;text-align:center;background:#168447;color:white}
-.oculto{display:none}
-.nota-prueba{text-align:center;color:#666;font-size:13px;margin-top:10px}
-</style>
-</head>
-<body>
+<!DOCTYPE html>  <html lang="es">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>RSG Ventas</title>  
+<style>  
+*{box-sizing:border-box}  
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7f0;color:#222}  
+header{background:#168447;color:white;text-align:center;padding:22px 12px}  
+header h1{margin:0;font-size:30px}  
+header p{margin:7px 0 0}  
+.contenedor{width:95%;max-width:1100px;margin:20px auto}  
+button{cursor:pointer}  
+.boton-publicar{width:100%;padding:16px;margin:15px 0 20px;background:#ffcc00;color:#222;border:0;border-radius:9px;font-size:18px;font-weight:bold}  
+.formulario-publicar,.formulario-compra{display:none;background:white;padding:18px;border-radius:10px;margin-bottom:22px;box-shadow:0 2px 7px #0002}  
+h2{color:#168447}  
+input,textarea,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ccc;border-radius:6px;font-size:16px}  
+textarea{min-height:75px}  
+.boton-enviar,.boton-compra{width:100%;padding:14px;background:#168447;color:white;border:0;border-radius:7px;font-size:17px;font-weight:bold}  
+.buscador{margin-bottom:12px}  
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}  
+.filtros button{padding:10px 14px;border:0;border-radius:20px;background:#ddd}  
+.filtros button.activo{background:#168447;color:white}  
+#productos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}  
+.producto{background:white;border-radius:10px;padding:12px;box-shadow:0 2px 7px #0002;display:flex;flex-direction:column}  
+.producto img{width:100%;height:190px;object-fit:contain}  
+.producto h3{margin:10px 0 5px}  
+.producto p{margin:5px 0;color:#555}  
+.precio{color:#168447!important;font-size:20px;font-weight:bold}  
+.producto button{margin-top:auto;padding:11px;background:#168447;color:white;border:0;border-radius:6px}  
+.carrito{margin-top:25px;padding:18px;background:white;border-radius:10px;box-shadow:0 2px 7px #0002}  
+.item-carrito{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #ddd;padding:10px 0}  
+.item-carrito button{background:#c62828;color:white;border:0;padding:6px 10px;border-radius:5px}  
+.totales p{font-size:17px;margin:8px 0}  
+.total-final{font-size:22px!important;font-weight:bold;color:#168447}  
+.boton-compra{margin-top:15px}  
+.mensaje{text-align:center;padding:15px;color:#555}  
+footer{margin-top:30px;padding:18px;text-align:center;background:#168447;color:white}  
+.oculto{display:none}  
+.nota-prueba{text-align:center;color:#666;font-size:13px;margin-top:10px}  
+</style>  
+</head>  
+<body>  <header>  
+<h1>🛒 RSG Ventas</h1>  
+<p>Productos y recuerdos</p>  
+</header>  <main class="contenedor">  <button type="button" class="boton-publicar" id="botonMostrarFormulario">🟡 PUBLICÁ TUS PRODUCTOS</button>
 
-<header>
-<h1>🛒 RSG Ventas</h1>
-<p>Productos y recuerdos</p>
-</header>
-
-<main class="contenedor">
-
-<button type="button" class="boton-publicar" id="botonMostrarFormulario">🟡 PUBLICÁ TUS PRODUCTOS</button>
-
-<section class="formulario-publicar" id="formularioPublicar">
-<h2>Publicá tus productos</h2>
-<p>Sumá tus productos a RSG Ventas.</p>
-
-<form id="formPublicar" method="POST" target="respuestaFormulario">
-<label>Nombre del comercio</label>
-<input name="comercio" required placeholder="Nombre de tu comercio">
-
-<label>Nombre del producto</label>
+<section class="formulario-publicar" id="formularioPublicar">  
+<h2>Publicá tus productos</h2>  
+<p>Sumá tus productos a RSG Ventas.</p>  <form id="formPublicar" method="POST" target="respuestaFormulario">  
+<label>Nombre del comercio</label>  
+<input name="comercio" required placeholder="Nombre de tu comercio">  <label>Nombre del producto</label>
 <input name="nombre" required placeholder="Nombre del producto">
 
 <label>Precio</label>
 <input name="precio" type="number" min="1" step="0.01" required>
 
 <label>Descripción</label>
-<textarea name="descripcion" placeholder="Descripción del producto"></textarea>
 
-<label>Enlace de la fotografía</label>
+<textarea name="descripcion" placeholder="Descripción del producto"></textarea>  <label>Enlace de la fotografía</label>
 <input name="foto" type="url" placeholder="Enlace de la foto">
 
 <label>Categoría</label>
 <select name="categoria">
-<option>Religiosos</option>
-<option>Llaveros</option>
-<option>Recuerdos</option>
-<option>Otros</option>
-</select>
 
-<label>WhatsApp del comercio</label>
+<option>Religiosos</option>  
+<option>Llaveros</option>  
+<option>Recuerdos</option>  
+<option>Otros</option>  
+</select>  <label>WhatsApp del comercio</label>
 <input name="whatsapp" type="tel" required placeholder="5493447123456">
 
 <button type="submit" class="boton-enviar" id="botonEnviar">PUBLICAR PRODUCTO</button>
-</form>
 
-<iframe name="respuestaFormulario" id="respuestaFormulario" class="oculto"></iframe>
-<p id="mensajePublicacion" class="mensaje"></p>
-</section>
+</form>  <iframe name="respuestaFormulario" id="respuestaFormulario" class="oculto"></iframe>  
+<p id="mensajePublicacion" class="mensaje"></p>  
+</section>  <input type="search" id="buscador" class="buscador" placeholder="¿Qué estás buscando?">  <nav class="filtros">  
+<button class="activo" data-categoria="Todos">Todos</button>  
+<button data-categoria="Religiosos">Religiosos</button>  
+<button data-categoria="Llaveros">Llaveros</button>  
+<button data-categoria="Recuerdos">Recuerdos</button>  
+</nav>  <div id="estadoProductos" class="mensaje">Cargando productos...</div>  
+<section id="productos"></section>  <section class="carrito">  
+<h2>🛒 Tu carrito</h2>  
+<div id="listaCarrito"><p>Tu carrito está vacío.</p></div>  <div class="totales">  
+<p>Subtotal: <strong id="subtotal">$0</strong></p>  
+<p>Servicio 10 %: <strong id="servicio">$0</strong></p>  
+<p class="total-final">Total: <strong id="total">$0</strong></p>  
+</div>  <button type="button" class="boton-compra" id="botonPedido">🛒 CONFIRMAR COMPRA</button>
 
-<input type="search" id="buscador" class="buscador" placeholder="¿Qué estás buscando?">
-
-<nav class="filtros">
-<button class="activo" data-categoria="Todos">Todos</button>
-<button data-categoria="Religiosos">Religiosos</button>
-<button data-categoria="Llaveros">Llaveros</button>
-<button data-categoria="Recuerdos">Recuerdos</button>
-</nav>
-
-<div id="estadoProductos" class="mensaje">Cargando productos...</div>
-<section id="productos"></section>
-
-<section class="carrito">
-<h2>🛒 Tu carrito</h2>
-<div id="listaCarrito"><p>Tu carrito está vacío.</p></div>
-
-<div class="totales">
-<p>Subtotal: <strong id="subtotal">$0</strong></p>
-<p>Servicio 10 %: <strong id="servicio">$0</strong></p>
-<p class="total-final">Total: <strong id="total">$0</strong></p>
-</div>
-
-<button type="button" class="boton-compra" id="botonPedido">🛒 CONFIRMAR COMPRA</button>
-</section>
-
-<section class="formulario-compra" id="formularioCompra">
-<h2>Datos del comprador</h2>
-<p>Completá tus datos para continuar con el pedido.</p>
-
-<form id="formDatosCompra">
-<label>Nombre y apellido</label>
-<input id="nombreComprador" required>
-
-<label>Teléfono</label>
+</section>  <section class="formulario-compra" id="formularioCompra">  
+<h2>Datos del comprador</h2>  
+<p>Completá tus datos para continuar con el pedido.</p>  <form id="formDatosCompra">  
+<label>Nombre y apellido</label>  
+<input id="nombreComprador" required>  <label>Teléfono</label>
 <input id="telefonoComprador" type="tel" required>
 
 <label>Correo electrónico</label>
 <input id="emailComprador" type="email" required>
 
 <label>Dirección de entrega</label>
-<textarea id="direccionComprador"></textarea>
 
-<button type="submit" class="boton-enviar" id="botonConfirmar">💳 PAGAR CON MERCADO PAGO</button>
-<p class="nota-prueba">Modo de prueba de Mercado Pago. No realizar compras reales.</p>
-</form>
+<textarea id="direccionComprador"></textarea>  <button type="submit" class="boton-enviar" id="botonConfirmar">💳 PAGAR CON MERCADO PAGO</button>
 
-<p id="mensajeCompra" class="mensaje"></p>
-</section>
-
-</main>
-
-<footer>RSG Ventas - Gracias por elegirnos</footer>
-
-<script>
-const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbxP9F2CLx0U2Vf4AW7DiQzfqaoZ10am3tNx5kwjTE27waYKpzxscXNEKbh72H--LrJZ/exec";
-const PORCENTAJE_SERVICIO=0.10;
-
-let productos=[];
-let carrito=[];
-let categoriaActual="Todos";
-
-const $=id=>document.getElementById(id);
-
-function precioNumero(valor){
- let t=String(valor??"").trim().replace(/[^\d,.-]/g,"");
- if(t.includes(",")&&t.includes("."))t=t.replace(/\./g,"").replace(",",".");
- else if(t.includes(","))t=t.replace(",",".");
- return Number(t)||0;
-}
-
-function dinero(n){
- return new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2}).format(n);
-}
-
-function convertirFoto(url){
- if(!url)return "";
- let m=String(url).match(/drive\.google\.com\/file\/d\/([^/]+)/);
- if(m)return "https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000";
- m=String(url).match(/[?&]id=([^&]+)/);
- if(String(url).includes("drive.google.com")&&m)return "https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000";
- return url;
-}
-
-function cargarProductos(){
- $("estadoProductos").textContent="Cargando productos...";
- fetch(URL_PRODUCTOS)
- .then(r=>{if(!r.ok)throw Error("Error consultando productos");return r.json()})
- .then(datos=>{
-  if(!Array.isArray(datos))throw Error(datos.error||"Respuesta inválida");
-  productos=datos.map(p=>({
-   nombre:p.nombre||"",
-   precio:precioNumero(p.precio),
-   descripcion:p.descripcion||"",
-   foto:convertirFoto(p.foto||""),
-   comercio:p.comercio||"",
-   categoria:p.categoria||"Otros",
-   whatsapp:String(p.whatsapp||"").replace(/\D/g,"")
-  }));
-  $("estadoProductos").textContent=productos.length?"":"Todavía no hay productos publicados.";
-  mostrarProductos();
- })
- .catch(e=>$("estadoProductos").textContent="No se pudieron cargar los productos: "+e.message);
-}
-
-function mostrarProductos(){
- const busqueda=$("buscador").value.toLowerCase().trim();
- const lista=productos.filter(p=>
-  (categoriaActual==="Todos"||p.categoria.toLowerCase()===categoriaActual.toLowerCase())&&
-  (p.nombre.toLowerCase().includes(busqueda)||p.descripcion.toLowerCase().includes(busqueda)||p.comercio.toLowerCase().includes(busqueda))
- );
- $("productos").innerHTML="";
- if(!lista.length){$("productos").innerHTML='<p class="mensaje">No se encontraron productos.</p>';return}
- lista.forEach(p=>{
-  const indice=productos.indexOf(p);
-  const tarjeta=document.createElement("article");
-  tarjeta.className="producto";
-  const imagen=p.foto?'<img src="'+p.foto.replace(/"/g,"&quot;")+'" alt="Producto" loading="lazy">':"";
-  tarjeta.innerHTML=imagen+
-   "<h3></h3><p class='precio'></p><p class='descripcion'></p><p class='comercio'></p><button>Agregar al carrito</button>";
-  tarjeta.querySelector("h3").textContent=p.nombre;
-  tarjeta.querySelector(".precio").textContent=dinero(p.precio);
-  tarjeta.querySelector(".descripcion").textContent=p.descripcion;
-  tarjeta.querySelector(".comercio").textContent="Comercio: "+p.comercio;
-  tarjeta.querySelector("button").onclick=()=>agregarAlCarrito(indice);
-  tarjeta.querySelector("img")?.addEventListener("error",function(){this.style.display="none"});
-  $("productos").appendChild(tarjeta);
- });
-}
-
-function agregarAlCarrito(indice){
- const p=productos[indice];
- const existente=carrito.find(x=>x.producto===p);
- if(existente)existente.cantidad++;
- else carrito.push({producto:p,cantidad:1});
- mostrarCarrito();
-}
-
-function mostrarCarrito(){
- const lista=$("listaCarrito");
- lista.innerHTML="";
- let subtotal=0;
- if(!carrito.length)lista.innerHTML="<p>Tu carrito está vacío.</p>";
- carrito.forEach((item,i)=>{
-  const importe=item.producto.precio*item.cantidad;
-  subtotal+=importe;
-  const fila=document.createElement("div");
-  fila.className="item-carrito";
-  const detalle=document.createElement("span");
-  detalle.textContent=item.producto.nombre+" x "+item.cantidad+" - "+dinero(importe);
-  const boton=document.createElement("button");
-  boton.textContent="Quitar";
-  boton.onclick=()=>{carrito.splice(i,1);mostrarCarrito()};
-  fila.append(detalle,boton);
-  lista.appendChild(fila);
- });
- const servicio=subtotal*PORCENTAJE_SERVICIO;
- $("subtotal").textContent=dinero(subtotal);
- $("servicio").textContent=dinero(servicio);
- $("total").textContent=dinero(subtotal+servicio);
-}
-
-$("botonMostrarFormulario").onclick=()=>{
- const f=$("formularioPublicar");
- f.style.display=f.style.display==="block"?"none":"block";
-};
-
-$("botonPedido").onclick=()=>{
- if(!carrito.length){alert("Primero agregá productos al carrito.");return}
- const f=$("formularioCompra");
- f.style.display=f.style.display==="block"?"none":"block";
- if(f.style.display==="block")f.scrollIntoView({behavior:"smooth"});
-};
-
-$("buscador").addEventListener("input",mostrarProductos);
-
-document.querySelectorAll(".filtros button").forEach(b=>{
- b.onclick=()=>{
-  document.querySelectorAll(".filtros button").forEach(x=>x.classList.remove("activo"));
-  b.classList.add("activo");
-  categoriaActual=b.dataset.categoria;
-  mostrarProductos();
- };
-});
-
-const iframe=$("respuestaFormulario");
-let esperandoPublicacion=false;
-
-$("formPublicar").action=URL_PRODUCTOS;
-$("formPublicar").addEventListener("submit",()=>{
- esperandoPublicacion=true;
- $("botonEnviar").disabled=true;
- $("botonEnviar").textContent="PUBLICANDO...";
- $("mensajePublicacion").textContent="Enviando producto...";
-});
-
-iframe.addEventListener("load",()=>{
- if(!esperandoPublicacion)return;
- esperandoPublicacion=false;
- $("botonEnviar").disabled=false;
- $("botonEnviar").textContent="PUBLICAR PRODUCTO";
- $("formPublicar").reset();
- $("mensajePublicacion").textContent="Solicitud enviada. Actualizando catálogo...";
- setTimeout(cargarProductos,2500);
-});
-
-// Crear preferencia de pago de prueba en Mercado Pago.
-$("formDatosCompra").addEventListener("submit",async evento=>{
- evento.preventDefault();
-
- if(!carrito.length){
-  alert("El carrito está vacío.");
-  return;
- }
-
- const boton=$("botonConfirmar");
- const mensaje=$("mensajeCompra");
-
- boton.disabled=true;
- boton.textContent="CONECTANDO CON MERCADO PAGO...";
- mensaje.textContent="Preparando el pago. Esperá un momento...";
-
- const pedido={
-  cliente:$("nombreComprador").value.trim(),
-  telefono:$("telefonoComprador").value.trim(),
-  email:$("emailComprador").value.trim(),
-  direccion:$("direccionComprador").value.trim(),
-  productos:carrito.map(item=>({
-   nombre:item.producto.nombre,
-   comercio:item.producto.comercio,
-   cantidad:item.cantidad
-  }))
- };
-
- const datos=new URLSearchParams();
- datos.set("accion","crearPago");
- datos.set("pedido",JSON.stringify(pedido));
-
- try{
-  const respuesta=await fetch(URL_PRODUCTOS,{
-   method:"POST",
-   body:datos
-  });
-
-  const resultado=await respuesta.json();
-
-  if(!resultado.correcto){
-   throw Error(resultado.mensaje||resultado.error||"No se pudo crear el pago.");
-  }
-
-  if(!resultado.urlPago){
-   throw Error("Mercado Pago no devolvió el enlace de pago.");
-  }
-
-  mensaje.textContent="Pedido preparado. Abriendo Mercado Pago...";
-  window.location.href=resultado.urlPago;
-
- }catch(error){
-  mensaje.textContent="No se pudo iniciar el pago: "+error.message+". El carrito sigue guardado. Intentá nuevamente.";
-  boton.disabled=false;
-  boton.textContent="💳 PAGAR CON MERCADO PAGO";
- }
-});
-
-cargarProductos();
-mostrarCarrito();
-</script>
-
-</body>
+<p class="nota-prueba">Modo de prueba de Mercado Pago. No realizar compras reales.</p>  
+</form>  <p id="mensajeCompra" class="mensaje"></p>  
+</section>  </main>  <footer>RSG Ventas - Gracias por elegirnos</footer>  <script>  
+const URL_PRODUCTOS="https://script.google.com/macros/s/AKfycbxP9F2CLx0U2Vf4AW7DiQzfqaoZ10am3tNx5kwjTE27waYKpzxscXNEKbh72H--LrJZ/exec";  
+const PORCENTAJE_SERVICIO=0.10;  
+  
+let productos=[];  
+let carrito=[];  
+let categoriaActual="Todos";  
+  
+const $=id=>document.getElementById(id);  
+  
+function precioNumero(valor){  
+ let t=String(valor??"").trim().replace(/[^\d,.-]/g,"");  
+ if(t.includes(",")&&t.includes("."))t=t.replace(/\./g,"").replace(",",".");  
+ else if(t.includes(","))t=t.replace(",",".");  
+ return Number(t)||0;  
+}  
+  
+function dinero(n){  
+ return new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2}).format(n);  
+}  
+  
+function convertirFoto(url){  
+ if(!url)return "";  
+ let m=String(url).match(/drive\.google\.com\/file\/d\/([^/]+)/);  
+ if(m)return "https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000";  
+ m=String(url).match(/[?&]id=([^&]+)/);  
+ if(String(url).includes("drive.google.com")&&m)return "https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000";  
+ return url;  
+}  
+  
+function cargarProductos(){  
+ $("estadoProductos").textContent="Cargando productos...";  
+ fetch(URL_PRODUCTOS)  
+ .then(r=>{if(!r.ok)throw Error("Error consultando productos");return r.json()})  
+ .then(datos=>{  
+  if(!Array.isArray(datos))throw Error(datos.error||"Respuesta inválida");  
+  productos=datos.map(p=>({  
+   nombre:p.nombre||"",  
+   precio:precioNumero(p.precio),  
+   descripcion:p.descripcion||"",  
+   foto:convertirFoto(p.foto||""),  
+   comercio:p.comercio||"",  
+   categoria:p.categoria||"Otros",  
+   whatsapp:String(p.whatsapp||"").replace(/\D/g,"")  
+  }));  
+  $("estadoProductos").textContent=productos.length?"":"Todavía no hay productos publicados.";  
+  mostrarProductos();  
+ })  
+ .catch(e=>$("estadoProductos").textContent="No se pudieron cargar los productos: "+e.message);  
+}  
+  
+function mostrarProductos(){  
+ const busqueda=$("buscador").value.toLowerCase().trim();  
+ const lista=productos.filter(p=>  
+  (categoriaActual==="Todos"||p.categoria.toLowerCase()===categoriaActual.toLowerCase())&&  
+  (p.nombre.toLowerCase().includes(busqueda)||p.descripcion.toLowerCase().includes(busqueda)||p.comercio.toLowerCase().includes(busqueda))  
+ );  
+ $("productos").innerHTML="";  
+ if(!lista.length){$("productos").innerHTML='<p class="mensaje">No se encontraron productos.</p>';return}  
+ lista.forEach(p=>{  
+  const indice=productos.indexOf(p);  
+  const tarjeta=document.createElement("article");  
+  tarjeta.className="producto";  
+  const imagen=p.foto?'<img src="'+p.foto.replace(/"/g,"&quot;")+'" alt="Producto" loading="lazy">':"";  
+  tarjeta.innerHTML=imagen+  
+   "<h3></h3><p class='precio'></p><p class='descripcion'></p><p class='comercio'></p><button>Agregar al carrito</button>";  
+  tarjeta.querySelector("h3").textContent=p.nombre;  
+  tarjeta.querySelector(".precio").textContent=dinero(p.precio);  
+  tarjeta.querySelector(".descripcion").textContent=p.descripcion;  
+  tarjeta.querySelector(".comercio").textContent="Comercio: "+p.comercio;  
+  tarjeta.querySelector("button").onclick=()=>agregarAlCarrito(indice);  
+  tarjeta.querySelector("img")?.addEventListener("error",function(){this.style.display="none"});  
+  $("productos").appendChild(tarjeta);  
+ });  
+}  
+  
+function agregarAlCarrito(indice){  
+ const p=productos[indice];  
+ const existente=carrito.find(x=>x.producto===p);  
+ if(existente)existente.cantidad++;  
+ else carrito.push({producto:p,cantidad:1});  
+ mostrarCarrito();  
+}  
+  
+function mostrarCarrito(){  
+ const lista=$("listaCarrito");  
+ lista.innerHTML="";  
+ let subtotal=0;  
+ if(!carrito.length)lista.innerHTML="<p>Tu carrito está vacío.</p>";  
+ carrito.forEach((item,i)=>{  
+  const importe=item.producto.precio*item.cantidad;  
+  subtotal+=importe;  
+  const fila=document.createElement("div");  
+  fila.className="item-carrito";  
+  const detalle=document.createElement("span");  
+  detalle.textContent=item.producto.nombre+" x "+item.cantidad+" - "+dinero(importe);  
+  const boton=document.createElement("button");  
+  boton.textContent="Quitar";  
+  boton.onclick=()=>{carrito.splice(i,1);mostrarCarrito()};  
+  fila.append(detalle,boton);  
+  lista.appendChild(fila);  
+ });  
+ const servicio=subtotal*PORCENTAJE_SERVICIO;  
+ $("subtotal").textContent=dinero(subtotal);  
+ $("servicio").textContent=dinero(servicio);  
+ $("total").textContent=dinero(subtotal+servicio);  
+}  
+  
+$("botonMostrarFormulario").onclick=()=>{  
+ const f=$("formularioPublicar");  
+ f.style.display=f.style.display==="block"?"none":"block";  
+};  
+  
+$("botonPedido").onclick=()=>{  
+ if(!carrito.length){alert("Primero agregá productos al carrito.");return}  
+ const f=$("formularioCompra");  
+ f.style.display=f.style.display==="block"?"none":"block";  
+ if(f.style.display==="block")f.scrollIntoView({behavior:"smooth"});  
+};  
+  
+$("buscador").addEventListener("input",mostrarProductos);  
+  
+document.querySelectorAll(".filtros button").forEach(b=>{  
+ b.onclick=()=>{  
+  document.querySelectorAll(".filtros button").forEach(x=>x.classList.remove("activo"));  
+  b.classList.add("activo");  
+  categoriaActual=b.dataset.categoria;  
+  mostrarProductos();  
+ };  
+});  
+  
+const iframe=$("respuestaFormulario");  
+let esperandoPublicacion=false;  
+  
+$("formPublicar").action=URL_PRODUCTOS;  
+$("formPublicar").addEventListener("submit",()=>{  
+ esperandoPublicacion=true;  
+ $("botonEnviar").disabled=true;  
+ $("botonEnviar").textContent="PUBLICANDO...";  
+ $("mensajePublicacion").textContent="Enviando producto...";  
+});  
+  
+iframe.addEventListener("load",()=>{  
+ if(!esperandoPublicacion)return;  
+ esperandoPublicacion=false;  
+ $("botonEnviar").disabled=false;  
+ $("botonEnviar").textContent="PUBLICAR PRODUCTO";  
+ $("formPublicar").reset();  
+ $("mensajePublicacion").textContent="Solicitud enviada. Actualizando catálogo...";  
+ setTimeout(cargarProductos,2500);  
+});  
+  
+// Crear preferencia de pago de prueba en Mercado Pago.  
+$("formDatosCompra").addEventListener("submit",async evento=>{  
+ evento.preventDefault();  
+  
+ if(!carrito.length){  
+  alert("El carrito está vacío.");  
+  return;  
+ }  
+  
+ const boton=$("botonConfirmar");  
+ const mensaje=$("mensajeCompra");  
+  
+ boton.disabled=true;  
+ boton.textContent="CONECTANDO CON MERCADO PAGO...";  
+ mensaje.textContent="Preparando el pago. Esperá un momento...";  
+  
+ const pedido={  
+  cliente:$("nombreComprador").value.trim(),  
+  telefono:$("telefonoComprador").value.trim(),  
+  email:$("emailComprador").value.trim(),  
+  direccion:$("direccionComprador").value.trim(),  
+  productos:carrito.map(item=>({  
+   nombre:item.producto.nombre,  
+   comercio:item.producto.comercio,  
+   cantidad:item.cantidad  
+  }))  
+ };  
+  
+ const datos=new URLSearchParams();  
+ datos.set("accion","crearPago");  
+ datos.set("pedido",JSON.stringify(pedido));  
+  
+ try{  
+  const respuesta=await fetch(URL_PRODUCTOS,{  
+   method:"POST",  
+   body:datos  
+  });  
+  
+  const resultado=await respuesta.json();  
+  
+  if(!resultado.correcto){  
+   throw Error(resultado.mensaje||resultado.error||"No se pudo crear el pago.");  
+  }  
+  
+  if(!resultado.urlPago){  
+   throw Error("Mercado Pago no devolvió el enlace de pago.");  
+  }  
+  
+  mensaje.textContent="Pedido preparado. Abriendo Mercado Pago...";  
+  window.location.href=resultado.urlPago;  
+  
+ }catch(error){  
+  mensaje.textContent="No se pudo iniciar el pago: "+error.message+". El carrito sigue guardado. Intentá nuevamente.";  
+  boton.disabled=false;  
+  boton.textContent="💳 PAGAR CON MERCADO PAGO";  
+ }  
+});  
+  
+cargarProductos();  
+mostrarCarrito();  
+</script>  </body>  
 </html>
-
 
 
 
